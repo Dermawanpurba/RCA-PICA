@@ -54,7 +54,9 @@
         }
 
         @media print {
-            html, body {
+
+            html,
+            body {
                 height: auto !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -314,6 +316,7 @@
             align-items: center;
             min-width: max-content;
         }
+
         .org-tree-level {
             display: flex;
             justify-content: center;
@@ -322,10 +325,12 @@
             width: 100%;
             flex-wrap: nowrap;
         }
+
         /* Vertical line connector leaving the parent card */
         .org-tree-parent-node {
             position: relative;
         }
+
         .org-tree-parent-node::after {
             content: '';
             position: absolute;
@@ -334,9 +339,11 @@
             transform: translateX(-50%);
             width: 2px;
             height: 1.5rem;
-            background-color: #6366f1; /* Indigo-500 connector */
+            background-color: #6366f1;
+            /* Indigo-500 connector */
             z-index: 10;
         }
+
         /* Branch representing each child path */
         .org-tree-branch {
             display: flex;
@@ -348,6 +355,7 @@
             padding-right: 1.25rem;
             flex-shrink: 0;
         }
+
         /* Vertical line entering the child node */
         .org-tree-branch::before {
             content: '';
@@ -360,6 +368,7 @@
             background-color: #6366f1;
             z-index: 10;
         }
+
         /* Horizontal connector linking branches */
         .org-tree-branch::after {
             content: '';
@@ -371,23 +380,26 @@
             background-color: #6366f1;
             z-index: 5;
         }
+
         /* Remove horizontal line segments for boundaries */
         .org-tree-branch:first-child::after {
             left: 50%;
         }
+
         .org-tree-branch:last-child::after {
             right: 50%;
         }
+
         .org-tree-branch:only-child::after {
             display: none;
         }
 
         /* Compact layout adjustments to show more items vertically */
-        #pica-main-table th, 
+        #pica-main-table th,
         #pica-main-table td,
-        #parts-main-table th, 
+        #parts-main-table th,
         #parts-main-table td,
-        #populasi-main-table th, 
+        #populasi-main-table th,
         #populasi-main-table td {
             padding: 4px 6px !important;
             font-size: 10px !important;
@@ -422,7 +434,9 @@
 <body class="bg-industrial-bg text-slate-800 font-sans min-h-screen flex flex-col md:flex-row overflow-x-hidden">
 
     <!-- Preview/Live Server status badge -->
-    <div id="previewBadge" class="no-print" style="display:none; position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; padding: 4px 12px; border-radius: 999px; font-weight: bold; font-size: 11px; z-index: 10000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">MODE PREVIEW (Simulasi)</div>
+    <div id="previewBadge" class="no-print"
+        style="display:none; position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; padding: 4px 12px; border-radius: 999px; font-weight: bold; font-size: 11px; z-index: 10000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        MODE PREVIEW (Simulasi)</div>
 
     <!-- LOGIN OVERLAY -->
     <div id="login-overlay"
@@ -564,7 +578,6 @@
                             <span class="text-xs font-medium">Komparasi Accurate</span>
                         </button>
                         <button onclick="openFormModal()"
-
                             class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-amber-500 hover:bg-slate-850 transition-all font-bold">
                             <i data-lucide="plus-square" class="w-4 h-4"></i>
                             <span class="text-xs">Input Masalah Baru</span>
@@ -664,7 +677,6 @@
             <span class="text-[9px] mt-0.5 font-bold">Populasi</span>
         </button>
         <button onclick="initApp()"
-
             class="mobile-nav-btn text-emerald-600 flex flex-col items-center shrink-0 px-2 py-1">
             <i data-lucide="refresh-cw" class="w-5 h-5"></i>
             <span class="text-[9px] mt-0.5 font-bold">Sync</span>
@@ -996,19 +1008,17 @@
                         <thead
                             class="bg-slate-100 border-b-2 border-industrial-border text-slate-700 uppercase font-bold text-[11px] tracking-wider">
                             <tr>
-                                <th class="p-3 text-center border-r border-industrial-border" style="width: 4%;">NO</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 12%;">UNIT (PLAN
-                                    RUNNING)</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 12%;">NO MR</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 12%;">PART NUMBER</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 20%;">DESCRIPTION</th>
-                                <th class="p-3 text-center border-r border-industrial-border" style="width: 8%;">QTY /
-                                    SATUAN</th>
-                                <th class="p-3 text-center border-r border-industrial-border" style="width: 10%;">STATUS
-                                    BARANG</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 14%;">REMARK (KENDALA)
-                                </th>
-                                <th class="p-3 text-center no-print" style="width: 8%;">AKSI</th>
+                                <th class="p-3 text-center border-r border-industrial-border" style="width: 3%;">NO</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">UNIT (PLAN RUNNING)</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">NO MR</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">TGL MR</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">OUTSTANDING</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">PART NUMBER</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 16%;">DESCRIPTION</th>
+                                <th class="p-3 text-center border-r border-industrial-border" style="width: 7%;">QTY / SATUAN</th>
+                                <th class="p-3 text-center border-r border-industrial-border" style="width: 10%;">STATUS BARANG</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 11%;">REMARK (KENDALA)</th>
+                                <th class="p-3 text-center no-print" style="width: 6%;">AKSI</th>
                             </tr>
                         </thead>
                         <tbody id="parts-tbody" class="divide-y divide-industrial-border font-mono text-slate-800">
@@ -1503,13 +1513,15 @@
 
         <!-- CONTAINER 7: ORGANIZATIONAL STRUCTURE -->
         <section id="view-org-structure" class="hidden space-y-4">
-            <div class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div
+                class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider flex items-center gap-2">
                         <i data-lucide="network" class="w-4 h-4"></i>
                         Struktur Organisasi (KTT & Team)
                     </h3>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Kelola bagan organisasi, atasan (superior), dan bawahan (subordinates)</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Kelola bagan organisasi, atasan (superior), dan bawahan
+                        (subordinates)</p>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
                     <button onclick="openOrgMemberModal()"
@@ -1523,8 +1535,10 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Org Chart Visualizer (2/3 width) -->
                 <div class="premium-card p-6 rounded-xl lg:col-span-2 space-y-4">
-                    <h4 class="text-xs font-black uppercase text-slate-900 tracking-wider">Visualisasi Bagan Organisasi</h4>
-                    <div id="org-chart-wrapper" class="overflow-auto border border-slate-100 rounded-lg p-6 bg-slate-50/50 min-h-[400px] text-center">
+                    <h4 class="text-xs font-black uppercase text-slate-900 tracking-wider">Visualisasi Bagan Organisasi
+                    </h4>
+                    <div id="org-chart-wrapper"
+                        class="overflow-auto border border-slate-100 rounded-lg p-6 bg-slate-50/50 min-h-[400px] text-center">
                         <!-- Dynamic Tree Chart -->
                     </div>
                 </div>
@@ -1541,22 +1555,29 @@
 
         <!-- CONTAINER 8: SOP & JOB DESCRIPTION -->
         <section id="view-sop-jobdesc" class="hidden space-y-4">
-            <div class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div
+                class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h3 class="text-xs font-black uppercase text-teal-700 tracking-wider flex items-center gap-2">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
                         SOP & Tugas Tanggung Jawab Kerja
                     </h3>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Kelola Standard Operating Procedure (SOP) dan pembagian tugas peranan tim</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Kelola Standard Operating Procedure (SOP) dan pembagian
+                        tugas peranan tim</p>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
                     <!-- Tab toggle buttons -->
-                    <button onclick="switchSopTab('sop')" id="sop-tab-btn-sop" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white shadow-sm transition-all">Daftar SOP</button>
-                    <button onclick="switchSopTab('jobdesc')" id="sop-tab-btn-jobdesc" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">Tugas & Tanggung Jawab</button>
-                    
+                    <button onclick="switchSopTab('sop')" id="sop-tab-btn-sop"
+                        class="px-3 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white shadow-sm transition-all">Daftar
+                        SOP</button>
+                    <button onclick="switchSopTab('jobdesc')" id="sop-tab-btn-jobdesc"
+                        class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">Tugas
+                        & Tanggung Jawab</button>
+
                     <div class="border-l h-5 mx-1"></div>
 
-                    <button onclick="openSopOrJobdescModal()" id="btn-add-sop-item" class="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center space-x-1.5 transition-all shadow-md shadow-teal-600/15">
+                    <button onclick="openSopOrJobdescModal()" id="btn-add-sop-item"
+                        class="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center space-x-1.5 transition-all shadow-md shadow-teal-600/15">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                         <span>Tambah Data</span>
                     </button>
@@ -1576,13 +1597,15 @@
 
         <!-- CONTAINER 9: ACCURATE PARSER -->
         <section id="view-accurate-parser" class="hidden space-y-4">
-            <div class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div
+                class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider flex items-center gap-2">
                         <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                         PRO-PARSER ACCURATE
                     </h3>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Modul khusus pembersihan text mentah tabular (Fixed-Width Report) hasil ekspor ACCURATE Desktop PT Benamakmur Selaras Sejahtera</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Modul khusus pembersihan text mentah tabular
+                        (Fixed-Width Report) hasil ekspor ACCURATE Desktop PT Benamakmur Selaras Sejahtera</p>
                 </div>
             </div>
 
@@ -1590,27 +1613,32 @@
                 <!-- Control Panel (1/3 width) -->
                 <div class="premium-card p-5 rounded-xl space-y-4 font-sans">
                     <h4 class="text-xs font-black uppercase text-slate-900 tracking-wider">Unggah File Laporan</h4>
-                    <p class="text-[11px] text-slate-500">Pilih berkas teks (.txt) hasil ekspor outstanding report dari ACCURATE Desktop:</p>
-                    
-                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg p-6 hover:bg-slate-50 transition-all cursor-pointer relative" id="accurate-dropzone" onclick="document.getElementById('accurate-file-input').click()">
+                    <p class="text-[11px] text-slate-500">Pilih berkas teks (.txt) hasil ekspor outstanding report dari
+                        ACCURATE Desktop:</p>
+
+                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg p-6 hover:bg-slate-50 transition-all cursor-pointer relative"
+                        id="accurate-dropzone" onclick="document.getElementById('accurate-file-input').click()">
                         <i data-lucide="upload-cloud" class="w-8 h-8 text-indigo-500 mb-2"></i>
-                        <span class="text-[11px] font-bold text-slate-700 text-center">Pilih berkas atau seret ke sini</span>
-                        <span class="text-[9px] text-slate-400 mt-1" id="accurate-file-name">Mendukung format .txt</span>
-                        <input type="file" id="accurate-file-input" accept=".txt" class="hidden" onchange="handleAccurateFileUpload(event)">
+                        <span class="text-[11px] font-bold text-slate-700 text-center">Pilih berkas atau seret ke
+                            sini</span>
+                        <span class="text-[9px] text-slate-400 mt-1" id="accurate-file-name">Mendukung format
+                            .txt</span>
+                        <input type="file" id="accurate-file-input" accept=".txt" class="hidden"
+                            onchange="handleAccurateFileUpload(event)">
                     </div>
-                    
+
                     <button type="button" onclick="processAccurateFileContent()" id="btn-process-accurate" disabled
                         class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-2.5 rounded-lg text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md shadow-indigo-600/15 cursor-pointer">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                         <span>Proses & Bersihkan Data</span>
                     </button>
-                    
+
                     <button type="button" onclick="syncAccurateToDb()" id="btn-sync-accurate" disabled
                         class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold py-2.5 rounded-lg text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md shadow-emerald-600/15 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
                         <i data-lucide="database" class="w-4 h-4"></i>
                         <span>Simpan ke Database Sheets</span>
                     </button>
-                    
+
                     <button type="button" onclick="clearAccurateDb()" id="btn-clear-accurate"
                         class="w-full border border-rose-200 hover:bg-rose-50 text-rose-600 font-bold py-2 rounded-lg text-xs flex items-center justify-center space-x-1.5 transition-all cursor-pointer">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -1624,19 +1652,24 @@
                     <!-- Metrics -->
                     <div class="grid grid-cols-2 gap-4">
                         <div class="premium-card p-4 rounded-xl">
-                            <span class="text-[10px] text-slate-500 block tracking-wider uppercase font-bold">Total Outstanding Item</span>
-                            <span id="accurate-kpi-total" class="text-2xl font-black font-mono text-slate-900 block mt-1">0</span>
+                            <span class="text-[10px] text-slate-500 block tracking-wider uppercase font-bold">Total
+                                Outstanding Item</span>
+                            <span id="accurate-kpi-total"
+                                class="text-2xl font-black font-mono text-slate-900 block mt-1">0</span>
                         </div>
                         <div class="premium-card p-4 rounded-xl">
-                            <span class="text-[10px] text-slate-500 block tracking-wider uppercase font-bold">Unik Nomor PR</span>
-                            <span id="accurate-kpi-unique-pr" class="text-2xl font-black font-mono text-indigo-600 block mt-1">0</span>
+                            <span class="text-[10px] text-slate-500 block tracking-wider uppercase font-bold">Unik Nomor
+                                PR</span>
+                            <span id="accurate-kpi-unique-pr"
+                                class="text-2xl font-black font-mono text-indigo-600 block mt-1">0</span>
                         </div>
                     </div>
 
                     <!-- Table -->
                     <div class="premium-card p-5 rounded-xl space-y-4">
                         <div class="flex items-center justify-between border-b pb-3">
-                            <h4 class="text-xs font-black uppercase text-slate-900 tracking-wider">Data Hasil Parsing (Format Tabular)</h4>
+                            <h4 class="text-xs font-black uppercase text-slate-900 tracking-wider">Data Hasil Parsing
+                                (Format Tabular)</h4>
                             <button type="button" onclick="downloadAccurateCsv()" id="btn-download-accurate" disabled
                                 class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold px-3 py-1.5 rounded-lg text-[10px] flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
@@ -1646,7 +1679,8 @@
 
                         <div class="overflow-x-auto border border-slate-200 rounded-lg max-h-[380px] overflow-y-auto">
                             <table class="w-full text-[10px] text-left border-collapse" id="accurate-main-table">
-                                <thead class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold sticky top-0 z-10">
+                                <thead
+                                    class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold sticky top-0 z-10">
                                     <tr>
                                         <th class="p-2 border-r border-slate-200 text-center">NO</th>
                                         <th class="p-2 border-r border-slate-200">NOMOR PR</th>
@@ -1665,10 +1699,12 @@
                                         <th class="p-2">TANGGAL MR</th>
                                     </tr>
                                 </thead>
-                                <tbody id="accurate-tbody" class="divide-y divide-slate-200 bg-white font-mono text-slate-800">
+                                <tbody id="accurate-tbody"
+                                    class="divide-y divide-slate-200 bg-white font-mono text-slate-800">
                                     <tr>
                                         <td colspan="15" class="p-8 text-center text-slate-400 font-sans">
-                                            Belum ada data. Silakan paste teks mentah Accurate di sebelah kiri lalu klik "Proses & Bersihkan Data".
+                                            Belum ada data. Silakan paste teks mentah Accurate di sebelah kiri lalu klik
+                                            "Proses & Bersihkan Data".
                                         </td>
                                     </tr>
                                 </tbody>
@@ -1681,16 +1717,19 @@
 
         <!-- CONTAINER 10: ACCURATE COMPARISON -->
         <section id="view-accurate-comparison" class="hidden space-y-4">
-            <div class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div
+                class="no-print premium-card p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider flex items-center gap-2">
                         <i data-lucide="git-compare" class="w-4 h-4"></i>
                         KOMPARASI ACCURATE & MONITORING PART URGENT
                     </h3>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Pantau status real-time pengadaan barang urgent berdasarkan data Sinkronisasi ACCURATE PR DB</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Pantau status real-time pengadaan barang urgent
+                        berdasarkan data Sinkronisasi ACCURATE PR DB</p>
                 </div>
                 <!-- Refresh Button -->
-                <button onclick="loadAccurateComparison()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer">
+                <button onclick="loadAccurateComparison()"
+                    class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                     Refresh Data
                 </button>
@@ -1699,28 +1738,37 @@
             <!-- KPI Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="premium-card p-4 rounded-xl bg-white shadow-sm border border-slate-100">
-                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Total Part Urgent</span>
-                    <span id="comp-kpi-total-urgent" class="text-2xl font-black font-mono text-slate-900 block mt-1">0</span>
+                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Total Part
+                        Urgent</span>
+                    <span id="comp-kpi-total-urgent"
+                        class="text-2xl font-black font-mono text-slate-900 block mt-1">0</span>
                 </div>
                 <div class="premium-card p-4 rounded-xl bg-white shadow-sm border border-slate-100">
-                    <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider block">Tercatat di Accurate</span>
-                    <span id="comp-kpi-matched" class="text-2xl font-black font-mono text-emerald-600 block mt-1">0</span>
+                    <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider block">Tercatat di
+                        Accurate</span>
+                    <span id="comp-kpi-matched"
+                        class="text-2xl font-black font-mono text-emerald-600 block mt-1">0</span>
                 </div>
                 <div class="premium-card p-4 rounded-xl bg-white shadow-sm border border-slate-100">
-                    <span class="text-[10px] text-rose-500 font-bold uppercase tracking-wider block">Belum Terproses</span>
-                    <span id="comp-kpi-unprocessed" class="text-2xl font-black font-mono text-rose-600 block mt-1">0</span>
+                    <span class="text-[10px] text-rose-500 font-bold uppercase tracking-wider block">Belum
+                        Terproses</span>
+                    <span id="comp-kpi-unprocessed"
+                        class="text-2xl font-black font-mono text-rose-600 block mt-1">0</span>
                 </div>
                 <div class="premium-card p-4 rounded-xl bg-white shadow-sm border border-slate-100">
-                    <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider block">Selesai / PO Closed</span>
-                    <span id="comp-kpi-completed" class="text-2xl font-black font-mono text-indigo-600 block mt-1">0</span>
+                    <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider block">Selesai / PO
+                        Closed</span>
+                    <span id="comp-kpi-completed"
+                        class="text-2xl font-black font-mono text-indigo-600 block mt-1">0</span>
                 </div>
             </div>
 
             <!-- Filter Controls -->
-            <div class="premium-card p-4 rounded-xl bg-white shadow-sm border border-slate-100 flex flex-col md:flex-row gap-3 items-center justify-between">
+            <div
+                class="premium-card p-4 rounded-xl bg-white shadow-sm border border-slate-100 flex flex-col md:flex-row gap-3 items-center justify-between">
                 <div class="flex flex-wrap gap-2 items-center w-full md:w-auto">
                     <span class="text-xs font-bold text-slate-600">Filter Status:</span>
-                    <select id="comp-filter-status" onchange="renderAccurateComparison()" 
+                    <select id="comp-filter-status" onchange="renderAccurateComparison()"
                         class="bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-indigo-500">
                         <option value="all">Semua Data</option>
                         <option value="matched">Tercatat di Accurate</option>
@@ -1732,7 +1780,8 @@
                 </div>
                 <div class="relative w-full md:w-72">
                     <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
-                    <input type="text" id="comp-search" oninput="renderAccurateComparison()" placeholder="Cari Unit, Part No, MR..." 
+                    <input type="text" id="comp-search" oninput="renderAccurateComparison()"
+                        placeholder="Cari Unit, Part No, MR..."
                         class="w-full pl-9 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
                 </div>
             </div>
@@ -1741,7 +1790,8 @@
             <div class="premium-card rounded-xl overflow-hidden bg-white shadow-sm border border-slate-100">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-[11px]" id="comp-table">
-                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[9px] tracking-wider">
+                        <thead
+                            class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[9px] tracking-wider">
                             <tr>
                                 <th class="p-3 border-r border-slate-200 text-center w-10">No</th>
                                 <th class="p-3 border-r border-slate-200">Data Urgent (PICA)</th>
@@ -1951,9 +2001,13 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Nomor MR (Material
-                            Request)</label>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Nomor MR (Material Request)</label>
                         <input type="text" id="form-part-mr" required placeholder="Contoh: MR/2026/05/012"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 font-mono focus:outline-none focus:border-industrial-yellow">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Tanggal MR</label>
+                        <input type="date" id="form-part-tgl-mr" required
                             class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 font-mono focus:outline-none focus:border-industrial-yellow">
                     </div>
                 </div>
@@ -1966,7 +2020,8 @@
                 <div class="flex justify-start pt-2 pb-2" id="add-item-btn-container">
                     <button type="button" onclick="addPartItemRow()"
                         class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold px-3 py-1.5 rounded flex items-center gap-1.5 transition">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            class="w-3.5 h-3.5">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
@@ -2466,7 +2521,8 @@
         class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 overflow-y-auto no-print">
         <div class="bg-white border-2 border-indigo-600 w-full max-w-md rounded-xl overflow-hidden shadow-2xl">
             <div class="bg-indigo-50 px-4 py-3 border-b border-industrial-border flex justify-between items-center">
-                <h3 id="org-member-modal-title" class="text-xs font-black uppercase text-indigo-950 tracking-wider">Tambah Anggota Organisasi</h3>
+                <h3 id="org-member-modal-title" class="text-xs font-black uppercase text-indigo-950 tracking-wider">
+                    Tambah Anggota Organisasi</h3>
                 <button onclick="closeOrgMemberModal()" class="text-slate-500 hover:text-slate-900">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -2480,11 +2536,13 @@
                 </div>
                 <div>
                     <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Jabatan (Title)</label>
-                    <input type="text" id="org-member-title" required placeholder="Contoh: Planner / Mechanical Supervisor"
+                    <input type="text" id="org-member-title" required
+                        placeholder="Contoh: Planner / Mechanical Supervisor"
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                 </div>
                 <div>
-                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Atasan Langsung (Superior)</label>
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Atasan Langsung
+                        (Superior)</label>
                     <select id="org-member-parent"
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                         <option value="">Tidak Ada (Top Level KTT)</option>
@@ -2511,7 +2569,8 @@
         class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 overflow-y-auto no-print">
         <div class="bg-white border-2 border-teal-600 w-full max-w-lg rounded-xl overflow-hidden shadow-2xl">
             <div class="bg-teal-50 px-4 py-3 border-b border-industrial-border flex justify-between items-center">
-                <h3 id="sop-modal-title" class="text-xs font-black uppercase text-teal-950 tracking-wider">Form Standard Operating Procedure (SOP)</h3>
+                <h3 id="sop-modal-title" class="text-xs font-black uppercase text-teal-950 tracking-wider">Form Standard
+                    Operating Procedure (SOP)</h3>
                 <button onclick="closeSopModal()" class="text-slate-500 hover:text-slate-900">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -2519,7 +2578,8 @@
             <form id="sop-form" onsubmit="saveSopDataItem(event)" class="p-5 space-y-4 text-xs">
                 <input type="hidden" id="sop-id">
                 <div>
-                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Judul Prosedur (SOP Title)</label>
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Judul Prosedur (SOP
+                        Title)</label>
                     <input type="text" id="sop-title-input" required placeholder="Contoh: Overhaul Engine Komatsu PC200"
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-teal-600">
                 </div>
@@ -2534,7 +2594,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Langkah-Langkah & Konten Prosedur (Gunakan baris baru untuk setiap langkah)</label>
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Langkah-Langkah & Konten
+                        Prosedur (Gunakan baris baru untuk setiap langkah)</label>
                     <textarea id="sop-content-input" required rows="6" placeholder="Langkah 1: ...&#10;Langkah 2: ..."
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-teal-600"></textarea>
                 </div>
@@ -2558,7 +2619,8 @@
         class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 overflow-y-auto no-print">
         <div class="bg-white border-2 border-teal-600 w-full max-w-lg rounded-xl overflow-hidden shadow-2xl">
             <div class="bg-teal-50 px-4 py-3 border-b border-industrial-border flex justify-between items-center">
-                <h3 id="jobdesc-modal-title" class="text-xs font-black uppercase text-teal-950 tracking-wider">Form Tugas & Tanggung Jawab Peranan</h3>
+                <h3 id="jobdesc-modal-title" class="text-xs font-black uppercase text-teal-950 tracking-wider">Form
+                    Tugas & Tanggung Jawab Peranan</h3>
                 <button onclick="closeJobdescModal()" class="text-slate-500 hover:text-slate-900">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -2566,17 +2628,22 @@
             <form id="jobdesc-form" onsubmit="saveJobdescDataItem(event)" class="p-5 space-y-4 text-xs">
                 <input type="hidden" id="jobdesc-id">
                 <div>
-                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Nama Peranan (Role Name)</label>
-                    <input type="text" id="jobdesc-role-input" required placeholder="Contoh: Foreman / Mechanic / Asst Mechanic"
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Nama Peranan (Role
+                        Name)</label>
+                    <input type="text" id="jobdesc-role-input" required
+                        placeholder="Contoh: Foreman / Mechanic / Asst Mechanic"
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-teal-600">
                 </div>
                 <div>
-                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Tanggung Jawab Utama (Main Responsibilities)</label>
-                    <textarea id="jobdesc-responsibility-input" required rows="3" placeholder="Tanggung jawab utama peranan ini..."
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Tanggung Jawab Utama
+                        (Main Responsibilities)</label>
+                    <textarea id="jobdesc-responsibility-input" required rows="3"
+                        placeholder="Tanggung jawab utama peranan ini..."
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-teal-600"></textarea>
                 </div>
                 <div>
-                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Tugas & Instruksi Harian (Daily Duties - pisahkan dengan baris baru)</label>
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Tugas & Instruksi Harian
+                        (Daily Duties - pisahkan dengan baris baru)</label>
                     <textarea id="jobdesc-duties-input" required rows="5" placeholder="Tugas 1: ...&#10;Tugas 2: ..."
                         class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-teal-600"></textarea>
                 </div>
@@ -3111,6 +3178,7 @@
                 unit_code: "EXCA 109",
                 plan: "EXCAVATOR",
                 no_mr: "MR/2026/05/102",
+                'tgl MR': "2026-06-10",
                 part_no: "20Y-30-00021",
                 description: "Recoil Spring Assy RH",
                 qty: 1,
@@ -3124,6 +3192,7 @@
                 unit_code: "EXCA 111",
                 plan: "EXCAVATOR",
                 no_mr: "MR/2026/05/115",
+                'tgl MR': "2026-06-12",
                 part_no: "20Y-30-11110",
                 description: "Track Link Assembly RH",
                 qty: 2,
@@ -3137,6 +3206,7 @@
                 unit_code: "MAN 801",
                 plan: "MAN",
                 no_mr: "MR/2026/06/044",
+                'tgl MR': "2026-06-18",
                 part_no: "81.30012.0123",
                 description: "Clutch Plate & Disc Assembly",
                 qty: 1,
@@ -3618,7 +3688,7 @@
                 populasiUnitStore = [];
                 const localFar = localStorage.getItem('FAR_DB') || localStorage.getItem('PICA_FAR_DATA') || '[]';
                 farDataStore = JSON.parse(localFar);
-                
+
                 applySystemSettingsToUI();
                 renderDashboard();
                 renderTable(picaDataStore);
@@ -3975,7 +4045,7 @@
             if (partsList.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="9" class="p-8 text-center text-slate-500 bg-white">
+                        <td colspan="11" class="p-8 text-center text-slate-500 bg-white">
                             Tidak ditemukan pengadaan part urgent aktif untuk Plan Running.
                         </td>
                     </tr>
@@ -3990,6 +4060,39 @@
                 else if (item.status_barang === "PO Issued") badgeClass = "bg-amber-100 text-amber-800 border border-amber-300 font-bold";
                 else if (item.status_barang === "On-Site") badgeClass = "bg-blue-100 text-blue-800 border border-blue-300 font-bold";
                 else if (item.status_barang === "Installed") badgeClass = "bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold";
+
+                // Calculate outstanding days
+                let outstandingText = "-";
+                let outstandingBadge = "text-slate-500 bg-slate-50 border border-slate-200";
+                
+                const tglMrStr = item['tgl MR'];
+                const tglMrFormatted = tglMrStr ? formatDateString(tglMrStr) : '-';
+                
+                if (tglMrStr) {
+                    if (item.status_barang === "Installed") {
+                        outstandingText = "Selesai";
+                        outstandingBadge = "bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold";
+                    } else {
+                        const tglMr = new Date(tglMrStr);
+                        if (!isNaN(tglMr.getTime())) {
+                            const today = new Date();
+                            tglMr.setHours(0,0,0,0);
+                            today.setHours(0,0,0,0);
+                            const diffTime = today.getTime() - tglMr.getTime();
+                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                            if (diffDays >= 0) {
+                                outstandingText = `${diffDays} Hari`;
+                                if (diffDays > 14) {
+                                    outstandingBadge = "bg-rose-100 text-rose-800 border border-rose-300 font-bold animate-pulse";
+                                } else if (diffDays >= 7) {
+                                    outstandingBadge = "bg-amber-100 text-amber-800 border border-amber-300 font-bold";
+                                } else {
+                                    outstandingBadge = "bg-indigo-50 text-indigo-700 border border-indigo-200";
+                                }
+                            }
+                        }
+                    }
+                }
 
                 let actionsHtml = "";
                 if (currentUserRole === 'editor') {
@@ -4019,6 +4122,12 @@
                         <td class="p-3 text-center border-r border-slate-200">${index + 1}</td>
                         <td class="p-3 border-r border-slate-200 font-black text-slate-900 text-[12px]">${item.unit_code} <span class="text-[9px] block text-slate-400 font-mono">${item.plan}</span></td>
                         <td class="p-3 border-r border-slate-200 font-mono font-bold text-slate-800 text-[11px]">${item.no_mr}</td>
+                        <td class="p-3 border-r border-slate-200 font-mono text-[11px] text-slate-700">${tglMrFormatted}</td>
+                        <td class="p-3 text-center border-r border-slate-200">
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] uppercase tracking-wide ${outstandingBadge}">
+                                ${outstandingText}
+                            </span>
+                        </td>
                         <td class="p-3 border-r border-slate-200 font-mono text-[11px] text-slate-700">${item.part_no}</td>
                         <td class="p-3 border-r border-slate-200 text-slate-900 font-bold text-[11px]">${item.description}</td>
                         <td class="p-3 text-center border-r border-slate-200 font-mono font-bold">${item.qty} ${item.satuan}</td>
@@ -4064,7 +4173,7 @@
             const container = document.getElementById('part-items-container');
             const rowCount = container.querySelectorAll('.part-item-row').length;
             const uniqueId = 'row_' + Math.random().toString(36).substr(2, 9);
-            
+
             const html = `
                 <div class="part-item-row border-t border-slate-200 pt-3 mt-3 relative" id="${uniqueId}">
                     ${rowCount > 0 ? `
@@ -4131,8 +4240,9 @@
             document.getElementById('part-modal-title').innerText = "Input Part Urgent Baru";
             document.getElementById('part-form').reset();
             document.getElementById('part-id').value = "";
+            document.getElementById('form-part-tgl-mr').value = "";
             document.getElementById('part-items-container').innerHTML = "";
-            
+
             document.getElementById('add-item-btn-container').style.display = 'flex';
 
             // Populate select unit dropdown with all units
@@ -4219,7 +4329,7 @@
             document.getElementById('part-modal-title').innerText = "Edit Pengadaan Part Urgent";
             document.getElementById('part-id').value = target.id;
             document.getElementById('part-items-container').innerHTML = "";
-            
+
             document.getElementById('add-item-btn-container').style.display = 'none';
 
             const selectUnit = document.getElementById('form-part-pica-id');
@@ -4234,6 +4344,20 @@
             // Set Selected Pica ID
             selectUnit.value = target.pica_id;
             document.getElementById('form-part-mr').value = target.no_mr;
+
+            if (target['tgl MR']) {
+                const dateVal = new Date(target['tgl MR']);
+                if (!isNaN(dateVal.getTime())) {
+                    const yyyy = dateVal.getFullYear();
+                    const mm = String(dateVal.getMonth() + 1).padStart(2, '0');
+                    const dd = String(dateVal.getDate()).padStart(2, '0');
+                    document.getElementById('form-part-tgl-mr').value = `${yyyy}-${mm}-${dd}`;
+                } else {
+                    document.getElementById('form-part-tgl-mr').value = target['tgl MR'];
+                }
+            } else {
+                document.getElementById('form-part-tgl-mr').value = "";
+            }
 
             addPartItemRow(target);
 
@@ -4280,6 +4404,7 @@
                         unit_code: unitRef.unit_code,
                         plan: unitRef.plan,
                         no_mr: document.getElementById('form-part-mr').value,
+                        'tgl MR': document.getElementById('form-part-tgl-mr').value,
                         part_no: row.querySelector('.form-part-no').value.trim(),
                         description: row.querySelector('.form-part-desc').value.trim(),
                         qty: parseInt(row.querySelector('.form-part-qty').value) || 1,
@@ -5872,7 +5997,7 @@
             }
             const toProcess = files.slice(0, remaining);
             showLoading(true, "Memproses & Mengoptimalkan Ukuran Gambar...");
-            
+
             try {
                 for (let file of toProcess) {
                     // Compress to max 1600px (HD resolution) at 80% quality
@@ -5938,7 +6063,7 @@
                         const unitCode = document.getElementById('far-unit-code').value.trim().toUpperCase() || 'UNIT';
                         const timestamp = Date.now();
                         const fileName = `FAR_${unitCode}_${timestamp}_${i}.jpg`;
-                        
+
                         const res = await callBackend('uploadTtdToDrive', { fileName: fileName, fileData: photo.data });
                         if (res.success && res.driveUrl) {
                             uploadedPhotos.push({ data: res.driveUrl, caption: photo.caption || '' });
@@ -5974,7 +6099,7 @@
                 if (response.success) {
                     Swal.fire({ icon: 'success', title: 'FAR Tersimpan', text: `FAR unit ${payload.unit_code} berhasil disimpan.`, timer: 1800, showConfirmButton: false });
                     closeFarModal();
-                    
+
                     // Refresh data
                     const farData = await callBackend('getFarData');
                     farDataStore = Array.isArray(farData) ? farData : [];
@@ -6238,7 +6363,7 @@
         function updateAnnotZoom() {
             const canvas = document.getElementById('annotation-canvas');
             if (!canvas) return;
-            
+
             if (_annotZoom === 1.0) {
                 canvas.style.width = '';
                 canvas.style.height = '';
@@ -6251,11 +6376,11 @@
                 const scale = baseWidth / _annotImgWidth;
                 const canvasW = baseWidth;
                 const canvasH = Math.round(_annotImgHeight * scale);
-                
+
                 canvas.style.width = (canvasW * _annotZoom) + 'px';
                 canvas.style.height = (canvasH * _annotZoom) + 'px';
             }
-            
+
             const zoomSpan = document.getElementById('annot-zoom-level');
             if (zoomSpan) {
                 zoomSpan.textContent = Math.round(_annotZoom * 100) + '%';
@@ -6524,9 +6649,9 @@
             const lines = rawText.split(/\r?\n/);
             let headerLineIdx = -1;
             for (let i = 0; i < Math.min(lines.length, 50); i++) {
-                if (lines[i].includes("Nomor PR") && lines[i].includes("Part Number")) { 
-                    headerLineIdx = i; 
-                    break; 
+                if (lines[i].includes("Nomor PR") && lines[i].includes("Part Number")) {
+                    headerLineIdx = i;
+                    break;
                 }
             }
 
@@ -6553,10 +6678,10 @@
             if (headerLineIdx > -1 && !lines[headerLineIdx].includes('\t')) {
                 const headerStr = lines[headerLineIdx];
                 let positions = [];
-                headers.forEach(h => { 
-                    let idx = headerStr.indexOf(h); 
+                headers.forEach(h => {
+                    let idx = headerStr.indexOf(h);
                     if (idx !== -1) {
-                        positions.push({ name: h, start: idx }); 
+                        positions.push({ name: h, start: idx });
                     }
                 });
                 positions.sort((a, b) => a.start - b.start);
@@ -6571,9 +6696,9 @@
                     if (line.trim() === "") continue;
 
                     // Skip garbage lines
-                    if (line.includes("PT Benamakmur") || line.includes("Rincian Permintaan") || 
-                        line.includes("Dari 01 Feb") || line.includes("Cabang :") || 
-                        line.includes("Nomor PR") || line.includes("ACCURATE Accounting") || 
+                    if (line.includes("PT Benamakmur") || line.includes("Rincian Permintaan") ||
+                        line.includes("Dari 01 Feb") || line.includes("Cabang :") ||
+                        line.includes("Nomor PR") || line.includes("ACCURATE Accounting") ||
                         line.includes("Tercetak pada") || line.includes("Halaman")) {
                         continue;
                     }
@@ -6611,7 +6736,7 @@
                         if (currentRow) {
                             dataRows.push(currentRow);
                         }
-                        
+
                         // Parse Vendor name from PO number if vendor name is empty
                         let poNum = rowData["nomor_po"] || "";
                         let vendorName = rowData["nama_pemasok_pesanan_pembelian_terakhir"] || "";
@@ -6620,7 +6745,7 @@
                             vendorName = poNum.substring(spaceIdx + 1).trim();
                             poNum = poNum.substring(0, spaceIdx).trim();
                         }
-                        
+
                         currentRow = {
                             ...rowData,
                             "nomor_po": poNum,
@@ -6644,9 +6769,9 @@
                     let line = lines[i].replace(/\r/g, '');
                     if (line.trim() === "") continue;
 
-                    if (line.includes("PT Benamakmur") || line.includes("Rincian Permintaan") || 
-                        line.includes("Dari 01 Feb") || line.includes("Cabang :") || 
-                        line.includes("Nomor PR") || line.includes("ACCURATE Accounting") || 
+                    if (line.includes("PT Benamakmur") || line.includes("Rincian Permintaan") ||
+                        line.includes("Dari 01 Feb") || line.includes("Cabang :") ||
+                        line.includes("Nomor PR") || line.includes("ACCURATE Accounting") ||
                         line.includes("Tercetak pada") || line.includes("Halaman")) {
                         continue;
                     }
@@ -6735,9 +6860,9 @@
             const tbody = document.getElementById('accurate-tbody');
             const btnSync = document.getElementById('btn-sync-accurate');
             const btnDownload = document.getElementById('btn-download-accurate');
-            
+
             tbody.innerHTML = "";
-            
+
             if (rows.length === 0) {
                 tbody.innerHTML = `
                     <tr>
@@ -6752,14 +6877,14 @@
                 document.getElementById('accurate-kpi-unique-pr').innerText = "0";
                 return;
             }
-            
+
             btnSync.disabled = false;
             btnDownload.disabled = false;
-            
+
             document.getElementById('accurate-kpi-total').innerText = rows.length;
             const uniquePrs = new Set(rows.map(r => r.nomor_pr).filter(Boolean));
             document.getElementById('accurate-kpi-unique-pr').innerText = uniquePrs.size;
-            
+
             rows.forEach((row, index) => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 border-b border-slate-200";
@@ -6782,7 +6907,7 @@
                 `;
                 tbody.appendChild(tr);
             });
-            
+
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
@@ -6793,14 +6918,14 @@
         function handleAccurateFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             document.getElementById('accurate-file-name').innerText = file.name;
-            
+
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 uploadedAccurateContent = e.target.result;
                 document.getElementById('btn-process-accurate').disabled = false;
-                
+
                 const dropzone = document.getElementById('accurate-dropzone');
                 if (dropzone) {
                     dropzone.classList.remove('border-slate-300');
@@ -6821,7 +6946,7 @@
                 });
                 return;
             }
-            
+
             showLoading(true);
             setTimeout(() => {
                 try {
@@ -6892,9 +7017,9 @@
                 background: '#ffffff',
                 color: '#1e293b'
             });
-            
+
             if (!confirm.isConfirmed) return;
-            
+
             showLoading(true);
             try {
                 const response = await callBackend('clearAccurateData');
@@ -6924,33 +7049,33 @@
 
         function downloadAccurateCsv() {
             if (accurateDataStore.length === 0) return;
-            
+
             const headers = [
                 "Nomor PR", "Tanggal PR", "Kode Barang", "Part Number", "Nama Barang",
                 "Kuantitas", "Nomor PO", "Nama Pemasok Pesanan Pembelian Terakhir",
                 "Tanggal PO", "Qty Dipesan", "Qty Diterima", "Qty Belum Terproses",
                 "No MR", "Tanggal MR"
             ];
-            
+
             const rows = accurateDataStore.map(row => [
                 row.nomor_pr, row.tanggal_pr, row.kode_barang, row.part_number, row.nama_barang,
                 row.kuantitas, row.nomor_po, row.nama_pemasok_pesanan_pembelian_terakhir,
                 row.tanggal_po, row.qty_dipesan, row.qty_diterima, row.qty_belum_terproses,
                 row.no_mr, row.tanggal_mr
             ]);
-            
+
             let csvContent = "data:text/csv;charset=utf-8,";
-            
+
             const formatCsvRow = (arr) => arr.map(val => {
                 const text = String(val || '').replace(/"/g, '""');
                 return text.includes(',') || text.includes('\n') || text.includes('"') ? `"${text}"` : text;
             }).join(",");
-            
+
             csvContent += formatCsvRow(headers) + "\n";
             rows.forEach(row => {
                 csvContent += formatCsvRow(row) + "\n";
             });
-            
+
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -6986,10 +7111,10 @@
             try {
                 const partsData = await callBackend('getUrgentParts');
                 urgentPartsStore = Array.isArray(partsData) ? partsData : [];
-                
+
                 const accData = await callBackend('getAccurateData');
                 accurateDataStore = Array.isArray(accData) ? accData : [];
-                
+
                 renderAccurateComparison();
             } catch (err) {
                 console.error("Gagal memuat data komparasi:", err);
@@ -7001,19 +7126,19 @@
         function renderAccurateComparison() {
             const tbody = document.getElementById('comp-tbody');
             if (!tbody) return;
-            
+
             const filterStatus = document.getElementById('comp-filter-status')?.value || 'all';
             const searchQuery = (document.getElementById('comp-search')?.value || '').toLowerCase().trim();
-            
+
             tbody.innerHTML = '';
-            
+
             let totalCount = urgentPartsStore.length;
             let matchedCount = 0;
             let unprocessedCount = 0;
             let completedCount = 0;
-            
+
             const rowsToRender = [];
-            
+
             urgentPartsStore.forEach(item => {
                 const itemMR = (getObjectValue(item, 'no_mr') || '').toString().trim();
                 const itemPart = (getObjectValue(item, 'part_no') || getObjectValue(item, 'part_number') || '').toString().trim();
@@ -7025,14 +7150,14 @@
 
                 const itemMRClean = itemMR.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
                 const itemPartClean = itemPart.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-                
+
                 let matches = accurateDataStore.filter(acc => {
                     const accMR = (getObjectValue(acc, 'no_mr') || '').toString().trim();
                     const accPart = (getObjectValue(acc, 'part_number') || getObjectValue(acc, 'part_no') || '').toString().trim();
-                    
+
                     const accMRClean = accMR.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
                     const accPartClean = accPart.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-                    
+
                     if (itemMRClean && accMRClean && itemMRClean === accMRClean) {
                         return true;
                     }
@@ -7041,9 +7166,9 @@
                     }
                     return false;
                 });
-                
+
                 let matchFound = matches.length > 0;
-                let calculatedStatus = 'unprocessed'; 
+                let calculatedStatus = 'unprocessed';
                 let accuratePRs = [];
                 let accuratePOs = [];
                 let datesPR = [];
@@ -7053,10 +7178,10 @@
                 let qtyRecv = 0;
                 let qtyUnprocessed = 0;
                 let vendors = [];
-                
+
                 if (matchFound) {
                     matchedCount++;
-                    
+
                     matches.forEach(m => {
                         const nomorPr = getObjectValue(m, 'nomor_pr');
                         const nomorPo = getObjectValue(m, 'nomor_po');
@@ -7072,23 +7197,23 @@
                         if (nomorPo) accuratePOs.push(nomorPo);
                         if (tanggalPr) datesPR.push(tanggalPr);
                         if (tanggalPo) datesPO.push(tanggalPo);
-                        
+
                         qtyPR += parseFloat(kuantitas) || 0;
                         qtyPO += parseFloat(qtyDipesan) || 0;
                         qtyRecv += parseFloat(qtyDiterima) || 0;
                         qtyUnprocessed += parseFloat(qtyBelum) || 0;
-                        
+
                         if (vendor) {
                             vendors.push(vendor);
                         }
                     });
-                    
+
                     accuratePRs = [...new Set(accuratePRs)];
                     accuratePOs = [...new Set(accuratePOs)];
                     datesPR = [...new Set(datesPR)];
                     datesPO = [...new Set(datesPO)];
                     vendors = [...new Set(vendors)];
-                    
+
                     if (qtyUnprocessed === 0 && qtyRecv >= qtyPR && qtyPR > 0) {
                         calculatedStatus = 'completed';
                         completedCount++;
@@ -7102,7 +7227,7 @@
                 } else {
                     unprocessedCount++;
                 }
-                
+
                 const searchString = [
                     itemUnit,
                     itemPart,
@@ -7112,11 +7237,11 @@
                     accuratePOs.join(' '),
                     vendors.join(' ')
                 ].join(' ').toLowerCase();
-                
+
                 if (searchQuery && !searchString.includes(searchQuery)) {
                     return;
                 }
-                
+
                 if (filterStatus !== 'all') {
                     if (filterStatus === 'matched' && !matchFound) return;
                     if (filterStatus === 'unprocessed' && matchFound) return;
@@ -7124,7 +7249,7 @@
                     if (filterStatus === 'pr-created' && calculatedStatus !== 'pr-created') return;
                     if (filterStatus === 'po-issued' && calculatedStatus !== 'po-issued') return;
                 }
-                
+
                 rowsToRender.push({
                     item: item,
                     itemMR: itemMR,
@@ -7147,12 +7272,12 @@
                     vendors: vendors
                 });
             });
-            
+
             document.getElementById('comp-kpi-total-urgent').innerText = totalCount;
             document.getElementById('comp-kpi-matched').innerText = matchedCount;
             document.getElementById('comp-kpi-unprocessed').innerText = unprocessedCount;
             document.getElementById('comp-kpi-completed').innerText = completedCount;
-            
+
             if (rowsToRender.length === 0) {
                 tbody.innerHTML = `
                     <tr>
@@ -7163,11 +7288,11 @@
                 `;
                 return;
             }
-            
+
             rowsToRender.forEach((row, idx) => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 border-b border-slate-100 transition-all";
-                
+
                 const urgentCol = `
                     <div>
                         <span class="font-bold text-slate-900 block font-mono text-[10px]">${row.itemPart || '-'}</span>
@@ -7178,14 +7303,14 @@
                         </div>
                     </div>
                 `;
-                
+
                 const mrCol = `
                     <div>
                         <span class="font-bold text-indigo-700 block font-mono">${row.itemMR || '-'}</span>
                         <span class="text-slate-400 block text-[9px] mt-0.5">Status PICA: <b class="text-slate-600">${row.itemStatus || '-'}</b></span>
                     </div>
                 `;
-                
+
                 let matchCol = '';
                 if (row.matchFound) {
                     matchCol = `
@@ -7209,10 +7334,10 @@
                 } else {
                     matchCol = `<span class="text-slate-400 italic">Tidak ditemukan dokumen di Accurate</span>`;
                 }
-                
+
                 let qtyPrPoCol = '';
                 if (row.matchFound) {
-                    const diffWarning = row.qtyPR !== row.itemQty ? 
+                    const diffWarning = row.qtyPR !== row.itemQty ?
                         `<i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500 inline-block align-middle ml-1" title="Perbedaan Qty: PICA (${row.itemQty}) vs Accurate (${row.qtyPR})"></i>` : '';
                     qtyPrPoCol = `
                         <div class="text-center font-sans">
@@ -7223,7 +7348,7 @@
                 } else {
                     qtyPrPoCol = `<div class="text-center text-slate-300">-</div>`;
                 }
-                
+
                 let qtyRecvCol = '';
                 if (row.matchFound) {
                     qtyRecvCol = `
@@ -7235,13 +7360,13 @@
                 } else {
                     qtyRecvCol = `<div class="text-center text-slate-300">-</div>`;
                 }
-                
+
                 const vendorCol = `
                     <span class="font-medium text-slate-700 block max-w-[150px] truncate" title="${row.vendors.join(', ')}">
                         ${row.vendors.join(', ') || '-'}
                     </span>
                 `;
-                
+
                 let statusBadge = '';
                 if (row.calculatedStatus === 'completed') {
                     statusBadge = `<span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase tracking-wider block text-center shadow-sm">Lengkap / Received</span>`;
@@ -7254,7 +7379,7 @@
                 } else {
                     statusBadge = `<span class="px-2 py-1 rounded bg-rose-100 text-rose-800 text-[9px] font-black uppercase tracking-wider block text-center shadow-sm">Belum di PR</span>`;
                 }
-                
+
                 tr.innerHTML = `
                     <td class="p-3 border-r border-slate-100 text-center text-slate-400 font-bold">${idx + 1}</td>
                     <td class="p-3 border-r border-slate-100">${urgentCol}</td>
@@ -7267,7 +7392,7 @@
                 `;
                 tbody.appendChild(tr);
             });
-            
+
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
@@ -7285,7 +7410,7 @@
                 const subChildren = orgDataStore.filter(m => m.parentId === member.id);
                 const hasChildren = subChildren.length > 0;
                 const subHtml = buildOrgTreeHTML(member.id);
-                
+
                 html += `
                     <div class="org-tree-branch flex flex-col items-center">
                         <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
@@ -7329,7 +7454,7 @@
 
             const wrapper = document.getElementById('org-chart-wrapper');
             const topLevel = orgDataStore.filter(m => !m.parentId);
-            
+
             if (topLevel.length === 0 && orgDataStore.length > 0) {
                 orgDataStore[0].parentId = null;
                 localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
@@ -7491,10 +7616,10 @@
                 if (result.isConfirmed) {
                     orgDataStore = orgDataStore.filter(m => m.id !== id);
                     orgDataStore = orgDataStore.map(m => m.parentId === id ? { ...m, parentId: null } : m);
-                    
+
                     localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
                     renderOrgModule();
-                    
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Anggota Berhasil Dihapus',
@@ -7549,7 +7674,7 @@
         function renderSopModuleContent() {
             const container = document.getElementById('sop-tab-content-sop');
             const categories = ["SAFETY / K3", "REPAIR / OVERHAUL", "MAINTENANCE / INSPEKSI", "OPERASIONAL / TOOLS"];
-            
+
             let html = '';
             categories.forEach(cat => {
                 const items = sopDataStore.filter(s => s.category === cat);
@@ -7560,8 +7685,8 @@
                             <span class="bg-teal-50 text-teal-700 font-bold px-2 py-0.5 rounded-full text-[10px]">${items.length} SOP</span>
                         </div>
                         <div class="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
-                            ${items.length === 0 ? `<p class="text-slate-400 text-xs italic py-4">Belum ada prosedur di kategori ini.</p>` : 
-                            items.map(item => `
+                            ${items.length === 0 ? `<p class="text-slate-400 text-xs italic py-4">Belum ada prosedur di kategori ini.</p>` :
+                        items.map(item => `
                                 <div class="border border-slate-100 rounded-lg p-3 bg-slate-50/50 hover:bg-white hover:border-teal-300 transition-all group relative">
                                     <h5 class="font-bold text-xs text-slate-900 pr-12">${item.title}</h5>
                                     <div class="text-[11px] text-slate-700 whitespace-pre-line mt-2 leading-relaxed bg-white border border-slate-100 p-2.5 rounded font-mono">${item.content}</div>
@@ -7591,7 +7716,7 @@
 
         function renderJobdescModuleContent() {
             const container = document.getElementById('sop-tab-content-jobdesc');
-            
+
             let html = '';
             if (jobdescDataStore.length === 0) {
                 html = `<div class="col-span-full text-slate-400 text-xs text-center py-10">Belum ada data tugas peranan.</div>`;
@@ -7724,7 +7849,7 @@
                     sopDataStore = sopDataStore.filter(s => s.id !== id);
                     localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
                     renderSopModuleContent();
-                    
+
                     Swal.fire({
                         icon: 'success',
                         title: 'SOP Berhasil Dihapus',
@@ -7795,7 +7920,7 @@
                     jobdescDataStore = jobdescDataStore.filter(j => j.id !== id);
                     localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
                     renderJobdescModuleContent();
-                    
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Data Peranan Berhasil Dihapus',
