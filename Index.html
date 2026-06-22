@@ -950,7 +950,7 @@
                             <i data-lucide="search" class="w-4 h-4"></i>
                         </span>
                         <input type="text" id="search-parts" oninput="applyPartsFilters()"
-                            placeholder="Cari MR / Part Number / Deskripsi..."
+                            placeholder="Cari Unit / No MR / Part Number / Deskripsi..."
                             class="bg-slate-50 border border-industrial-border text-xs rounded pl-9 pr-3 py-2 w-full text-slate-800 focus:outline-none focus:border-industrial-yellow focus:bg-white">
                     </div>
                     <select id="filter-parts-status" onchange="applyPartsFilters()"
@@ -4177,22 +4177,34 @@
 
             paginatedData.forEach((item, index) => {
                 const globalIndex = index + 1 + startIndex;
+
+                // Flexible field resolution — works regardless of field name casing/spacing
+                const unitCode   = getObjectValue(item, 'unit_code') || getObjectValue(item, 'Unit') || item.unit_code || '-';
+                const planVal    = getObjectValue(item, 'plan') || item.plan || '';
+                const noMr       = getObjectValue(item, 'no_mr') || getObjectValue(item, 'No MR') || item.no_mr || '-';
+                const partNo     = getObjectValue(item, 'part_no') || getObjectValue(item, 'Part Number') || getObjectValue(item, 'part_number') || item.part_no || '-';
+                const desc       = getObjectValue(item, 'description') || getObjectValue(item, 'Description') || getObjectValue(item, 'Deskripsi') || item.description || '-';
+                const qty        = getObjectValue(item, 'qty') || getObjectValue(item, 'Qty') || item.qty || '-';
+                const satuan     = getObjectValue(item, 'satuan') || getObjectValue(item, 'Satuan') || item.satuan || '';
+                const statusBrg  = getObjectValue(item, 'status_barang') || getObjectValue(item, 'Status Barang') || getObjectValue(item, 'status barang') || item.status_barang || '-';
+                const remark     = getObjectValue(item, 'remark') || getObjectValue(item, 'Remark') || item.remark || '-';
+                const tglMrStr   = item['tgl MR'] || getObjectValue(item, 'tgl MR') || getObjectValue(item, 'tglMR') || getObjectValue(item, 'Tgl MR') || getObjectValue(item, 'tgl_mr') || '';
+                const tglMrFormatted = tglMrStr ? formatDateString(tglMrStr) : '-';
+                const itemId     = item.id || getObjectValue(item, 'id') || '';
+
                 let badgeClass = "bg-slate-100 text-slate-800 border border-slate-300";
-                if (item.status_barang === "Waiting PR") badgeClass = "bg-red-100 text-red-800 border border-red-300 font-bold";
-                else if (item.status_barang === "PR Created") badgeClass = "bg-orange-100 text-orange-800 border border-orange-300 font-bold";
-                else if (item.status_barang === "PO Issued") badgeClass = "bg-amber-100 text-amber-800 border border-amber-300 font-bold";
-                else if (item.status_barang === "On-Site") badgeClass = "bg-blue-100 text-blue-800 border border-blue-300 font-bold";
-                else if (item.status_barang === "Installed") badgeClass = "bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold";
+                if (statusBrg === "Waiting PR") badgeClass = "bg-red-100 text-red-800 border border-red-300 font-bold";
+                else if (statusBrg === "PR Created") badgeClass = "bg-orange-100 text-orange-800 border border-orange-300 font-bold";
+                else if (statusBrg === "PO Issued") badgeClass = "bg-amber-100 text-amber-800 border border-amber-300 font-bold";
+                else if (statusBrg === "On-Site") badgeClass = "bg-blue-100 text-blue-800 border border-blue-300 font-bold";
+                else if (statusBrg === "Installed") badgeClass = "bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold";
 
                 // Calculate outstanding days
                 let outstandingText = "-";
                 let outstandingBadge = "text-slate-500 bg-slate-50 border border-slate-200";
-                
-                const tglMrStr = item['tgl MR'];
-                const tglMrFormatted = tglMrStr ? formatDateString(tglMrStr) : '-';
-                
+
                 if (tglMrStr) {
-                    if (item.status_barang === "Installed") {
+                    if (statusBrg === "Installed") {
                         outstandingText = "Selesai";
                         outstandingBadge = "bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold";
                     } else {
@@ -4220,18 +4232,18 @@
                 let actionsHtml = "";
                 if (currentUserRole === 'editor') {
                     actionsHtml = `
-                        <button onclick="editUrgentPart('${item.id}')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 p-1 rounded flex items-center justify-center space-x-1 transition shadow-sm">
+                        <button onclick="editUrgentPart('${itemId}')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 p-1 rounded flex items-center justify-center space-x-1 transition shadow-sm">
                             <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                             <span class="text-[10px] font-black">Edit</span>
                         </button>
-                        <button onclick="deleteUrgentPart('${item.id}')" class="w-full bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 p-1 rounded flex items-center justify-center space-x-1 transition shadow-sm">
+                        <button onclick="deleteUrgentPart('${itemId}')" class="w-full bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 p-1 rounded flex items-center justify-center space-x-1 transition shadow-sm">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                             <span class="text-[10px] font-black">Hapus</span>
                         </button>
                     `;
                 } else if (currentUserRole === 'purchasing') {
                     actionsHtml = `
-                        <button onclick="openRemarkOnlyModal('${item.id}')" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 p-1 rounded flex items-center justify-center space-x-1 transition shadow-sm">
+                        <button onclick="openRemarkOnlyModal('${itemId}')" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 p-1 rounded flex items-center justify-center space-x-1 transition shadow-sm">
                             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                             <span class="text-[10px] font-black font-sans">Edit Remark</span>
                         </button>
@@ -4243,23 +4255,23 @@
                 const rowHtml = `
                     <tr class="hover:bg-slate-50 bg-white transition border-b border-slate-200">
                         <td class="p-3 text-center border-r border-slate-200">${globalIndex}</td>
-                        <td class="p-3 border-r border-slate-200 font-black text-slate-900 text-[12px]">${item.unit_code} <span class="text-[9px] block text-slate-400 font-mono">${item.plan}</span></td>
-                        <td class="p-3 border-r border-slate-200 font-mono font-bold text-slate-800 text-[11px]">${item.no_mr}</td>
+                        <td class="p-3 border-r border-slate-200 font-black text-slate-900 text-[12px]">${unitCode} <span class="text-[9px] block text-slate-400 font-mono">${planVal}</span></td>
+                        <td class="p-3 border-r border-slate-200 font-mono font-bold text-slate-800 text-[11px]">${noMr}</td>
                         <td class="p-3 border-r border-slate-200 font-mono text-[11px] text-slate-700">${tglMrFormatted}</td>
                         <td class="p-3 text-center border-r border-slate-200">
                             <span class="inline-block px-2 py-0.5 rounded text-[10px] uppercase tracking-wide ${outstandingBadge}">
                                 ${outstandingText}
                             </span>
                         </td>
-                        <td class="p-3 border-r border-slate-200 font-mono text-[11px] text-slate-700">${item.part_no}</td>
-                        <td class="p-3 border-r border-slate-200 text-slate-900 font-bold text-[11px]">${item.description}</td>
-                        <td class="p-3 text-center border-r border-slate-200 font-mono font-bold">${item.qty} ${item.satuan}</td>
+                        <td class="p-3 border-r border-slate-200 font-mono text-[11px] text-slate-700">${partNo}</td>
+                        <td class="p-3 border-r border-slate-200 text-slate-900 font-bold text-[11px]">${desc}</td>
+                        <td class="p-3 text-center border-r border-slate-200 font-mono font-bold">${qty} ${satuan}</td>
                         <td class="p-3 text-center border-r border-slate-200">
                             <span class="inline-block px-2.5 py-1 rounded text-[10px] uppercase tracking-wider ${badgeClass}">
-                                ${item.status_barang}
+                                ${statusBrg}
                             </span>
                         </td>
-                        <td class="p-3 border-r border-slate-200 text-slate-700 text-[11px] font-sans font-medium">${item.remark || '-'}</td>
+                        <td class="p-3 border-r border-slate-200 text-slate-700 text-[11px] font-sans font-medium">${remark}</td>
                         <td class="p-3 text-center no-print space-y-1">
                             ${actionsHtml}
                         </td>
@@ -4277,16 +4289,21 @@
         // --- FILTER MONITORING PART URGENT ---
         function applyPartsFilters(resetPage = true) {
             if (resetPage) partsCurrentPage = 1;
-            const searchQuery = document.getElementById('search-parts').value.toLowerCase();
+            const searchQuery = document.getElementById('search-parts').value.toLowerCase().trim();
             const filterStatus = document.getElementById('filter-parts-status').value;
 
             const filtered = urgentPartsStore.filter(item => {
-                const matchSearch =
-                    item.no_mr.toLowerCase().includes(searchQuery) ||
-                    item.part_no.toLowerCase().includes(searchQuery) ||
-                    item.description.toLowerCase().includes(searchQuery) ||
-                    item.unit_code.toLowerCase().includes(searchQuery);
-                const matchStatus = filterStatus === "" || item.status_barang === filterStatus;
+                // Search across ALL field values regardless of field name
+                // This handles both local mock data (snake_case) and GAS/Sheets data (any casing)
+                const matchSearch = !searchQuery || Object.values(item).some(val =>
+                    val && String(val).toLowerCase().includes(searchQuery)
+                );
+
+                // Status filter: check multiple possible field name variants
+                const statusVal = item.status_barang || item['Status Barang'] || item['status barang'] ||
+                    item['STATUS_BARANG'] || item['statusBarang'] || '';
+                const matchStatus = filterStatus === "" || statusVal === filterStatus;
+
                 return matchSearch && matchStatus;
             });
 
