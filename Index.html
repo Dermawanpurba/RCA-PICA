@@ -540,6 +540,11 @@
                             <i data-lucide="table-properties" class="w-4 h-4"></i>
                             <span class="text-xs font-medium">PICA Active Board</span>
                         </button>
+                        <button onclick="switchMenu('wo')" id="btn-nav-wo"
+                            class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
+                            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                            <span class="text-xs font-medium">Work Order (WO)</span>
+                        </button>
                         <button onclick="switchMenu('urgent-part')" id="btn-nav-urgent-part"
                             class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
                             <i data-lucide="package-open" class="w-4 h-4"></i>
@@ -639,6 +644,11 @@
             class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
             <i data-lucide="table-properties" class="w-5 h-5"></i>
             <span class="text-[9px] mt-0.5">PICA Board</span>
+        </button>
+        <button onclick="switchMenu('wo')" id="m-btn-nav-wo"
+            class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
+            <i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-500"></i>
+            <span class="text-[9px] mt-0.5 font-bold">WO</span>
         </button>
         <button onclick="switchMenu('urgent-part')" id="m-btn-nav-urgent-part"
             class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
@@ -1481,6 +1491,84 @@
             </div>
         </section>
 
+        <!-- CONTAINER 10: WORK ORDER (WO) -->
+        <section id="view-wo" class="hidden space-y-4">
+            <div
+                class="bg-industrial-card border border-industrial-border p-4 rounded flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm bg-white">
+                <div>
+                    <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider">Monitoring Work Order (WO)</h3>
+                    <p class="text-xs text-slate-500">Kelola dan monitor status Work Order (WO) operasional.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openWoModal()"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-2 rounded text-xs flex items-center space-x-1.5 transition shadow-sm cursor-pointer">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        <span>Tambah WO</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-industrial-card border border-industrial-border p-4 rounded flex flex-col md:flex-row md:items-center gap-3 shadow-sm bg-white">
+                <div class="flex-1">
+                    <input type="text" id="search-wo" oninput="renderWoTable()" placeholder="Cari WO, ID, Problem, Action..."
+                        class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-xs text-slate-950 focus:outline-none focus:border-indigo-600">
+                </div>
+                <div class="w-full md:w-48">
+                    <select id="filter-wo-status" onchange="renderWoTable()"
+                        class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-xs text-slate-950 focus:outline-none focus:border-indigo-600">
+                        <option value="">Semua Status</option>
+                        <option value="OPEN">OPEN</option>
+                        <option value="CLOSE">CLOSE</option>
+                        <option value="WIP">WIP</option>
+                    </select>
+                </div>
+            </div>
+
+            <div
+                class="bg-industrial-card border border-industrial-border rounded overflow-hidden shadow-sm p-2 bg-white">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs whitespace-nowrap" id="wo-main-table">
+                        <thead
+                            class="bg-slate-100 border-b-2 border-industrial-border text-slate-700 uppercase font-bold text-[11px] tracking-wider">
+                            <tr>
+                                <th class="p-3 text-center border-r border-industrial-border">NO</th>
+                                <th class="p-3 border-r border-industrial-border">NO WO</th>
+                                <th class="p-3 border-r border-industrial-border">NO ID</th>
+                                <th class="p-3 border-r border-industrial-border">PROBLEM</th>
+                                <th class="p-3 border-r border-industrial-border">ACTION</th>
+                                <th class="p-3 border-r border-industrial-border">START DATE</th>
+                                <th class="p-3 border-r border-industrial-border">START TIME</th>
+                                <th class="p-3 border-r border-industrial-border">END DATE2</th>
+                                <th class="p-3 border-r border-industrial-border">END DATE</th>
+                                <th class="p-3 border-r border-industrial-border">END TIME</th>
+                                <th class="p-3 border-r border-industrial-border">STATUS WO</th>
+                                <th class="p-3 border-r border-industrial-border">TOTAL (WO)</th>
+                                <th class="p-3 border-r border-industrial-border">START DATETIME</th>
+                                <th class="p-3 border-r border-industrial-border">MAJOR COMPONENT</th>
+                                <th class="p-3 border-r border-industrial-border">END DATETIME</th>
+                                <th class="p-3 border-r border-industrial-border">REMARK</th>
+                                <th class="p-3 border-r border-industrial-border">DUE DATE</th>
+                                <th class="p-3 border-r border-industrial-border">D1</th>
+                                <th class="p-3 border-r border-industrial-border">D2</th>
+                                <th class="p-3 border-r border-industrial-border">D3</th>
+                                <th class="p-3 border-r border-industrial-border">Start BD</th>
+                                <th class="p-3 border-r border-industrial-border">End BD</th>
+                                <th class="p-3 border-r border-industrial-border">TOTAL (BD)</th>
+                                <th class="p-3 border-r border-industrial-border">SCH/UNH</th>
+                                <th class="p-3 text-center">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wo-tbody" class="divide-y divide-industrial-border font-mono text-slate-800">
+                            <!-- Dynamic Content Rendered Here -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div id="wo-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+            </div>
+        </section>
+
         <!-- CONTAINER 6: FAR (FAILURE ANALYSIS REPORT) -->
         <section id="view-far" class="hidden space-y-4">
             <!-- HEADER & ACTION BAR -->
@@ -2152,6 +2240,174 @@
         </div>
     </div>
 
+    <!-- WO MODAL -->
+    <div id="wo-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 overflow-y-auto no-print">
+        <div class="bg-industrial-card border-2 border-indigo-600 w-full max-w-4xl rounded overflow-hidden shadow-2xl bg-white">
+            <div class="bg-indigo-50 px-4 py-3 border-b border-industrial-border flex justify-between items-center">
+                <h3 id="wo-modal-title" class="text-xs font-black uppercase text-indigo-950 tracking-wider">Form Work Order (WO)</h3>
+                <button onclick="closeWoModal()" class="text-slate-500 hover:text-slate-900 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="wo-form" onsubmit="saveWo(event)" class="p-5 space-y-4 text-xs">
+                <input type="hidden" id="form-wo-old-id">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">NO WO</label>
+                        <input type="text" id="form-wo-no" required placeholder="Contoh: WO-2026-001"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">NO ID</label>
+                        <input type="text" id="form-wo-no-id" required placeholder="Contoh: ID-1002"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">MAJOR COMPONENT</label>
+                        <input type="text" id="form-wo-major" placeholder="Contoh: ENGINE"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">PROBLEM</label>
+                        <textarea id="form-wo-problem" required placeholder="Jelaskan problem..." rows="2"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">ACTION</label>
+                        <textarea id="form-wo-action" required placeholder="Jelaskan action..." rows="2"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600"></textarea>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">START DATE</label>
+                        <input type="date" id="form-wo-start-date"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">START TIME</label>
+                        <input type="time" id="form-wo-start-time"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">END DATE</label>
+                        <input type="date" id="form-wo-end-date"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">END TIME</label>
+                        <input type="time" id="form-wo-end-time"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">END DATE2</label>
+                        <input type="date" id="form-wo-end-date2"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">START DATETIME</label>
+                        <input type="datetime-local" id="form-wo-start-datetime"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">END DATETIME</label>
+                        <input type="datetime-local" id="form-wo-end-datetime"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">DUE DATE</label>
+                        <input type="date" id="form-wo-due-date"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">STATUS WO</label>
+                        <select id="form-wo-status"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                            <option value="OPEN">OPEN</option>
+                            <option value="WIP">WIP</option>
+                            <option value="CLOSE">CLOSE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">TOTAL (WO)</label>
+                        <input type="text" id="form-wo-total1" placeholder="Masukkan total WO..."
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">SCH/UNH</label>
+                        <select id="form-wo-sch-unh"
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                            <option value="SCHEDULED">SCHEDULED</option>
+                            <option value="UNSCHEDULED">UNSCHEDULED</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">REMARK</label>
+                        <input type="text" id="form-wo-remark" placeholder="Remark..."
+                            class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-200 pt-3 mt-3">
+                    <span class="text-xs font-bold text-slate-700 block mb-2 uppercase">Breakdown & Durasi</span>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <div>
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">D1</label>
+                            <input type="text" id="form-wo-d1" placeholder="D1"
+                                class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">D2</label>
+                            <input type="text" id="form-wo-d2" placeholder="D2"
+                                class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">D3</label>
+                            <input type="text" id="form-wo-d3" placeholder="D3"
+                                class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Start BD</label>
+                            <input type="text" id="form-wo-start-bd" placeholder="Start BD"
+                                class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">End BD</label>
+                            <input type="text" id="form-wo-end-bd" placeholder="End BD"
+                                class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-2">
+                        <div class="md:col-start-5">
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">TOTAL (BD)</label>
+                            <input type="text" id="form-wo-total2" placeholder="Total Breakdown..."
+                                class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-industrial-border">
+                    <button type="button" onclick="closeWoModal()"
+                        class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded transition cursor-pointer">Batal</button>
+                    <button type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded transition cursor-pointer">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- SETTINGS MODEL (PENGATURAN SYSTEM, LOGO, NAMA PT, DAN TARGET UNIT) -->
     <div id="settings-modal"
         class="hidden fixed inset-0 bg-slate-900/60 flex items-start md:items-center justify-center p-4 z-50 overflow-y-auto no-print">
@@ -2315,39 +2571,136 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- TAB CONTENT 3: FIREBASE MIGRATION & BACKUP -->
                 <div id="settings-tab-firebase" class="hidden space-y-4">
-                    <div class="bg-red-50 p-4 rounded border border-red-200 space-y-2">
-                        <h4 class="font-black text-red-800 uppercase tracking-wider flex items-center space-x-1.5">
-                            <i data-lucide="cloud-lightning" class="w-4 h-4 text-red-600"></i>
-                            <span>Cloud Migration (Sheets -> Firebase)</span>
+                    <div class="bg-slate-50 p-4 rounded border border-slate-200 space-y-4">
+                        <h4 class="font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
+                            <i data-lucide="cloud-cog" class="w-4 h-4 text-indigo-600"></i>
+                            <span>Kelola Migrasi &amp; Backup per Modul</span>
                         </h4>
                         <p class="text-slate-600 text-[11px] leading-relaxed">
-                            Fitur ini akan menyalin seluruh data eksisting dari Google Sheets (PICA, RCA, Urgent Parts, Populasi Unit, FAR, Accurate, User, dll.) ke Firebase Realtime Database. Lakukan ini saat pertama kali migrasi agar data tidak kosong.
+                            Pilih modul spesifik untuk disinkronisasikan antara <b>Google Sheets</b> dan <b>Cloud Firebase</b>. Hal ini mencegah penimpaan data yang tidak disengaja pada modul lain.
                         </p>
-                        <button type="button" onclick="migrateToFirebase()"
-                            class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2.5 rounded w-full flex items-center justify-center space-x-1.5 shadow cursor-pointer">
-                            <i data-lucide="upload-cloud" class="w-4 h-4"></i>
-                            <span>Mulai Migrasi Database ke Firebase</span>
-                        </button>
+                        
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg">
+                            <table class="w-full text-[11px] text-left">
+                                <thead class="bg-slate-100 uppercase font-bold text-slate-700">
+                                    <tr>
+                                        <th class="p-2.5">Nama Modul (Sidebar)</th>
+                                        <th class="p-2.5 text-center" style="width: 35%;">Sheets → Firebase</th>
+                                        <th class="p-2.5 text-center" style="width: 35%;">Firebase → Sheets</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 bg-white font-medium">
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">PICA Active Board</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('pica')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('pica')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">Work Order (WO)</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('wo')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('wo')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">Monitoring Part Urgent</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('urgent_part')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('urgent_part')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">Analisa Biaya Repair (RCA)</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('rca')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('rca')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">Master Populasi Unit</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('populasi_unit')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('populasi_unit')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">FAR (Failure Analysis)</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('far')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('far')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">Accurate Parser</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('accurate')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('accurate')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-slate-850">Target & Pengaturan</td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="migrateSingleToFirebase('settings')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            </button>
+                                        </td>
+                                        <td class="p-2.5">
+                                            <button type="button" onclick="backupSingleToGoogleSheets('settings')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
-                    <div class="bg-blue-50 p-4 rounded border border-blue-200 space-y-2">
-                        <h4 class="font-black text-blue-800 uppercase tracking-wider flex items-center space-x-1.5">
-                            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-blue-600"></i>
-                            <span>Backup Firebase ke Google Sheets</span>
-                        </h4>
-                        <p class="text-slate-600 text-[11px] leading-relaxed">
-                            Amankan seluruh data yang ada di Cloud Firebase Realtime Database dan backup kembali ke dalam Google Sheets sebagai cadangan.
-                        </p>
-                        <button type="button" onclick="backupToGoogleSheets()"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded w-full flex items-center justify-center space-x-1.5 shadow cursor-pointer">
-                            <i data-lucide="download-cloud" class="w-4 h-4"></i>
-                            <span>Backup Firebase ke Google Sheets</span>
-                        </button>
-                    </div>
-                </div>
+                </div>          </div>
 
                 <!-- Settings Action Buttons -->
                 <div class="flex justify-end space-x-2 pt-3 border-t border-industrial-border">
@@ -3329,6 +3682,8 @@
         let rcaDataStore = [];
         let urgentPartsStore = [];
         let populasiUnitStore = [];
+        let woStore = [];
+        let woCurrentPage = 1;
         let orgDataStore = [];
         let sopDataStore = [];
         let jobdescDataStore = [];
@@ -3891,6 +4246,9 @@
                 const populasiData = await callBackend('getPopulasiData');
                 populasiUnitStore = Array.isArray(populasiData) ? populasiData : [];
 
+                const woData = await callBackend('getWoData');
+                woStore = Array.isArray(woData) ? woData : [];
+
                 const farData = await callBackend('getFarData');
                 farDataStore = Array.isArray(farData) ? farData : [];
 
@@ -3899,6 +4257,7 @@
                 renderTable(picaDataStore);
                 renderUrgentPartsTable(urgentPartsStore);
                 renderPopulasiTable();
+                renderWoTable();
                 renderRcaModule();
                 renderFarModule();
             } catch (err) {
@@ -3918,6 +4277,8 @@
                 }
                 urgentPartsStore = [...DEFAULT_URGENT_PARTS_DATA];
                 populasiUnitStore = [];
+                const localWo = localStorage.getItem('WO_DB') || '[]';
+                woStore = JSON.parse(localWo);
                 const localFar = localStorage.getItem('FAR_DB') || localStorage.getItem('PICA_FAR_DATA') || '[]';
                 farDataStore = JSON.parse(localFar);
 
@@ -3926,6 +4287,7 @@
                 renderTable(picaDataStore);
                 renderUrgentPartsTable(urgentPartsStore);
                 renderPopulasiTable();
+                renderWoTable();
                 renderRcaModule();
                 renderFarModule();
             } finally {
@@ -5458,6 +5820,9 @@
             document.getElementById('view-urgent-part').classList.add('hidden');
             document.getElementById('view-rca').classList.add('hidden');
             document.getElementById('view-populasi-unit').classList.add('hidden');
+            if (document.getElementById('view-wo')) {
+                document.getElementById('view-wo').classList.add('hidden');
+            }
             document.getElementById('view-far').classList.add('hidden');
             document.getElementById('view-org-structure').classList.add('hidden');
             document.getElementById('view-sop-jobdesc').classList.add('hidden');
@@ -5494,6 +5859,17 @@
                 document.getElementById('btn-nav-populasi-unit').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold transition-all shadow-md shadow-emerald-950/40";
                 document.getElementById('m-btn-nav-populasi-unit').className = "mobile-nav-btn text-emerald-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
                 renderPopulasiTable();
+            } else if (menuId === 'wo') {
+                if (document.getElementById('view-wo')) {
+                    document.getElementById('view-wo').classList.remove('hidden');
+                }
+                if (document.getElementById('btn-nav-wo')) {
+                    document.getElementById('btn-nav-wo').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold transition-all shadow-md shadow-indigo-900/40";
+                }
+                if (document.getElementById('m-btn-nav-wo')) {
+                    document.getElementById('m-btn-nav-wo').className = "mobile-nav-btn text-indigo-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
+                }
+                renderWoTable();
             } else if (menuId === 'far') {
                 document.getElementById('view-far').classList.remove('hidden');
                 document.getElementById('btn-nav-far').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold transition-all shadow-md shadow-orange-900/40";
@@ -5815,17 +6191,28 @@
             }
         }
 
-        async function migrateToFirebase() {
+        async function migrateSingleToFirebase(moduleKey) {
             if (!db) return Swal.fire('Error', 'Firebase belum aktif.', 'error');
-
+            
+            const moduleLabels = {
+                'pica': 'PICA Active Board',
+                'wo': 'Work Order (WO)',
+                'urgent_part': 'Monitoring Part Urgent',
+                'rca': 'Analisa Biaya Repair (RCA)',
+                'populasi_unit': 'Master Populasi Unit',
+                'far': 'FAR (Failure Analysis)',
+                'accurate': 'Accurate Parser',
+                'settings': 'Target & Pengaturan Sistem'
+            };
+            
             const result = await Swal.fire({
-                title: 'Mulai Migrasi Total?',
-                html: 'Sistem akan <b>mengambil semua data terbaru dari Google Sheets</b> lalu memindahkannya ke Firebase.',
+                title: `Migrasi ${moduleLabels[moduleKey]}?`,
+                html: `Sistem akan mengambil data terbaru <b>${moduleLabels[moduleKey]}</b> dari Google Sheets dan menuliskannya ke Firebase Cloud.`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Tarik & Migrasi!'
+                confirmButtonText: 'Ya, Migrasikan!'
             });
 
             if (!result.isConfirmed) return;
@@ -5850,13 +6237,12 @@
                     throw new Error(res ? res.message : "Gagal mengambil data dari Google Sheets.");
                 }
 
-                const updates = {};
                 const cleanKey = (key) => String(key).replace(/[\.\#\$\[\]\/]/g, "-");
                 const seenIdsMap = {};
 
                 const processNode = (items, dbName, prefix) => {
-                    if (!items) return;
-                    updates[dbName] = {};
+                    const nodeUpdates = {};
+                    if (!items) return nodeUpdates;
                     if (!seenIdsMap[dbName]) seenIdsMap[dbName] = new Set();
                     
                     items.forEach((item) => {
@@ -5866,28 +6252,53 @@
                             item.id = itemId;
                         }
                         seenIdsMap[dbName].add(itemId);
-                        updates[dbName][cleanKey(itemId)] = item;
+                        nodeUpdates[cleanKey(itemId)] = item;
                     });
+                    return nodeUpdates;
                 };
 
-                processNode(res.pica, 'pica_db', 'ID_');
-                processNode(res.rca, 'rca_db', 'RCA_');
-                processNode(res.urgentParts, 'urgent_parts_db', 'UP_');
-                processNode(res.populasi, 'populasi_unit_db', 'POP_');
-                processNode(res.far, 'far_db', 'FAR_');
-                processNode(res.accurate, 'accurate_pr_db', 'AC_');
+                let targetRef = null;
+                let dataToUpdate = null;
 
-                if (res.targets) {
-                    updates['settings_db/targets_config'] = JSON.stringify(res.targets);
-                }
-                if (res.settings) {
-                    updates['settings_db/system_settings_config'] = JSON.stringify(res.settings);
+                if (moduleKey === 'pica') {
+                    targetRef = db.ref('pica_db');
+                    dataToUpdate = processNode(res.pica, 'pica_db', 'ID_');
+                } else if (moduleKey === 'wo') {
+                    targetRef = db.ref('wo');
+                    dataToUpdate = processNode(res.wo, 'wo', 'WO_');
+                } else if (moduleKey === 'urgent_part') {
+                    targetRef = db.ref('urgent_parts_db');
+                    dataToUpdate = processNode(res.urgentParts, 'urgent_parts_db', 'UP_');
+                } else if (moduleKey === 'rca') {
+                    targetRef = db.ref('rca_db');
+                    dataToUpdate = processNode(res.rca, 'rca_db', 'RCA_');
+                } else if (moduleKey === 'populasi_unit') {
+                    targetRef = db.ref('populasi_unit_db');
+                    dataToUpdate = processNode(res.populasi, 'populasi_unit_db', 'POP_');
+                } else if (moduleKey === 'far') {
+                    targetRef = db.ref('far_db');
+                    dataToUpdate = processNode(res.far, 'far_db', 'FAR_');
+                } else if (moduleKey === 'accurate') {
+                    targetRef = db.ref('accurate_pr_db');
+                    dataToUpdate = processNode(res.accurate, 'accurate_pr_db', 'AC_');
+                } else if (moduleKey === 'settings') {
+                    const settingsUpdates = {};
+                    if (res.targets) {
+                        settingsUpdates['targets_config'] = JSON.stringify(res.targets);
+                    }
+                    if (res.settings) {
+                        settingsUpdates['system_settings_config'] = JSON.stringify(res.settings);
+                    }
+                    targetRef = db.ref('settings_db');
+                    dataToUpdate = settingsUpdates;
                 }
 
-                await db.ref().update(updates);
+                if (targetRef && dataToUpdate !== null) {
+                    await targetRef.set(dataToUpdate);
+                }
 
                 showLoading(false);
-                Swal.fire('Sukses', 'Seluruh data dari Google Sheets berhasil dimigrasikan ke Firebase!', 'success');
+                Swal.fire('Sukses', `Data ${moduleLabels[moduleKey]} berhasil dimigrasikan ke Firebase!`, 'success');
                 initApp();
             } catch (e) {
                 showLoading(false);
@@ -5896,12 +6307,34 @@
             }
         }
 
-        async function backupToGoogleSheets() {
+        async function backupSingleToGoogleSheets(moduleKey) {
             if (!db) return Swal.fire('Error', 'Firebase belum aktif.', 'error');
             
+            const moduleLabels = {
+                'pica': 'PICA Active Board',
+                'wo': 'Work Order (WO)',
+                'urgent_part': 'Monitoring Part Urgent',
+                'rca': 'Analisa Biaya Repair (RCA)',
+                'populasi_unit': 'Master Populasi Unit',
+                'far': 'FAR (Failure Analysis)',
+                'accurate': 'Accurate Parser',
+                'settings': 'Target & Pengaturan Sistem'
+            };
+
+            const firebaseNodes = {
+                'pica': 'pica_db',
+                'wo': 'wo',
+                'urgent_part': 'urgent_parts_db',
+                'rca': 'rca_db',
+                'populasi_unit': 'populasi_unit_db',
+                'far': 'far_db',
+                'accurate': 'accurate_pr_db',
+                'settings': 'settings_db'
+            };
+            
             const result = await Swal.fire({
-                title: 'Mulai Backup ke Sheets?',
-                html: 'Sistem akan mengambil data Cloud Firebase saat ini dan merekapnya kembali ke spreadsheet Google Sheets.',
+                title: `Backup ${moduleLabels[moduleKey]}?`,
+                html: `Sistem akan mengambil data Cloud Firebase saat ini untuk <b>${moduleLabels[moduleKey]}</b> dan menulisnya kembali ke spreadsheet Google Sheets.`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -5917,8 +6350,16 @@
                     throw new Error("Koneksi Google Apps Script tidak aktif. Gunakan link web app resmi.");
                 }
 
-                const snap = await db.ref().once('value');
-                const allData = snap.val() || {};
+                const nodeName = firebaseNodes[moduleKey];
+                const snap = await db.ref(nodeName).once('value');
+                const nodeData = snap.val();
+
+                if (!nodeData) {
+                    throw new Error(`Data ${moduleLabels[moduleKey]} di Firebase kosong.`);
+                }
+
+                const payload = {};
+                payload[nodeName] = nodeData;
 
                 const sendBackup = (data) => {
                     return new Promise((resolve, reject) => {
@@ -5929,10 +6370,10 @@
                     });
                 };
 
-                const res = await sendBackup(allData);
+                const res = await sendBackup(payload);
                 showLoading(false);
                 if (res && res.success) {
-                    Swal.fire('Backup Sukses', 'Semua data dari Firebase berhasil direkap ke Google Sheets!', 'success');
+                    Swal.fire('Backup Sukses', `Data ${moduleLabels[moduleKey]} dari Firebase berhasil direkap ke Google Sheets!`, 'success');
                 } else {
                     Swal.fire('Gagal Backup', res ? res.message : "Error tidak diketahui", 'error');
                 }
@@ -6398,6 +6839,272 @@
                         Swal.fire('Terhapus!', 'Data unit telah dihapus.', 'success');
                     } catch (err) {
                         Swal.fire('Error', 'Gagal menghapus data.', 'error');
+                    } finally {
+                        showLoading(false);
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // WORK ORDER (WO) MODULE
+        // ============================================================
+        function renderWoTable() {
+            const tbody = document.getElementById('wo-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            const query = (document.getElementById('search-wo')?.value || "").toLowerCase();
+            const statusFilter = document.getElementById('filter-wo-status')?.value || "";
+
+            let filtered = woStore;
+            if (statusFilter) {
+                filtered = filtered.filter(item => (item["STATUS WO"] || "").toUpperCase() === statusFilter.toUpperCase());
+            }
+            if (query) {
+                filtered = filtered.filter(item => {
+                    return (item["NO WO"] || "").toLowerCase().includes(query) ||
+                           (item["NO ID"] || "").toLowerCase().includes(query) ||
+                           (item["PROBLEM"] || "").toLowerCase().includes(query) ||
+                           (item["ACTION"] || "").toLowerCase().includes(query) ||
+                           (item["MAJOR COMPONENT"] || "").toLowerCase().includes(query) ||
+                           (item["REMARK"] || "").toLowerCase().includes(query);
+                });
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="25" class="p-4 text-center text-slate-500 font-sans">Data Work Order (WO) kosong atau tidak ditemukan.</td></tr>`;
+                return;
+            }
+
+            const totalItems = filtered.length;
+            const startIndex = (woCurrentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const paginatedData = filtered.slice(startIndex, endIndex);
+
+            paginatedData.forEach((item, index) => {
+                const globalIndex = index + 1 + startIndex;
+                let actionsHtml = "";
+                if (currentUserRole === 'editor') {
+                    actionsHtml = `
+                        <div class="flex justify-center space-x-2">
+                            <button onclick="editWo('${item["NO WO"]}')" class="text-indigo-600 hover:text-indigo-800" title="Edit">
+                                <i data-lucide="edit" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteWo('${item["NO WO"]}')" class="text-red-600 hover:text-red-800" title="Hapus">
+                                <i data-lucide="trash" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    actionsHtml = `<span class="text-slate-400 font-bold font-sans text-[11px]">-</span>`;
+                }
+
+                let statusBadge = "";
+                const status = (item["STATUS WO"] || "").toUpperCase();
+                if (status === 'OPEN') {
+                    statusBadge = `<span class="px-2 py-1 rounded bg-red-100 text-red-800 font-bold text-[10px]">${status}</span>`;
+                } else if (status === 'CLOSE') {
+                    statusBadge = `<span class="px-2 py-1 rounded bg-green-100 text-green-800 font-bold text-[10px]">${status}</span>`;
+                } else if (status === 'WIP') {
+                    statusBadge = `<span class="px-2 py-1 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">${status}</span>`;
+                } else {
+                    statusBadge = `<span class="px-2 py-1 rounded bg-slate-100 text-slate-800 text-[10px]">${status || '-'}</span>`;
+                }
+
+                const row = `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 text-center border-r border-industrial-border font-bold text-slate-500">${globalIndex}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900">${item["NO WO"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900">${item["NO ID"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis">${item["PROBLEM"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis">${item["ACTION"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["START DATE"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["START TIME"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["END DATE2"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["END DATE"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["END TIME"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border text-center">${statusBadge}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-indigo-700">${item["TOTAL_1"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["START DATETIME"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["MAJOR COMPONENT"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["END DATETIME"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis">${item["REMARK"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["DUE DATE"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["D1"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["D2"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["D3"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["Start BD"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["End BD"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-red-700">${item["TOTAL_2"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border">${item["SCH_UNH"] || '-'}</td>
+                        <td class="p-3 text-center">${actionsHtml}</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+
+            const paginationDiv = document.getElementById('wo-pagination');
+            if (paginationDiv) {
+                const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+                let pagHtml = `
+                    <span class="text-xs text-slate-500">Menampilkan <b>${Math.min(totalItems, startIndex + 1)}-${Math.min(totalItems, endIndex)}</b> dari <b>${totalItems}</b> data</span>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="changeWoPage(${woCurrentPage - 1})" ${woCurrentPage === 1 ? 'disabled' : ''} class="px-2.5 py-1.5 rounded border border-slate-200 hover:bg-slate-550 text-slate-600 disabled:opacity-40 transition text-xs font-bold cursor-pointer">Sblm</button>
+                        <span class="text-xs font-bold px-3 text-slate-700">Hal ${woCurrentPage} / ${totalPages}</span>
+                        <button onclick="changeWoPage(${woCurrentPage + 1})" ${woCurrentPage >= totalPages ? 'disabled' : ''} class="px-2.5 py-1.5 rounded border border-slate-200 hover:bg-slate-550 text-slate-600 disabled:opacity-40 transition text-xs font-bold cursor-pointer">Sel</button>
+                    </div>
+                `;
+                paginationDiv.innerHTML = pagHtml;
+            }
+            lucide.createIcons();
+        }
+
+        function changeWoPage(page) {
+            const totalPages = Math.ceil(woStore.length / ITEMS_PER_PAGE) || 1;
+            if (page < 1 || page > totalPages) return;
+            woCurrentPage = page;
+            renderWoTable();
+        }
+
+        function openWoModal() {
+            document.getElementById('wo-form').reset();
+            document.getElementById('form-wo-old-id').value = "";
+            document.getElementById('form-wo-no').disabled = false;
+            document.getElementById('wo-modal-title').innerText = "Tambah Work Order (WO)";
+            document.getElementById('wo-modal').classList.remove('hidden');
+        }
+
+        function closeWoModal() {
+            document.getElementById('wo-modal').classList.add('hidden');
+        }
+
+        function editWo(noWo) {
+            const item = woStore.find(w => w["NO WO"] === noWo);
+            if (item) {
+                document.getElementById('form-wo-old-id').value = item["NO WO"];
+                document.getElementById('form-wo-no').value = item["NO WO"];
+                document.getElementById('form-wo-no').disabled = true;
+                document.getElementById('form-wo-no-id').value = item["NO ID"] || "";
+                document.getElementById('form-wo-major').value = item["MAJOR COMPONENT"] || "";
+                document.getElementById('form-wo-problem').value = item["PROBLEM"] || "";
+                document.getElementById('form-wo-action').value = item["ACTION"] || "";
+                document.getElementById('form-wo-start-date').value = item["START DATE"] || "";
+                document.getElementById('form-wo-start-time').value = item["START TIME"] || "";
+                document.getElementById('form-wo-end-date').value = item["END DATE"] || "";
+                document.getElementById('form-wo-end-time').value = item["END TIME"] || "";
+                document.getElementById('form-wo-end-date2').value = item["END DATE2"] || "";
+                document.getElementById('form-wo-start-datetime').value = item["START DATETIME"] || "";
+                document.getElementById('form-wo-end-datetime').value = item["END DATETIME"] || "";
+                document.getElementById('form-wo-due-date').value = item["DUE DATE"] || "";
+                document.getElementById('form-wo-status').value = item["STATUS WO"] || "OPEN";
+                document.getElementById('form-wo-total1').value = item["TOTAL_1"] || "";
+                document.getElementById('form-wo-sch-unh').value = item["SCH_UNH"] || "SCHEDULED";
+                document.getElementById('form-wo-remark').value = item["REMARK"] || "";
+                document.getElementById('form-wo-d1').value = item["D1"] || "";
+                document.getElementById('form-wo-d2').value = item["D2"] || "";
+                document.getElementById('form-wo-d3').value = item["D3"] || "";
+                document.getElementById('form-wo-start-bd').value = item["Start BD"] || "";
+                document.getElementById('form-wo-end-bd').value = item["End BD"] || "";
+                document.getElementById('form-wo-total2').value = item["TOTAL_2"] || "";
+
+                document.getElementById('wo-modal-title').innerText = "Edit Work Order (WO)";
+                document.getElementById('wo-modal').classList.remove('hidden');
+            }
+        }
+
+        async function saveWo(e) {
+            e.preventDefault();
+            const oldNoWo = document.getElementById('form-wo-old-id').value;
+            const newNoWo = document.getElementById('form-wo-no').value;
+
+            const payload = {
+                "NO WO": newNoWo,
+                "NO ID": document.getElementById('form-wo-no-id').value,
+                "PROBLEM": document.getElementById('form-wo-problem').value,
+                "ACTION": document.getElementById('form-wo-action').value,
+                "START DATE": document.getElementById('form-wo-start-date').value,
+                "START TIME": document.getElementById('form-wo-start-time').value,
+                "END DATE2": document.getElementById('form-wo-end-date2').value,
+                "END DATE": document.getElementById('form-wo-end-date').value,
+                "END TIME": document.getElementById('form-wo-end-time').value,
+                "STATUS WO": document.getElementById('form-wo-status').value,
+                "TOTAL_1": document.getElementById('form-wo-total1').value,
+                "START DATETIME": document.getElementById('form-wo-start-datetime').value,
+                "MAJOR COMPONENT": document.getElementById('form-wo-major').value,
+                "END DATETIME": document.getElementById('form-wo-end-datetime').value,
+                "REMARK": document.getElementById('form-wo-remark').value,
+                "DUE DATE": document.getElementById('form-wo-due-date').value,
+                "D1": document.getElementById('form-wo-d1').value,
+                "D2": document.getElementById('form-wo-d2').value,
+                "D3": document.getElementById('form-wo-d3').value,
+                "Start BD": document.getElementById('form-wo-start-bd').value,
+                "End BD": document.getElementById('form-wo-end-bd').value,
+                "TOTAL_2": document.getElementById('form-wo-total2').value,
+                "SCH_UNH": document.getElementById('form-wo-sch-unh').value
+            };
+
+            showLoading(true);
+            try {
+                if (oldNoWo && oldNoWo !== newNoWo) {
+                    await callBackend('deleteWoData', { noWo: oldNoWo });
+                }
+                await callBackend('saveWoData', { data: payload });
+                
+                const woData = await callBackend('getWoData');
+                woStore = Array.isArray(woData) ? woData : [];
+                
+                localStorage.setItem('WO_DB', JSON.stringify(woStore));
+
+                renderWoTable();
+                closeWoModal();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tersimpan',
+                    text: 'Data Work Order berhasil disimpan.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            } catch (err) {
+                if (!oldNoWo) {
+                    woStore.push(payload);
+                } else {
+                    const idx = woStore.findIndex(w => w["NO WO"] === oldNoWo);
+                    if (idx !== -1) woStore[idx] = payload;
+                }
+                localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                renderWoTable();
+                closeWoModal();
+                Swal.fire('Offline Save', 'Data disimpan secara lokal di browser.', 'warning');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deleteWo(noWo) {
+            Swal.fire({
+                title: 'Hapus Data WO?',
+                text: "Tindakan ini tidak dapat dibatalkan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    showLoading(true);
+                    try {
+                        await callBackend('deleteWoData', { noWo: noWo });
+                        const woData = await callBackend('getWoData');
+                        woStore = Array.isArray(woData) ? woData : [];
+                        localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                        renderWoTable();
+                        Swal.fire('Terhapus!', 'Data Work Order telah dihapus.', 'success');
+                    } catch (err) {
+                        woStore = woStore.filter(w => w["NO WO"] !== noWo);
+                        localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                        renderWoTable();
+                        Swal.fire('Offline Delete', 'Data dihapus dari memori lokal browser.', 'warning');
                     } finally {
                         showLoading(false);
                     }
