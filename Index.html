@@ -190,43 +190,72 @@
 
         /* Optimalisasi 1 Halaman Cetak */
         #print-only #rca-print-paper {
-            padding: 8mm 10mm !important;
+            padding: 6mm 8mm !important;
             margin: 0 !important;
             border: none !important;
+            transform: scale(0.98) !important;
+            transform-origin: top center !important;
+        }
+
+        #print-only #rca-print-paper * {
+            font-size: 7.8pt !important;
+        }
+
+        #print-only #rca-print-paper h1 {
+            font-size: 14pt !important;
+        }
+
+        #print-only #rca-print-paper h2 {
+            font-size: 9.5pt !important;
+        }
+
+        #print-only #rca-print-paper .text-xl {
+            font-size: 14pt !important;
+        }
+
+        #print-only #rca-print-paper table {
+            font-size: 6.8pt !important;
+        }
+
+        #print-only #rca-print-paper th,
+        #print-only #rca-print-paper td {
+            padding: 2px 3.5px !important;
+            font-size: 6.8pt !important;
+            border-width: 1px !important;
         }
 
         #print-only .border-b-2.border-black {
-            padding-bottom: 4px !important;
-            margin-bottom: 8px !important;
+            padding-bottom: 2.5px !important;
+            margin-bottom: 5px !important;
         }
 
         #print-only .grid-cols-1.md\:grid-cols-3 {
-            padding-bottom: 4px !important;
-            margin-bottom: 8px !important;
-            gap: 4px 12px !important;
+            padding-bottom: 2.5px !important;
+            margin-bottom: 5px !important;
+            gap: 2px 8px !important;
         }
 
         #print-only .mb-4,
         #print-only .mb-6,
         #print-only .mb-8 {
-            margin-bottom: 8px !important;
+            margin-bottom: 6px !important;
         }
 
         #print-only .mt-8 {
-            margin-top: 10px !important;
+            margin-top: 12px !important;
         }
 
         #print-only .h-36 {
-            height: 115px !important;
+            height: 96px !important;
         }
 
         #print-only .max-h-16 {
-            max-height: 55px !important;
+            max-height: 48px !important;
         }
 
         #print-only .py-2 {
-            padding-top: 2px !important;
-            padding-bottom: 2px !important;
+            padding-top: 0.5px !important;
+            padding-bottom: 0.5px !important;
         }
         }
 
@@ -2538,11 +2567,16 @@
                             <input type="text" id="sett-company-name" required
                                 class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 font-bold text-slate-900">
                         </div>
-                        <div>
+                        <div class="flex flex-col space-y-1">
                             <label class="block text-slate-600 mb-1 uppercase tracking-wide font-black">Ganti File Logo
                                 (Base64/Drive)</label>
-                            <input type="file" accept="image/*" onchange="handleLogoUpload(event)"
-                                class="w-full bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs">
+                            <div class="flex items-center space-x-3">
+                                <div id="sett-logo-preview-container" class="w-12 h-12 border border-slate-200 rounded flex items-center justify-center overflow-hidden bg-white shrink-0">
+                                    <span class="text-[10px] text-slate-400 font-bold">No Logo</span>
+                                </div>
+                                <input type="file" accept="image/*" onchange="handleLogoUpload(event)"
+                                    class="w-full bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs">
+                            </div>
                         </div>
                     </div>
 
@@ -4343,7 +4377,7 @@
 
             const logoSrc = systemSettings.logoUrl || "";
             if (logoSrc !== "") {
-                const imgHtml = `<img src="${logoSrc}" class="w-full h-full object-cover">`;
+                const imgHtml = `<img src="${logoSrc}" class="w-full h-full object-contain">`;
                 sidebarLogo.innerHTML = imgHtml;
                 rcaLogo.innerHTML = imgHtml;
                 if (picaLogo) picaLogo.innerHTML = imgHtml;
@@ -5976,9 +6010,18 @@
 
             // Buat clone persis seperti konsep ekspor gambar
             const clone = source.cloneNode(true);
-            const isLandscape = (sectionId === 'pica-print-area' || sectionId === 'rca-print-paper' || sectionId === 'parts-print-area');
+            const isLandscape = (sectionId === 'pica-print-area' || sectionId === 'parts-print-area');
             const targetWidth = isLandscape ? '1080px' : '794px';
             clone.style.cssText = `width:${targetWidth};padding:16px;margin:0 auto;background:#fff;border:none;box-shadow:none;border-radius:0;color:#000;box-sizing:border-box;`;
+
+            // Atur orientasi cetak dinamis (@page)
+            let styleEl = document.getElementById('dynamic-print-style');
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'dynamic-print-style';
+                document.head.appendChild(styleEl);
+            }
+            styleEl.innerHTML = `@page { size: A4 ${isLandscape ? 'landscape' : 'portrait'}; margin: 5mm; }`;
 
             // Tampilkan semua span print:inline / print:block / print:flex di clone secara paksa
             clone.querySelectorAll('.hidden').forEach(el => {
@@ -6031,7 +6074,7 @@
 
             // Pindahkan sementara ke print-only div agar tidak terpengaruh overflow parent
             const printDiv = document.getElementById('print-only');
-            const isLandscape = (sectionId === 'pica-print-area' || sectionId === 'rca-print-paper' || sectionId === 'parts-print-area');
+            const isLandscape = (sectionId === 'pica-print-area' || sectionId === 'parts-print-area');
             const targetWidth = isLandscape ? '1280px' : '800px';
             printDiv.style.cssText = `position:fixed;top:0;left:0;width:${targetWidth};background:#fff;z-index:-9999;`;
             const clone = element.cloneNode(true);
@@ -6435,6 +6478,16 @@
             document.getElementById('sett-sig-name-hse').value = systemSettings.sigHseName || DEFAULT_SYSTEM_SETTINGS.sigHseName;
             document.getElementById('sett-sig-name-ktt').value = systemSettings.sigKttName || DEFAULT_SYSTEM_SETTINGS.sigKttName;
 
+            // Load Logo Preview
+            const previewContainer = document.getElementById('sett-logo-preview-container');
+            if (previewContainer) {
+                if (systemSettings.logoUrl) {
+                    previewContainer.innerHTML = `<img src="${systemSettings.logoUrl}" class="w-full h-full object-contain">`;
+                } else {
+                    previewContainer.innerHTML = `<span class="text-[10px] text-slate-400 font-bold">No Logo</span>`;
+                }
+            }
+
             // Load Signatures Upload Indicators
             updateSignatureIndicator('planner', systemSettings.sigPlannerTtd);
             updateSignatureIndicator('plant', systemSettings.sigPlantTtd);
@@ -6469,6 +6522,10 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 systemSettings.logoUrl = e.target.result;
+                const previewContainer = document.getElementById('sett-logo-preview-container');
+                if (previewContainer) {
+                    previewContainer.innerHTML = `<img src="${systemSettings.logoUrl}" class="w-full h-full object-contain">`;
+                }
                 Swal.fire({
                     icon: 'success',
                     title: 'Logo Berhasil Dimuat',
