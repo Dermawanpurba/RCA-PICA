@@ -4604,7 +4604,7 @@
             });
 
             picaDataStore.forEach(item => {
-                const planKey = item.plan.toUpperCase();
+                const planKey = String(item.plan || "").toUpperCase();
                 const planType = item.plan_type || 'Plan Running';
 
                 if (!metrics[planKey]) {
@@ -4643,7 +4643,7 @@
             });
 
             picaDataStore.forEach(item => {
-                if (item.description && item.description.toUpperCase().includes("WAITING")) {
+                if (item.description && String(item.description).toUpperCase().includes("WAITING")) {
                     wParts++;
                 }
             });
@@ -4829,8 +4829,8 @@
             const groupMetrics = calculateGroupMetrics();
 
             const sortedData = [...dataList].sort((a, b) => {
-                const orderA = PLAN_ORDER[a.plan.toUpperCase()] || 99;
-                const orderB = PLAN_ORDER[b.plan.toUpperCase()] || 99;
+                const orderA = PLAN_ORDER[String(a.plan || "").toUpperCase()] || 99;
+                const orderB = PLAN_ORDER[String(b.plan || "").toUpperCase()] || 99;
                 if (orderA !== orderB) {
                     return orderA - orderB;
                 }
@@ -4847,7 +4847,7 @@
             let i = 0;
             while (i < paginatedData.length) {
                 let j = i + 1;
-                while (j < paginatedData.length && paginatedData[j].plan.toUpperCase() === paginatedData[i].plan.toUpperCase()) {
+                while (j < paginatedData.length && String(paginatedData[j].plan || "").toUpperCase() === String(paginatedData[i].plan || "").toUpperCase()) {
                     j++;
                 }
                 const count = j - i;
@@ -4891,7 +4891,7 @@
 
                 let mergedCellsHtml = "";
                 if (isSpanStart) {
-                    const metricsObj = groupMetrics[item.plan.toUpperCase()] || { rfu: '-', bd: '-' };
+                    const metricsObj = groupMetrics[String(item.plan || "").toUpperCase()] || { rfu: '-', bd: '-' };
                     mergedCellsHtml = `
                         <td class="p-3 text-center border-r border-slate-200 align-middle font-bold text-slate-900 bg-slate-50/50" rowspan="${spanInfo.span}">
                             ${spanInfo.no}
@@ -6339,10 +6339,10 @@
                 if (filterStatus !== "") {
                     if (filterStatus === "EXCEPT_RFU") {
                         matchStatus = item.unit_status !== "Running" &&
-                            !item.description.toUpperCase().includes("READY FOR USE") &&
-                            !item.description.toUpperCase().includes("READY FOR USED");
+                            !String(item.description || "").toUpperCase().includes("READY FOR USE") &&
+                            !String(item.description || "").toUpperCase().includes("READY FOR USED");
                     } else {
-                        matchStatus = item.description.toUpperCase().includes(filterStatus.toUpperCase());
+                        matchStatus = String(item.description || "").toUpperCase().includes(String(filterStatus).toUpperCase());
                     }
                 }
 
@@ -6370,8 +6370,8 @@
             }[planUpper] || [planUpper.substring(0, 3)];
 
             return populasiUnitStore.filter(unit => {
-                const codeUpper = (unit.code || "").toUpperCase();
-                const typeUpper = (unit.type || "").toUpperCase();
+                const codeUpper = String(unit.code || "").toUpperCase();
+                const typeUpper = String(unit.type || "").toUpperCase();
 
                 if (typeUpper.includes(planUpper)) return true;
                 const matchesPrefix = prefixes.some(pfx => codeUpper.startsWith(pfx));
@@ -7315,7 +7315,7 @@
 
                 // Find latest PICA status for this WO's unit (NO ID)
                 const unitCode = item["NO ID"];
-                const picaMatches = picaDataStore.filter(p => (p.unit_code || "").toUpperCase() === (unitCode || "").toUpperCase());
+                const picaMatches = picaDataStore.filter(p => String(p.unit_code || "").toUpperCase() === String(unitCode || "").toUpperCase());
                 let picaStatusHtml = "";
                 if (picaMatches.length > 0) {
                     picaMatches.sort((a, b) => {
