@@ -978,7 +978,8 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div id="pica-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+                <div id="pica-pagination"
+                    class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
             </div>
         </section>
 
@@ -1054,15 +1055,19 @@
                             class="bg-slate-100 border-b-2 border-industrial-border text-slate-700 uppercase font-bold text-[11px] tracking-wider">
                             <tr>
                                 <th class="p-3 text-center border-r border-industrial-border" style="width: 3%;">NO</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">UNIT (PLAN RUNNING)</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 10%;">UNIT (PLAN
+                                    RUNNING)</th>
                                 <th class="p-3 border-r border-industrial-border" style="width: 10%;">NO MR</th>
                                 <th class="p-3 border-r border-industrial-border" style="width: 10%;">TGL MR</th>
                                 <th class="p-3 border-r border-industrial-border" style="width: 10%;">OUTSTANDING</th>
                                 <th class="p-3 border-r border-industrial-border" style="width: 10%;">PART NUMBER</th>
                                 <th class="p-3 border-r border-industrial-border" style="width: 16%;">DESCRIPTION</th>
-                                <th class="p-3 text-center border-r border-industrial-border" style="width: 7%;">QTY / SATUAN</th>
-                                <th class="p-3 text-center border-r border-industrial-border" style="width: 10%;">STATUS BARANG</th>
-                                <th class="p-3 border-r border-industrial-border" style="width: 11%;">REMARK (KENDALA)</th>
+                                <th class="p-3 text-center border-r border-industrial-border" style="width: 7%;">QTY /
+                                    SATUAN</th>
+                                <th class="p-3 text-center border-r border-industrial-border" style="width: 10%;">STATUS
+                                    BARANG</th>
+                                <th class="p-3 border-r border-industrial-border" style="width: 11%;">REMARK (KENDALA)
+                                </th>
                                 <th class="p-3 text-center no-print" style="width: 6%;">AKSI</th>
                             </tr>
                         </thead>
@@ -1072,7 +1077,8 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div id="parts-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+                <div id="parts-pagination"
+                    class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
             </div>
         </section>
 
@@ -1134,7 +1140,9 @@
                             <!-- Dynamic List RCA rendered here -->
                         </div>
                         <!-- Pagination -->
-                        <div id="rca-pagination" class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 no-print"></div>
+                        <div id="rca-pagination"
+                            class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 no-print">
+                        </div>
                     </div>
                 </div>
 
@@ -1516,7 +1524,8 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div id="populasi-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+                <div id="populasi-pagination"
+                    class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
             </div>
         </section>
 
@@ -1525,7 +1534,8 @@
             <div
                 class="bg-industrial-card border border-industrial-border p-4 rounded flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm bg-white">
                 <div>
-                    <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider">Monitoring Work Order (WO)</h3>
+                    <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider">Monitoring Work Order (WO)
+                    </h3>
                     <p class="text-xs text-slate-500">Kelola dan monitor status Work Order (WO) operasional.</p>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -1541,31 +1551,37 @@
             <!-- WO Analytics Dashboard -->
             <div id="wo-analytics-container" class="grid grid-cols-1 lg:grid-cols-3 gap-4 no-print">
                 <!-- Col 1: Status Chart Card -->
-                <div class="bg-white border border-industrial-border p-4 rounded shadow-sm flex flex-col justify-between">
+                <div
+                    class="bg-white border border-industrial-border p-4 rounded shadow-sm flex flex-col justify-between">
                     <div>
-                        <h4 class="text-xs font-black uppercase text-slate-950 tracking-wider mb-3">Statistik Status WO</h4>
+                        <h4 class="text-xs font-black uppercase text-slate-950 tracking-wider mb-3">Statistik Status WO
+                        </h4>
                         <div class="space-y-3" id="wo-status-bars">
                             <!-- JS will render progress bars here -->
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Col 2 & 3: Open WOs List Card -->
                 <div class="bg-white border border-industrial-border p-4 rounded shadow-sm lg:col-span-2 flex flex-col">
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="text-xs font-black uppercase text-red-600 tracking-wider">Daftar WO Status OPEN</h4>
-                        <span id="wo-open-count-badge" class="px-2 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold rounded-full">0 Open</span>
+                        <span id="wo-open-count-badge"
+                            class="px-2 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold rounded-full">0 Open</span>
                     </div>
-                    <div id="wo-open-list" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[140px] overflow-y-auto pr-1">
+                    <div id="wo-open-list"
+                        class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[140px] overflow-y-auto pr-1">
                         <!-- JS will render open WOs here -->
                     </div>
                 </div>
             </div>
 
             <!-- Search and Filter -->
-            <div class="bg-industrial-card border border-industrial-border p-4 rounded flex flex-col md:flex-row md:items-center gap-3 shadow-sm bg-white">
+            <div
+                class="bg-industrial-card border border-industrial-border p-4 rounded flex flex-col md:flex-row md:items-center gap-3 shadow-sm bg-white">
                 <div class="flex-1">
-                    <input type="text" id="search-wo" oninput="renderWoTable()" placeholder="Cari WO, ID, Problem, Action..."
+                    <input type="text" id="search-wo" oninput="renderWoTable()"
+                        placeholder="Cari WO, ID, Problem, Action..."
                         class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-xs text-slate-950 focus:outline-none focus:border-indigo-600">
                 </div>
                 <div class="w-full md:w-48">
@@ -1626,7 +1642,8 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div id="wo-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+                <div id="wo-pagination"
+                    class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
             </div>
         </section>
 
@@ -1671,7 +1688,8 @@
                 <!-- Dynamic FAR cards rendered here -->
             </div>
             <!-- Pagination -->
-            <div id="far-pagination" class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100 no-print"></div>
+            <div id="far-pagination"
+                class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100 no-print"></div>
         </section>
 
         <!-- CONTAINER 7: ORGANIZATIONAL STRUCTURE -->
@@ -2164,7 +2182,8 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Nomor MR (Material Request)</label>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Nomor MR (Material
+                            Request)</label>
                         <input type="text" id="form-part-mr" required placeholder="Contoh: MR/2026/05/012"
                             class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 font-mono focus:outline-none focus:border-industrial-yellow">
                     </div>
@@ -2304,16 +2323,18 @@
     <!-- WO MODAL -->
     <div id="wo-modal"
         class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 overflow-y-auto no-print">
-        <div class="bg-industrial-card border-2 border-indigo-600 w-full max-w-4xl rounded overflow-hidden shadow-2xl bg-white">
+        <div
+            class="bg-industrial-card border-2 border-indigo-600 w-full max-w-4xl rounded overflow-hidden shadow-2xl bg-white">
             <div class="bg-indigo-50 px-4 py-3 border-b border-industrial-border flex justify-between items-center">
-                <h3 id="wo-modal-title" class="text-xs font-black uppercase text-indigo-950 tracking-wider">Form Work Order (WO)</h3>
+                <h3 id="wo-modal-title" class="text-xs font-black uppercase text-indigo-950 tracking-wider">Form Work
+                    Order (WO)</h3>
                 <button onclick="closeWoModal()" class="text-slate-500 hover:text-slate-900 cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             <form id="wo-form" onsubmit="saveWo(event)" class="p-5 space-y-4 text-xs">
                 <input type="hidden" id="form-wo-old-id">
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">NO WO</label>
@@ -2326,7 +2347,8 @@
                             class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                     </div>
                     <div>
-                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">MAJOR COMPONENT</label>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">MAJOR
+                            COMPONENT</label>
                         <input type="text" id="form-wo-major" placeholder="Contoh: ENGINE"
                             class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                     </div>
@@ -2375,7 +2397,8 @@
                             class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                     </div>
                     <div>
-                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">START DATETIME</label>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">START
+                            DATETIME</label>
                         <input type="datetime-local" id="form-wo-start-datetime"
                             class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                     </div>
@@ -2452,7 +2475,8 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-2">
                         <div class="md:col-start-5">
-                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">TOTAL (BD)</label>
+                            <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">TOTAL
+                                (BD)</label>
                             <input type="text" id="form-wo-total2" placeholder="Total Breakdown..."
                                 class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-indigo-600">
                         </div>
@@ -2497,7 +2521,7 @@
                 </button>
                 <button type="button" onclick="switchSettingsTab('firebase')" id="tab-btn-firebase"
                     class="flex-1 py-2.5 text-center text-xs font-black uppercase tracking-wider text-slate-500 hover:text-slate-900">
-                    Migrasi & Backup Firebase
+                    Sumber Data &amp; Sync
                 </button>
             </div>
 
@@ -2557,11 +2581,10 @@
                     </div>
                 </div>
 
-                <!-- TAB CONTENT 2: PROFIL & TTD -->
-                <div id="settings-tab-profile" class="hidden space-y-4">
-                    <!-- PT Profil & Logo URL -->
+                <!-- TAB CONTENT 2: PROFILE & SIGNATORIES -->
+                <div id="settings-tab-profile" class="hidden space-y-3">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
+                        <div class="flex flex-col space-y-1">
                             <label class="block text-slate-600 mb-1 uppercase tracking-wide font-black">Nama Perusahaan
                                 (PT)</label>
                             <input type="text" id="sett-company-name" required
@@ -2571,7 +2594,8 @@
                             <label class="block text-slate-600 mb-1 uppercase tracking-wide font-black">Ganti File Logo
                                 (Base64/Drive)</label>
                             <div class="flex items-center space-x-3">
-                                <div id="sett-logo-preview-container" class="w-12 h-12 border border-slate-200 rounded flex items-center justify-center overflow-hidden bg-white shrink-0">
+                                <div id="sett-logo-preview-container"
+                                    class="w-12 h-12 border border-slate-200 rounded flex items-center justify-center overflow-hidden bg-white shrink-0">
                                     <span class="text-[10px] text-slate-400 font-bold">No Logo</span>
                                 </div>
                                 <input type="file" accept="image/*" onchange="handleLogoUpload(event)"
@@ -2612,21 +2636,22 @@
                             </div>
                         </div>
 
-                        <!-- Signatory 3: HSE -->
+                        <!-- Signatory 3: HSE Spv -->
                         <div class="p-2.5 bg-slate-50 rounded border border-slate-200 space-y-1.5">
-                            <span class="font-bold text-slate-800 block">3. Diketahui Oleh (HSE)</span>
-                            <input type="text" id="sett-sig-name-hse" placeholder="Nama HSE"
+                            <span class="font-bold text-slate-800 block">3. Mengetahui (HSE Spv)</span>
+                            <input type="text" id="sett-sig-name-hse" placeholder="Nama HSE Spv"
                                 class="w-full bg-white border rounded px-2 py-1 text-xs text-slate-900">
                             <div class="flex items-center space-x-1.5">
                                 <input type="file" accept="image/png, image/jpeg"
                                     onchange="handleSignatureUpload(event, 'hse')" class="w-full text-[10px]">
-                                <span id="indicator-sig-hse" class="text-[9px] text-gray-400 font-bold">Belum Ada</span>
+                                <span id="indicator-sig-hse" class="text-[9px] text-gray-400 font-bold">Belum
+                                    Ada</span>
                             </div>
                         </div>
 
                         <!-- Signatory 4: KTT -->
                         <div class="p-2.5 bg-slate-50 rounded border border-slate-200 space-y-1.5">
-                            <span class="font-bold text-slate-800 block">4. Disetujui Oleh (KTT)</span>
+                            <span class="font-bold text-slate-800 block">4. Menyetujui (KTT)</span>
                             <input type="text" id="sett-sig-name-ktt" placeholder="Nama KTT"
                                 class="w-full bg-white border rounded px-2 py-1 text-xs text-slate-900">
                             <div class="flex items-center space-x-1.5">
@@ -2639,15 +2664,49 @@
                 </div>
                 <!-- TAB CONTENT 3: FIREBASE MIGRATION & BACKUP -->
                 <div id="settings-tab-firebase" class="hidden space-y-4">
+                    <!-- PENGATURAN SUMBER DATA & AUTO SYNC -->
+                    <div class="bg-indigo-50 p-4 rounded border border-indigo-200 space-y-3">
+                        <h4 class="font-black text-indigo-950 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
+                            <i data-lucide="database" class="w-4 h-4 text-indigo-600"></i>
+                            <span>Sumber Data Utama &amp; Auto Sync</span>
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex flex-col space-y-1">
+                                <label class="font-bold text-slate-700">Sumber Data</label>
+                                <select id="sett-data-source" class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
+                                    <option value="googlesheet">Google Sheet (GAS)</option>
+                                    <option value="firebase">Firebase (Realtime)</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label class="font-bold text-slate-700">Interval Auto Sync (Google Sheet)</label>
+                                <select id="sett-sync-interval" class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
+                                    <option value="0">Mati (Manual Refresh)</option>
+                                    <option value="10">10 Detik</option>
+                                    <option value="30">30 Detik</option>
+                                    <option value="60">1 Menit</option>
+                                    <option value="300">5 Menit</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <label class="font-bold text-slate-700">Google Apps Script Web App URL (GAS_URL)</label>
+                            <input type="text" id="sett-gas-url" placeholder="https://script.google.com/macros/s/.../exec"
+                                class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
+                        </div>
+                    </div>
+
                     <div class="bg-slate-50 p-4 rounded border border-slate-200 space-y-4">
-                        <h4 class="font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
+                        <h4
+                            class="font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
                             <i data-lucide="cloud-cog" class="w-4 h-4 text-indigo-600"></i>
                             <span>Kelola Migrasi &amp; Backup per Modul</span>
                         </h4>
                         <p class="text-slate-600 text-[11px] leading-relaxed">
-                            Pilih modul spesifik untuk disinkronisasikan antara <b>Google Sheets</b> dan <b>Cloud Firebase</b>. Hal ini mencegah penimpaan data yang tidak disengaja pada modul lain.
+                            Pilih modul spesifik untuk disinkronisasikan antara <b>Google Sheets</b> dan <b>Cloud
+                                Firebase</b>. Hal ini mencegah penimpaan data yang tidak disengaja pada modul lain.
                         </p>
-                        
+
                         <div class="overflow-x-auto border border-slate-200 rounded-lg">
                             <table class="w-full text-[11px] text-left">
                                 <thead class="bg-slate-100 uppercase font-bold text-slate-700">
@@ -2661,104 +2720,136 @@
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">PICA Active Board</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('pica')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('pica')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('pica')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('pica')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">Work Order (WO)</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('wo')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('wo')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('wo')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('wo')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">Monitoring Part Urgent</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('urgent_part')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('urgent_part')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('urgent_part')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('urgent_part')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">Analisa Biaya Repair (RCA)</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('rca')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('rca')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('rca')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('rca')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">Master Populasi Unit</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('populasi_unit')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('populasi_unit')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('populasi_unit')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('populasi_unit')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">FAR (Failure Analysis)</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('far')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('far')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('far')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('far')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">Accurate Parser</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('accurate')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('accurate')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('accurate')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('accurate')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-2.5 font-bold text-slate-850">Target & Pengaturan</td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('settings')" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> <span>Migrasi</span>
+                                            <button type="button" onclick="migrateSingleToFirebase('settings')"
+                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Migrasi</span>
                                             </button>
                                         </td>
                                         <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('settings')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> <span>Backup</span>
+                                            <button type="button" onclick="backupSingleToGoogleSheets('settings')"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
+                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+                                                <span>Backup</span>
                                             </button>
                                         </td>
                                     </tr>
@@ -2766,22 +2857,23 @@
                             </table>
                         </div>
                     </div>
-                </div>          </div>
-
-                <!-- Settings Action Buttons -->
-                <div class="flex justify-end space-x-2 pt-3 border-t border-industrial-border">
-                    <button type="button" onclick="closeSettingsModal()"
-                        class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2 rounded flex items-center space-x-1 shadow-sm">
-                        <i data-lucide="save" class="w-4 h-4"></i>
-                        <span>SIMPAN KONFIGURASI</span>
-                    </button>
                 </div>
-            </form>
         </div>
+
+        <!-- Settings Action Buttons -->
+        <div class="flex justify-end space-x-2 pt-3 border-t border-industrial-border">
+            <button type="button" onclick="closeSettingsModal()"
+                class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded">
+                Batal
+            </button>
+            <button type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2 rounded flex items-center space-x-1 shadow-sm">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span>SIMPAN KONFIGURASI</span>
+            </button>
+        </div>
+        </form>
+    </div>
     </div>
     <!-- FAR MODAL (FAILURE ANALYSIS REPORT - INPUT/EDIT) -->
     <div id="far-modal"
@@ -3306,19 +3398,24 @@
     <script>
         // --- FIREBASE CONFIGURATION & INITIALIZATION ---
         const firebaseConfig = {
-          apiKey: "AIzaSyDwUo9lGAVbBekZKwdVNa8ux_TDOqd51KA",
-          authDomain: "gen-lang-client-0064579309.firebaseapp.com",
-          databaseURL: "https://gen-lang-client-0064579309-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "gen-lang-client-0064579309",
-          storageBucket: "gen-lang-client-0064579309.firebasestorage.app",
-          messagingSenderId: "548744780368",
-          appId: "1:548744780368:web:f96848b6e9739263388f55"
+            apiKey: "AIzaSyDwUo9lGAVbBekZKwdVNa8ux_TDOqd51KA",
+            authDomain: "gen-lang-client-0064579309.firebaseapp.com",
+            databaseURL: "https://gen-lang-client-0064579309-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "gen-lang-client-0064579309",
+            storageBucket: "gen-lang-client-0064579309.firebasestorage.app",
+            messagingSenderId: "548744780368",
+            appId: "1:548744780368:web:f96848b6e9739263388f55"
         };
+        // --- DATA SOURCE & SYNC CONFIGURATION ---
+        let USE_FIREBASE = localStorage.getItem('PICA_USE_FIREBASE') === 'true'; // Default to false
+        let GAS_URL = localStorage.getItem('PICA_GAS_URL') || "https://script.google.com/macros/s/AKfycbzv6xH-d49-3_JRbC_oJNHkFrmINbKXljBQyQ1U0LBVXXZaOAajuhi2aZjsH3XvlU3Vyg/exec";
+        let AUTO_SYNC_INTERVAL = parseInt(localStorage.getItem('PICA_SYNC_INTERVAL')) || 0; // Default to 0 (disabled)
+        let syncTimer = null;
 
-        if (typeof firebase !== "undefined" && !firebase.apps.length) {
+        if (USE_FIREBASE && typeof firebase !== "undefined" && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-        const db = typeof firebase !== "undefined" ? firebase.database() : null;
+        const db = (USE_FIREBASE && typeof firebase !== "undefined") ? firebase.database() : null;
         if (db) {
             firebase.auth().signInAnonymously().catch((error) => {
                 console.warn("Firebase Anonymous Auth Failed:", error.message);
@@ -3333,8 +3430,6 @@
                 badge.style.backgroundColor = '#2563eb';
                 badge.style.display = 'block';
             }
-
-            const GAS_URL = "https://script.google.com/macros/s/AKfycbzv6xH-d49-3_JRbC_oJNHkFrmINbKXljBQyQ1U0LBVXXZaOAajuhi2aZjsH3XvlU3Vyg/exec";
 
             window.google = {
                 script: {
@@ -4359,6 +4454,60 @@
             } finally {
                 showLoading(false);
             }
+            setupAutoSync();
+        }
+
+        // --- AUTO REFRESH/SYNC GOOGLE SHEETS ---
+        function setupAutoSync() {
+            if (syncTimer) {
+                clearInterval(syncTimer);
+                syncTimer = null;
+            }
+
+            if (AUTO_SYNC_INTERVAL > 0 && !USE_FIREBASE) {
+                console.log(`Auto Sync aktif, sinkronisasi setiap ${AUTO_SYNC_INTERVAL} detik.`);
+                syncTimer = setInterval(async () => {
+                    const overlay = document.getElementById('login-overlay');
+                    // Hanya sync jika login overlay disembunyikan
+                    if (overlay && overlay.classList.contains('hidden') && currentUserRole) {
+                        console.log("Menjalankan Auto Sync dari Google Sheet...");
+                        try {
+                            const data = await callBackend('getData');
+                            if (Array.isArray(data)) {
+                                picaDataStore = data;
+                                renderTable(picaDataStore);
+                            }
+                            const rcaData = await callBackend('getRcaData');
+                            if (Array.isArray(rcaData)) {
+                                rcaDataStore = rcaData;
+                                renderRcaModule();
+                            }
+                            const partsData = await callBackend('getUrgentParts');
+                            if (Array.isArray(partsData)) {
+                                urgentPartsStore = partsData;
+                                renderUrgentPartsTable(urgentPartsStore);
+                            }
+                            const populasiData = await callBackend('getPopulasiData');
+                            if (Array.isArray(populasiData)) {
+                                populasiUnitStore = populasiData;
+                                renderPopulasiTable();
+                            }
+                            const woData = await callBackend('getWoData');
+                            if (Array.isArray(woData)) {
+                                woStore = woData;
+                                renderWoTable();
+                            }
+                            const farData = await callBackend('getFarData');
+                            if (Array.isArray(farData)) {
+                                farDataStore = farData;
+                                renderFarModule();
+                            }
+                        } catch (e) {
+                            console.warn("Auto Sync gagal:", e);
+                        }
+                    }
+                }, AUTO_SYNC_INTERVAL * 1000);
+            }
         }
 
         // --- APPLY DYNAMIC LOGO & COMPANY NAME TO UI ---
@@ -4549,18 +4698,18 @@
         function renderPagination(containerId, currentPage, totalItems, itemsPerPage, onPageChange) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            
+
             if (totalItems <= itemsPerPage) {
                 container.innerHTML = "";
                 return;
             }
-            
+
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             const startItem = (currentPage - 1) * itemsPerPage + 1;
             const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-            
+
             let buttonsHtml = "";
-            
+
             // First & Prev buttons
             buttonsHtml += `
                 <button onclick="${onPageChange}(1)" ${currentPage === 1 ? 'disabled' : ''} 
@@ -4572,7 +4721,7 @@
                     Prev
                 </button>
             `;
-            
+
             // Page numbers
             const range = 1;
             for (let i = 1; i <= totalPages; i++) {
@@ -4587,7 +4736,7 @@
                     buttonsHtml += `<span class="px-1 text-slate-400 text-xs">...</span>`;
                 }
             }
-            
+
             // Next & Last buttons
             buttonsHtml += `
                 <button onclick="${onPageChange}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} 
@@ -4599,7 +4748,7 @@
                     &raquo;
                 </button>
             `;
-            
+
             container.innerHTML = `
                 <div class="text-[11px] text-slate-500 font-sans font-medium flex-1">
                     Menampilkan <span class="font-bold text-slate-700">${startItem}-${endItem}</span> dari <span class="font-bold text-slate-700">${totalItems}</span> item
@@ -4660,7 +4809,7 @@
                 if (orderA !== orderB) {
                     return orderA - orderB;
                 }
-                return a.unit_code.localeCompare(b.unit_code);
+                return String(a.unit_code || "").localeCompare(String(b.unit_code || ""));
             });
 
             const totalItems = sortedData.length;
@@ -4818,18 +4967,18 @@
                 const globalIndex = index + 1 + startIndex;
 
                 // Flexible field resolution — works regardless of field name casing/spacing
-                const unitCode   = getObjectValue(item, 'unit_code') || getObjectValue(item, 'Unit') || item.unit_code || '-';
-                const planVal    = getObjectValue(item, 'plan') || item.plan || '';
-                const noMr       = getObjectValue(item, 'no_mr') || getObjectValue(item, 'No MR') || item.no_mr || '-';
-                const partNo     = getObjectValue(item, 'part_no') || getObjectValue(item, 'Part Number') || getObjectValue(item, 'part_number') || item.part_no || '-';
-                const desc       = getObjectValue(item, 'description') || getObjectValue(item, 'Description') || getObjectValue(item, 'Deskripsi') || item.description || '-';
-                const qty        = getObjectValue(item, 'qty') || getObjectValue(item, 'Qty') || item.qty || '-';
-                const satuan     = getObjectValue(item, 'satuan') || getObjectValue(item, 'Satuan') || item.satuan || '';
-                const statusBrg  = getObjectValue(item, 'status_barang') || getObjectValue(item, 'Status Barang') || getObjectValue(item, 'status barang') || item.status_barang || '-';
-                const remark     = getObjectValue(item, 'remark') || getObjectValue(item, 'Remark') || item.remark || '-';
-                const tglMrStr   = item['tgl MR'] || getObjectValue(item, 'tgl MR') || getObjectValue(item, 'tglMR') || getObjectValue(item, 'Tgl MR') || getObjectValue(item, 'tgl_mr') || '';
+                const unitCode = getObjectValue(item, 'unit_code') || getObjectValue(item, 'Unit') || item.unit_code || '-';
+                const planVal = getObjectValue(item, 'plan') || item.plan || '';
+                const noMr = getObjectValue(item, 'no_mr') || getObjectValue(item, 'No MR') || item.no_mr || '-';
+                const partNo = getObjectValue(item, 'part_no') || getObjectValue(item, 'Part Number') || getObjectValue(item, 'part_number') || item.part_no || '-';
+                const desc = getObjectValue(item, 'description') || getObjectValue(item, 'Description') || getObjectValue(item, 'Deskripsi') || item.description || '-';
+                const qty = getObjectValue(item, 'qty') || getObjectValue(item, 'Qty') || item.qty || '-';
+                const satuan = getObjectValue(item, 'satuan') || getObjectValue(item, 'Satuan') || item.satuan || '';
+                const statusBrg = getObjectValue(item, 'status_barang') || getObjectValue(item, 'Status Barang') || getObjectValue(item, 'status barang') || item.status_barang || '-';
+                const remark = getObjectValue(item, 'remark') || getObjectValue(item, 'Remark') || item.remark || '-';
+                const tglMrStr = item['tgl MR'] || getObjectValue(item, 'tgl MR') || getObjectValue(item, 'tglMR') || getObjectValue(item, 'Tgl MR') || getObjectValue(item, 'tgl_mr') || '';
                 const tglMrFormatted = tglMrStr ? formatDateString(tglMrStr) : '-';
-                const itemId     = item.id || getObjectValue(item, 'id') || '';
+                const itemId = item.id || getObjectValue(item, 'id') || '';
 
                 let badgeClass = "bg-slate-100 text-slate-800 border border-slate-300";
                 if (statusBrg === "Waiting PR") badgeClass = "bg-red-100 text-red-800 border border-red-300 font-bold";
@@ -4850,8 +4999,8 @@
                         const tglMr = new Date(tglMrStr);
                         if (!isNaN(tglMr.getTime())) {
                             const today = new Date();
-                            tglMr.setHours(0,0,0,0);
-                            today.setHours(0,0,0,0);
+                            tglMr.setHours(0, 0, 0, 0);
+                            today.setHours(0, 0, 0, 0);
                             const diffTime = today.getTime() - tglMr.getTime();
                             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                             if (diffDays >= 0) {
@@ -6268,7 +6417,7 @@
 
         async function migrateSingleToFirebase(moduleKey) {
             if (!db) return Swal.fire('Error', 'Firebase belum aktif.', 'error');
-            
+
             const moduleLabels = {
                 'pica': 'PICA Active Board',
                 'wo': 'Work Order (WO)',
@@ -6279,7 +6428,7 @@
                 'accurate': 'Accurate Parser',
                 'settings': 'Target & Pengaturan Sistem'
             };
-            
+
             const result = await Swal.fire({
                 title: `Migrasi ${moduleLabels[moduleKey]}?`,
                 html: `Sistem akan mengambil data terbaru <b>${moduleLabels[moduleKey]}</b> dari Google Sheets dan menuliskannya ke Firebase Cloud.`,
@@ -6319,7 +6468,7 @@
                     const nodeUpdates = {};
                     if (!items) return nodeUpdates;
                     if (!seenIdsMap[dbName]) seenIdsMap[dbName] = new Set();
-                    
+
                     items.forEach((item) => {
                         let itemId = item.id ? String(item.id).trim() : "";
                         if (!itemId || seenIdsMap[dbName].has(itemId)) {
@@ -6384,7 +6533,7 @@
 
         async function backupSingleToGoogleSheets(moduleKey) {
             if (!db) return Swal.fire('Error', 'Firebase belum aktif.', 'error');
-            
+
             const moduleLabels = {
                 'pica': 'PICA Active Board',
                 'wo': 'Work Order (WO)',
@@ -6406,7 +6555,7 @@
                 'accurate': 'accurate_pr_db',
                 'settings': 'settings_db'
             };
-            
+
             const result = await Swal.fire({
                 title: `Backup ${moduleLabels[moduleKey]}?`,
                 html: `Sistem akan mengambil data Cloud Firebase saat ini untuk <b>${moduleLabels[moduleKey]}</b> dan menulisnya kembali ke spreadsheet Google Sheets.`,
@@ -6493,6 +6642,11 @@
             updateSignatureIndicator('plant', systemSettings.sigPlantTtd);
             updateSignatureIndicator('hse', systemSettings.sigHseTtd);
             updateSignatureIndicator('ktt', systemSettings.sigKttTtd);
+
+            // Load Data Source & Sync Settings
+            document.getElementById('sett-data-source').value = USE_FIREBASE ? 'firebase' : 'googlesheet';
+            document.getElementById('sett-sync-interval').value = String(AUTO_SYNC_INTERVAL);
+            document.getElementById('sett-gas-url').value = GAS_URL;
 
             document.getElementById('settings-modal').classList.remove('hidden');
             document.getElementById('settings-modal').scrollTop = 0;
@@ -6581,6 +6735,41 @@
         async function saveSettings(event) {
             event.preventDefault();
             showLoading(true);
+
+            // Get Data Source & Sync Settings
+            const selectedSource = document.getElementById('sett-data-source').value;
+            const newUseFirebase = (selectedSource === 'firebase');
+            const newSyncInterval = parseInt(document.getElementById('sett-sync-interval').value) || 0;
+            const newGasUrl = document.getElementById('sett-gas-url').value.trim();
+
+            localStorage.setItem('PICA_USE_FIREBASE', String(newUseFirebase));
+            localStorage.setItem('PICA_SYNC_INTERVAL', String(newSyncInterval));
+            localStorage.setItem('PICA_GAS_URL', newGasUrl);
+
+            const restartRequired = (USE_FIREBASE !== newUseFirebase || GAS_URL !== newGasUrl);
+            
+            USE_FIREBASE = newUseFirebase;
+            AUTO_SYNC_INTERVAL = newSyncInterval;
+            GAS_URL = newGasUrl;
+
+            // Re-setup sync timer
+            setupAutoSync();
+
+            if (restartRequired) {
+                showLoading(false);
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Memuat Ulang Sistem',
+                    text: 'Sumber data telah diubah. Halaman akan dimuat ulang untuk menghubungkan ke sumber data yang baru.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: '#ffffff',
+                    color: '#1e293b'
+                }).then(() => {
+                    location.reload();
+                });
+                return;
+            }
 
             const updatedTargets = {
                 "EXCAVATOR": parseInt(document.getElementById('target-excavator').value) || 10,
@@ -7016,7 +7205,7 @@
                     const sortedOpen = [...openItems].sort((a, b) => {
                         const valA = a["START DATETIME"] || a["START DATE"] || "";
                         const valB = b["START DATETIME"] || b["START DATE"] || "";
-                        return valB.localeCompare(valA);
+                        return String(valB).localeCompare(String(valA));
                     });
 
                     sortedOpen.forEach(item => {
@@ -7024,7 +7213,7 @@
                         const noId = item["NO ID"] || "-";
                         const problem = item["PROBLEM"] || "-";
                         const date = item["START DATE"] || "-";
-                        
+
                         const cardHtml = `
                             <div onclick="searchWoFromCard('${noWo}')" 
                                 class="p-2 bg-red-50/40 hover:bg-red-55/60 border border-red-100 hover:border-red-200 rounded cursor-pointer transition flex flex-col justify-between text-[11px] min-w-0">
@@ -7052,11 +7241,11 @@
             if (query) {
                 filtered = filtered.filter(item => {
                     return (item["NO WO"] || "").toLowerCase().includes(query) ||
-                           (item["NO ID"] || "").toLowerCase().includes(query) ||
-                           (item["PROBLEM"] || "").toLowerCase().includes(query) ||
-                           (item["ACTION"] || "").toLowerCase().includes(query) ||
-                           (item["MAJOR COMPONENT"] || "").toLowerCase().includes(query) ||
-                           (item["REMARK"] || "").toLowerCase().includes(query);
+                        (item["NO ID"] || "").toLowerCase().includes(query) ||
+                        (item["PROBLEM"] || "").toLowerCase().includes(query) ||
+                        (item["ACTION"] || "").toLowerCase().includes(query) ||
+                        (item["MAJOR COMPONENT"] || "").toLowerCase().includes(query) ||
+                        (item["REMARK"] || "").toLowerCase().includes(query);
                 });
             }
 
@@ -7065,9 +7254,9 @@
                 const valA = a["START DATETIME"] || a["START DATE"] || "";
                 const valB = b["START DATETIME"] || b["START DATE"] || "";
                 if (dateSort === 'desc') {
-                    return valB.localeCompare(valA);
+                    return String(valB).localeCompare(String(valA));
                 } else {
-                    return valA.localeCompare(valB);
+                    return String(valA).localeCompare(String(valB));
                 }
             });
 
@@ -7107,19 +7296,19 @@
                     picaMatches.sort((a, b) => {
                         const dateA = a.unit_date || a.target_date || "";
                         const dateB = b.unit_date || b.target_date || "";
-                        return dateB.localeCompare(dateA);
+                        return String(dateB).localeCompare(String(dateA));
                     });
                     const latestPica = picaMatches[0];
                     const pStatus = latestPica.unit_status || "";
                     const pDesc = latestPica.description || "";
-                    
+
                     let badgeColor = "bg-slate-100 text-slate-800 border-slate-200";
                     if (pStatus.toUpperCase() === 'RUNNING') {
                         badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-300 font-black";
                     } else if (pStatus.toUpperCase() === 'BREAKDOWN') {
                         badgeColor = "bg-rose-100 text-rose-800 border-rose-300 font-black";
                     }
-                    
+
                     picaStatusHtml = `
                         <div class="mt-1.5 pt-1 border-t border-dashed border-slate-200 flex flex-col items-center gap-0.5">
                             <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Unit PICA Status:</span>
@@ -7219,19 +7408,19 @@
                 Swal.fire('Koneksi Gagal', 'Firebase tidak terhubung. Pastikan jaringan internet aktif.', 'error');
                 return;
             }
-            
+
             showLoading(true);
             try {
                 // 1. Fetch from Google Sheet (callBackend gets it from Apps Script)
                 const sheetData = await callBackend('getWoData');
                 const woList = Array.isArray(sheetData) ? sheetData : [];
-                
+
                 if (woList.length === 0) {
                     Swal.fire('Data Kosong', 'Tidak ada data Work Order ditemukan di Google Sheet.', 'warning');
                     showLoading(false);
                     return;
                 }
-                
+
                 // 2. Format and Batch set to Firebase
                 const cleanKey = (key) => String(key).replace(/[\.\#\$\[\]\/]/g, "-");
                 const updates = {};
@@ -7240,14 +7429,14 @@
                         updates[cleanKey(item["NO WO"])] = item;
                     }
                 });
-                
+
                 await db.ref('wo_db').set(updates);
-                
+
                 // 3. Update Local Memory & UI
                 woStore = woList;
                 localStorage.setItem('WO_DB', JSON.stringify(woStore));
                 renderWoTable();
-                
+
                 Swal.fire('Sinkronisasi Berhasil', `Berhasil menyinkronkan ${woList.length} data Work Order dari Google Sheet ke Firebase Database.`, 'success');
             } catch (err) {
                 console.error("Gagal sinkronisasi WO:", err);
@@ -7340,10 +7529,10 @@
                     await callBackend('deleteWoData', { noWo: oldNoWo });
                 }
                 await callBackend('saveWoData', { data: payload });
-                
+
                 const woData = await callBackend('getWoData');
                 woStore = Array.isArray(woData) ? woData : [];
-                
+
                 localStorage.setItem('WO_DB', JSON.stringify(woStore));
 
                 renderWoTable();
