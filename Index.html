@@ -1792,7 +1792,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Control Panel (1/3 width) -->
-                <div class="premium-card p-5 rounded-xl space-y-4 font-sans">
+                <div id="accurate-control-panel" class="premium-card p-5 rounded-xl space-y-4 font-sans">
                     <h4 class="text-xs font-black uppercase text-slate-900 tracking-wider">Unggah File Laporan</h4>
                     <p class="text-[11px] text-slate-500">Pilih berkas teks (.txt) hasil ekspor outstanding report dari
                         ACCURATE Desktop:</p>
@@ -1829,7 +1829,7 @@
 
 
                 <!-- Display & Table (2/3 width) -->
-                <div class="lg:col-span-2 space-y-4">
+                <div id="accurate-table-container" class="lg:col-span-2 space-y-4">
                     <!-- Metrics -->
                     <div class="grid grid-cols-2 gap-4">
                         <div class="premium-card p-4 rounded-xl">
@@ -3558,39 +3558,64 @@
             const role = currentUserRole;
             if (!role) return;
 
+            const isEditor = (role === 'editor');
+            const isPurchasing = (role === 'purchasing');
+
             // Hide/show sidebar buttons
             const formInputSidebarBtn = document.querySelector('button[onclick="openFormModal()"]');
             const settingsSidebarBtn = document.querySelector('button[onclick="openSettingsModal()"]');
 
-            // Hide/show main header/dashboard action buttons
-            const rcaAddBtn = document.querySelector('button[onclick="createNewRca()"]');
-            const populasiAddBtn = document.querySelector('button[onclick="openPopulasiModal()"]');
-            const partAddBtn = document.querySelector('button[onclick="openPartModal()"]');
+            // Select all add/sync buttons in header & modules
+            const picaAddBtns = document.querySelectorAll('button[onclick="openFormModal()"]');
+            const rcaAddBtns = document.querySelectorAll('button[onclick="createNewRca()"]');
+            const populasiAddBtns = document.querySelectorAll('button[onclick="openPopulasiModal()"]');
+            const partAddBtns = document.querySelectorAll('button[onclick="openPartModal()"]');
+            const farAddBtns = document.querySelectorAll('button[onclick="openFarModal()"]');
+            const orgAddBtns = document.querySelectorAll('button[onclick="openOrgMemberModal()"]');
+            const woSyncBtns = document.querySelectorAll('button[onclick="syncWoSheetToFirebase()"]');
+            const sopAddBtn = document.getElementById('btn-add-sop-item');
 
-            if (role === 'editor') {
-                if (formInputSidebarBtn) formInputSidebarBtn.style.display = 'flex';
-                if (settingsSidebarBtn) settingsSidebarBtn.style.display = 'flex';
-                if (rcaAddBtn) rcaAddBtn.style.display = 'flex';
-                if (populasiAddBtn) populasiAddBtn.style.display = 'flex';
-                if (partAddBtn) partAddBtn.style.display = 'flex';
-            } else {
-                if (formInputSidebarBtn) formInputSidebarBtn.style.display = 'none';
-                if (settingsSidebarBtn) settingsSidebarBtn.style.display = 'none';
-                if (rcaAddBtn) rcaAddBtn.style.display = 'none';
-                if (populasiAddBtn) populasiAddBtn.style.display = 'none';
-                if (partAddBtn) partAddBtn.style.display = 'none';
-            }
+            const displayStyle = isEditor ? 'flex' : 'none';
+
+            picaAddBtns.forEach(btn => btn.style.display = displayStyle);
+            rcaAddBtns.forEach(btn => btn.style.display = displayStyle);
+            populasiAddBtns.forEach(btn => btn.style.display = displayStyle);
+            partAddBtns.forEach(btn => btn.style.display = displayStyle);
+            farAddBtns.forEach(btn => btn.style.display = displayStyle);
+            orgAddBtns.forEach(btn => btn.style.display = displayStyle);
+            woSyncBtns.forEach(btn => btn.style.display = displayStyle);
+            if (sopAddBtn) sopAddBtn.style.display = isEditor ? 'inline-flex' : 'none';
+
+            if (formInputSidebarBtn) formInputSidebarBtn.style.display = displayStyle;
+            if (settingsSidebarBtn) settingsSidebarBtn.style.display = displayStyle;
 
             // Disable RCA form fields if not editor
-            const isRcaEditor = (role === 'editor');
             const rcaPaper = document.getElementById('rca-print-paper');
             if (rcaPaper) {
                 rcaPaper.querySelectorAll('input, select, textarea').forEach(el => {
-                    el.disabled = !isRcaEditor;
+                    el.disabled = !isEditor;
                 });
                 rcaPaper.querySelectorAll('.no-print button').forEach(el => {
-                    el.style.display = isRcaEditor ? 'inline-flex' : 'none';
+                    el.style.display = isEditor ? 'inline-flex' : 'none';
                 });
+            }
+
+            // Accurate Control Panel visibility
+            const accControlPanel = document.getElementById('accurate-control-panel');
+            const accTableContainer = document.getElementById('accurate-table-container');
+
+            if (isEditor || isPurchasing) {
+                if (accControlPanel) accControlPanel.style.display = 'block';
+                if (accTableContainer) {
+                    accTableContainer.classList.remove('lg:col-span-3');
+                    accTableContainer.classList.add('lg:col-span-2');
+                }
+            } else {
+                if (accControlPanel) accControlPanel.style.display = 'none';
+                if (accTableContainer) {
+                    accTableContainer.classList.remove('lg:col-span-2');
+                    accTableContainer.classList.add('lg:col-span-3');
+                }
             }
         }
 
@@ -7970,6 +7995,15 @@
                     : `<div class="h-12 bg-gradient-to-r from-orange-600 to-orange-700 rounded-t-xl flex items-center px-4">
                          <span class="text-white font-black font-mono text-sm">${item.unit_code}</span>
                        </div>`;
+                
+                const isEditor = (currentUserRole === 'editor');
+                const actionButtons = isEditor ? `
+                            <button onclick="openFarModal('${item.id}')" class="flex-1 text-center text-[10px] font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 py-1.5 rounded-lg transition-all">Edit</button>
+                            <button onclick="deleteFAR('${item.id}')" class="text-[10px] font-bold text-red-500 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                ` : '';
+
                 return `
                 <div class="premium-card rounded-xl overflow-hidden hover:shadow-lg transition-all group">
                     ${thumbHtml}
@@ -7991,10 +8025,7 @@
                         </div>
                         <div class="flex gap-2 pt-1">
                             <button onclick="openFarDetail('${item.id}')" class="flex-1 text-center text-[10px] font-bold text-orange-700 border border-orange-200 hover:bg-orange-50 py-1.5 rounded-lg transition-all">Detail</button>
-                            <button onclick="openFarModal('${item.id}')" class="flex-1 text-center text-[10px] font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 py-1.5 rounded-lg transition-all">Edit</button>
-                            <button onclick="deleteFAR('${item.id}')" class="text-[10px] font-bold text-red-500 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all">
-                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                            </button>
+                            ${actionButtons}
                         </div>
                     </div>
                 </div>`;
@@ -9116,13 +9147,8 @@
                 const hasChildren = subChildren.length > 0;
                 const subHtml = buildOrgTreeHTML(member.id);
 
-                html += `
-                    <div class="org-tree-branch flex flex-col items-center">
-                        <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
-                            <div class="inline-flex flex-col bg-white border border-slate-200 hover:border-indigo-500 rounded-lg p-3 shadow-sm min-w-[170px] max-w-[210px] text-center transition-all group relative">
-                                <span class="text-xs font-black text-slate-900 truncate w-full" title="${member.name}">${member.name}</span>
-                                <span class="text-[10px] text-slate-500 font-mono mt-0.5 truncate w-full" title="${member.title}">${member.title}</span>
-                                
+                                const isEditor = (currentUserRole === 'editor');
+                                const actionHtml = isEditor ? `
                                 <!-- Actions on Hover (Pusatkan di atas kartu agar rapi) -->
                                 <div class="absolute right-1/2 translate-x-1/2 -top-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-white border border-slate-200 px-2 py-0.5 rounded-full shadow-md z-30">
                                     <button type="button" onclick="editOrgMember('${member.id}')" title="Edit" class="text-slate-500 hover:text-indigo-600">
@@ -9138,8 +9164,17 @@
                                         </svg>
                                     </button>
                                 </div>
-                            </div>
-                        </div>
+                                ` : '';
+                                
+                                html += `
+                                    <div class="org-tree-branch flex flex-col items-center">
+                                        <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
+                                            <div class="inline-flex flex-col bg-white border border-slate-200 hover:border-indigo-500 rounded-lg p-3 shadow-sm min-w-[170px] max-w-[210px] text-center transition-all group relative">
+                                                <span class="text-xs font-black text-slate-900 truncate w-full" title="${member.name}">${member.name}</span>
+                                                <span class="text-[10px] text-slate-500 font-mono mt-0.5 truncate w-full" title="${member.title}">${member.title}</span>
+                                                ${actionHtml}
+                                            </div>
+                                        </div>
                         ${subHtml}
                     </div>
                 `;
@@ -9173,12 +9208,8 @@
                 topLevel.forEach(m => {
                     const children = orgDataStore.filter(c => c.parentId === m.id);
                     const hasChildren = children.length > 0;
-                    chartHtml += `
-                        <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
-                            <div class="inline-flex flex-col bg-slate-900 border border-slate-800 text-white rounded-lg p-3.5 shadow-md min-w-[190px] max-w-[230px] text-center relative group">
-                                <span class="text-xs font-black uppercase tracking-wider truncate w-full" title="${m.name}">${m.name}</span>
-                                <span class="text-[10px] text-slate-300 font-mono mt-1 truncate w-full" title="${m.title}">${m.title}</span>
-                                
+                    const isEditor = (currentUserRole === 'editor');
+                const actionHtml = isEditor ? `
                                 <!-- Actions on Hover (Pusatkan di atas kartu agar rapi) -->
                                 <div class="absolute right-1/2 translate-x-1/2 -top-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded-full shadow-md z-30">
                                     <button type="button" onclick="editOrgMember('${m.id}')" title="Edit" class="text-slate-300 hover:text-indigo-400">
@@ -9194,6 +9225,14 @@
                                         </svg>
                                     </button>
                                 </div>
+                ` : '';
+
+                chartHtml += `
+                        <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
+                            <div class="inline-flex flex-col bg-slate-900 border border-slate-800 text-white rounded-lg p-3.5 shadow-md min-w-[190px] max-w-[230px] text-center relative group">
+                                <span class="text-xs font-black uppercase tracking-wider truncate w-full" title="${m.name}">${m.name}</span>
+                                <span class="text-[10px] text-slate-300 font-mono mt-1 truncate w-full" title="${m.title}">${m.title}</span>
+                                ${actionHtml}
                             </div>
                         </div>
                         ${buildOrgTreeHTML(m.id)}
@@ -9210,13 +9249,7 @@
             } else {
                 orgDataStore.forEach(m => {
                     const parent = orgDataStore.find(p => p.id === m.parentId);
-                    listHtml += `
-                        <div class="bg-slate-50 border border-slate-200 rounded p-2.5 flex items-center justify-between text-xs hover:bg-slate-100 transition-colors">
-                            <div class="pr-2">
-                                <span class="font-bold block text-slate-800">${m.name}</span>
-                                <span class="text-[10px] text-slate-500 font-mono">${m.title}</span>
-                                ${parent ? `<span class="text-[9px] text-indigo-600 block mt-0.5 font-sans">Atasan: ${parent.name}</span>` : `<span class="text-[9px] text-slate-400 block mt-0.5 font-sans">Pimpinan Tertinggi</span>`}
-                            </div>
+                    const listActionHtml = isEditor ? `
                             <div class="flex items-center gap-1.5 shrink-0">
                                 <button type="button" onclick="editOrgMember('${m.id}')" class="text-slate-500 hover:text-slate-900" title="Edit">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
@@ -9231,6 +9264,16 @@
                                     </svg>
                                 </button>
                             </div>
+                    ` : '';
+
+                    listHtml += `
+                        <div class="bg-slate-50 border border-slate-200 rounded p-2.5 flex items-center justify-between text-xs hover:bg-slate-100 transition-colors">
+                            <div class="pr-2">
+                                <span class="font-bold block text-slate-800">${m.name}</span>
+                                <span class="text-[10px] text-slate-500 font-mono">${m.title}</span>
+                                ${parent ? `<span class="text-[9px] text-indigo-600 block mt-0.5 font-sans">Atasan: ${parent.name}</span>` : `<span class="text-[9px] text-slate-400 block mt-0.5 font-sans">Pimpinan Tertinggi</span>`}
+                            </div>
+                            ${listActionHtml}
                         </div>
                     `;
                 });
@@ -9391,11 +9434,9 @@
                         </div>
                         <div class="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
                             ${items.length === 0 ? `<p class="text-slate-400 text-xs italic py-4">Belum ada prosedur di kategori ini.</p>` :
-                        items.map(item => `
-                                <div class="border border-slate-100 rounded-lg p-3 bg-slate-50/50 hover:bg-white hover:border-teal-300 transition-all group relative">
-                                    <h5 class="font-bold text-xs text-slate-900 pr-12">${item.title}</h5>
-                                    <div class="text-[11px] text-slate-700 whitespace-pre-line mt-2 leading-relaxed bg-white border border-slate-100 p-2.5 rounded font-mono">${item.content}</div>
-                                    
+                        items.map(item => {
+                            const isEditor = (currentUserRole === 'editor');
+                            const actionsHtml = isEditor ? `
                                     <div class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-white/95 px-1.5 py-0.5 rounded shadow-sm border border-slate-100">
                                         <button onclick="editSopItem('${item.id}')" title="Edit" class="text-slate-500 hover:text-teal-600">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
@@ -9410,8 +9451,15 @@
                                             </svg>
                                         </button>
                                     </div>
+                            ` : '';
+                            return `
+                                <div class="border border-slate-100 rounded-lg p-3 bg-slate-50/50 hover:bg-white hover:border-teal-300 transition-all group relative">
+                                    <h5 class="font-bold text-xs text-slate-900 pr-12">${item.title}</h5>
+                                    <div class="text-[11px] text-slate-700 whitespace-pre-line mt-2 leading-relaxed bg-white border border-slate-100 p-2.5 rounded font-mono">${item.content}</div>
+                                    ${actionsHtml}
                                 </div>
-                            `).join('')}
+                            `;
+                        }).join('')}
                         </div>
                     </div>
                 `;
@@ -9428,11 +9476,8 @@
             } else {
                 jobdescDataStore.forEach(jd => {
                     const dutiesHtml = jd.duties.split('\n').map(d => `<li class="relative pl-3 mt-1.5"><span class="absolute left-0 top-1.5 w-1 h-1 bg-teal-500 rounded-full"></span>${d.replace(/^\d+\.\s*/, '')}</li>`).join('');
-                    html += `
-                        <div class="premium-card p-5 rounded-xl flex flex-col justify-between group relative">
-                            <div class="space-y-3.5">
-                                <div class="flex items-center justify-between border-b pb-2">
-                                    <span class="text-xs font-black text-slate-900 uppercase tracking-wider">${jd.role}</span>
+                    const isEditor = (currentUserRole === 'editor');
+                    const actionsHtml = isEditor ? `
                                     <div class="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-white/95 px-1.5 py-0.5 rounded shadow-sm border border-slate-100">
                                         <button onclick="editJobdescItem('${jd.id}')" title="Edit" class="text-slate-500 hover:text-teal-600">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
@@ -9447,6 +9492,13 @@
                                             </svg>
                                         </button>
                                     </div>
+                    ` : '';
+                    html += `
+                        <div class="premium-card p-5 rounded-xl flex flex-col justify-between group relative">
+                            <div class="space-y-3.5">
+                                <div class="flex items-center justify-between border-b pb-2">
+                                    <span class="text-xs font-black text-slate-900 uppercase tracking-wider">${jd.role}</span>
+                                    ${actionsHtml}
                                 </div>
                                 <div class="space-y-1">
                                     <span class="text-[9px] font-black uppercase text-teal-700 tracking-wider">Tanggung Jawab Utama</span>
