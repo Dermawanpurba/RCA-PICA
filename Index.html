@@ -38,15 +38,15 @@
         }
     </script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
     <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <!-- HTML2Canvas CDN untuk Ekspor ke Gambar -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <!-- Firebase SDK (v8.10.1) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js" defer></script>
 
     <style>
         /* ========================================================
@@ -2666,21 +2666,24 @@
                 <div id="settings-tab-firebase" class="hidden space-y-4">
                     <!-- PENGATURAN SUMBER DATA & AUTO SYNC -->
                     <div class="bg-indigo-50 p-4 rounded border border-indigo-200 space-y-3">
-                        <h4 class="font-black text-indigo-950 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
+                        <h4
+                            class="font-black text-indigo-950 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
                             <i data-lucide="database" class="w-4 h-4 text-indigo-600"></i>
                             <span>Sumber Data Utama &amp; Auto Sync</span>
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="flex flex-col space-y-1">
                                 <label class="font-bold text-slate-700">Sumber Data</label>
-                                <select id="sett-data-source" class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
+                                <select id="sett-data-source"
+                                    class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
                                     <option value="googlesheet">Google Sheet (GAS)</option>
                                     <option value="firebase">Firebase (Realtime)</option>
                                 </select>
                             </div>
                             <div class="flex flex-col space-y-1">
                                 <label class="font-bold text-slate-700">Interval Auto Sync (Google Sheet)</label>
-                                <select id="sett-sync-interval" class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
+                                <select id="sett-sync-interval"
+                                    class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
                                     <option value="0">Mati (Manual Refresh)</option>
                                     <option value="10">10 Detik</option>
                                     <option value="30">30 Detik</option>
@@ -2691,7 +2694,8 @@
                         </div>
                         <div class="flex flex-col space-y-1">
                             <label class="font-bold text-slate-700">Google Apps Script Web App URL (GAS_URL)</label>
-                            <input type="text" id="sett-gas-url" placeholder="https://script.google.com/macros/s/.../exec"
+                            <input type="text" id="sett-gas-url"
+                                placeholder="https://script.google.com/macros/s/.../exec"
                                 class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
                         </div>
                     </div>
@@ -3947,7 +3951,33 @@
 
                 // 1. JIKA FIREBASE AKTIF DAN TERKONEKSI, PRIORITASKAN FIREBASE LANGSUNG (ONLINE/REALTIME)
                 if (db) {
-                    if (action === 'getData') {
+                    if (action === 'getOptimizedDataFull') {
+                        Promise.all([
+                            db.ref('pica_db').once('value'),
+                            db.ref('rca_db').once('value'),
+                            db.ref('urgent_parts_db').once('value'),
+                            db.ref('populasi_unit_db').once('value'),
+                            db.ref('far_db').once('value'),
+                            db.ref('accurate_pr_db').once('value'),
+                            db.ref('wo').once('value'),
+                            db.ref('settings_db/targets_config').once('value'),
+                            db.ref('settings_db/system_settings_config').once('value')
+                        ]).then(([pica, rca, parts, populasi, far, accurate, wo, targets, settings]) => {
+                            resolve({
+                                success: true,
+                                pica: Object.values(pica.val() || {}),
+                                rca: Object.values(rca.val() || {}),
+                                urgentParts: Object.values(parts.val() || {}),
+                                populasi: Object.values(populasi.val() || {}),
+                                far: Object.values(far.val() || {}),
+                                accurate: Object.values(accurate.val() || {}),
+                                wo: Object.values(wo.val() || {}),
+                                targets: targets.val() ? JSON.parse(targets.val()) : {},
+                                settings: settings.val() ? JSON.parse(settings.val()) : {}
+                            });
+                        }).catch(err => reject(err));
+                        return;
+                    } else if (action === 'getData') {
                         db.ref('pica_db').once('value').then(snap => {
                             resolve(Object.values(snap.val() || {}));
                         }).catch(err => reject(err));
@@ -4110,7 +4140,23 @@
                             targetsConfig = JSON.parse(localTargets);
                         }
 
-                        if (action === 'getData') {
+                        if (action === 'getOptimizedDataFull') {
+                            const localFarDb = localStorage.getItem('FAR_DB');
+                            const localAcc = localStorage.getItem('ACCURATE_PR_DB');
+                            const localWo = localStorage.getItem('WO_DB') || '[]';
+                            resolve({
+                                success: true,
+                                pica: currentDb,
+                                rca: currentRcaDb,
+                                urgentParts: currentPartsDb,
+                                populasi: currentPopulasiDb,
+                                far: localFarDb ? JSON.parse(localFarDb) : [],
+                                accurate: localAcc ? JSON.parse(localAcc) : [],
+                                wo: JSON.parse(localWo),
+                                targets: targetsConfig,
+                                settings: systemSettings
+                            });
+                        } else if (action === 'getData') {
                             resolve(currentDb);
                         } else if (action === 'getRcaData') {
                             resolve(currentRcaDb);
@@ -4389,54 +4435,32 @@
         async function initApp() {
             showLoading(true);
             try {
-                const localTargets = localStorage.getItem('PICA_TARGETS');
-                if (localTargets) {
-                    targetsConfig = JSON.parse(localTargets);
-                }
-
-                const localSettings = localStorage.getItem('PICA_SYSTEM_SETTINGS');
-                if (localSettings) {
-                    systemSettings = JSON.parse(localSettings);
-                }
-
-                // Load from Firebase if active
-                if (db) {
-                    try {
-                        const snapTargets = await db.ref('settings_db/targets_config').once('value');
-                        if (snapTargets.val()) {
-                            targetsConfig = JSON.parse(snapTargets.val());
-                        }
-                        const snapSettings = await db.ref('settings_db/system_settings_config').once('value');
-                        if (snapSettings.val()) {
-                            systemSettings = JSON.parse(snapSettings.val());
-                        }
-                    } catch (e) {
-                        console.warn("Gagal mengambil settings/targets dari Firebase:", e);
+                // Ambil Seluruh Data Utama Secara Batch (Satu Request)
+                const res = await callBackend('getOptimizedDataFull');
+                if (res && res.success) {
+                    picaDataStore = Array.isArray(res.pica) ? res.pica : [];
+                    rcaDataStore = Array.isArray(res.rca) ? res.rca : [];
+                    urgentPartsStore = Array.isArray(res.urgentParts) ? res.urgentParts : [];
+                    populasiUnitStore = Array.isArray(res.populasi) ? res.populasi : [];
+                    woStore = Array.isArray(res.wo) ? res.wo : [];
+                    farDataStore = Array.isArray(res.far) ? res.far : [];
+                    accurateDataStore = Array.isArray(res.accurate) ? res.accurate : [];
+                    
+                    if (res.targets && Object.keys(res.targets).length > 0) {
+                        targetsConfig = res.targets;
                     }
+                    if (res.settings && Object.keys(res.settings).length > 0) {
+                        systemSettings = res.settings;
+                    }
+                } else {
+                    throw new Error(res ? res.message : "Gagal mengambil data dari server");
                 }
 
-                // Ambil Data Utama
-                const data = await callBackend('getData');
-                picaDataStore = Array.isArray(data) ? data : [];
-                const rcaData = await callBackend('getRcaData');
-                rcaDataStore = Array.isArray(rcaData) ? rcaData : [];
                 if (rcaDataStore.length > 0) {
                     if (!activeRcaId || !rcaDataStore.some(r => r.id === activeRcaId)) {
                         activeRcaId = rcaDataStore[0].id;
                     }
                 }
-
-                const partsData = await callBackend('getUrgentParts');
-                urgentPartsStore = Array.isArray(partsData) ? partsData : [];
-
-                const populasiData = await callBackend('getPopulasiData');
-                populasiUnitStore = Array.isArray(populasiData) ? populasiData : [];
-
-                const woData = await callBackend('getWoData');
-                woStore = Array.isArray(woData) ? woData : [];
-
-                const farData = await callBackend('getFarData');
-                farDataStore = Array.isArray(farData) ? farData : [];
 
                 applySystemSettingsToUI();
                 renderDashboard();
@@ -4454,15 +4478,28 @@
                     text: 'Gagal memuat database. Menampilkan data simulasi lokal sementara.',
                     confirmButtonColor: '#b45309'
                 });
-                picaDataStore = [...DEFAULT_MOCK_DATA];
-                rcaDataStore = [...DEFAULT_RCA_DATA];
+                
+                // Fallback lokal jika request gagal
+                const localTargets = localStorage.getItem('PICA_TARGETS');
+                if (localTargets) targetsConfig = JSON.parse(localTargets);
+                const localSettings = localStorage.getItem('PICA_SYSTEM_SETTINGS');
+                if (localSettings) systemSettings = JSON.parse(localSettings);
+
+                const localDb = localStorage.getItem('PICA_DB');
+                picaDataStore = localDb ? JSON.parse(localDb) : [...DEFAULT_MOCK_DATA];
+                const localRcaDb = localStorage.getItem('RCA_DB');
+                rcaDataStore = localRcaDb ? JSON.parse(localRcaDb) : [...DEFAULT_RCA_DATA];
                 if (rcaDataStore.length > 0) {
                     if (!activeRcaId || !rcaDataStore.some(r => r.id === activeRcaId)) {
                         activeRcaId = rcaDataStore[0].id;
                     }
                 }
-                urgentPartsStore = [...DEFAULT_URGENT_PARTS_DATA];
-                populasiUnitStore = [];
+                const localPartsDb = localStorage.getItem('URGENT_PARTS_DB');
+                urgentPartsStore = localPartsDb ? JSON.parse(localPartsDb) : [...DEFAULT_URGENT_PARTS_DATA];
+                
+                const localPopulasiDb = localStorage.getItem('POPULASI_UNIT_DB');
+                populasiUnitStore = localPopulasiDb ? JSON.parse(localPopulasiDb) : [];
+                
                 const localWo = localStorage.getItem('WO_DB') || '[]';
                 woStore = JSON.parse(localWo);
                 const localFar = localStorage.getItem('FAR_DB') || localStorage.getItem('PICA_FAR_DATA') || '[]';
@@ -4497,34 +4534,28 @@
                     if (overlay && overlay.classList.contains('hidden') && currentUserRole) {
                         console.log("Menjalankan Auto Sync dari Google Sheet...");
                         try {
-                            const data = await callBackend('getData');
-                            if (Array.isArray(data)) {
-                                picaDataStore = data;
+                            const res = await callBackend('getOptimizedDataFull');
+                            if (res && res.success) {
+                                picaDataStore = Array.isArray(res.pica) ? res.pica : [];
+                                rcaDataStore = Array.isArray(res.rca) ? res.rca : [];
+                                urgentPartsStore = Array.isArray(res.urgentParts) ? res.urgentParts : [];
+                                populasiUnitStore = Array.isArray(res.populasi) ? res.populasi : [];
+                                woStore = Array.isArray(res.wo) ? res.wo : [];
+                                farDataStore = Array.isArray(res.far) ? res.far : [];
+                                accurateDataStore = Array.isArray(res.accurate) ? res.accurate : [];
+
+                                if (res.targets && Object.keys(res.targets).length > 0) {
+                                    targetsConfig = res.targets;
+                                }
+                                if (res.settings && Object.keys(res.settings).length > 0) {
+                                    systemSettings = res.settings;
+                                }
+
                                 renderTable(picaDataStore);
-                            }
-                            const rcaData = await callBackend('getRcaData');
-                            if (Array.isArray(rcaData)) {
-                                rcaDataStore = rcaData;
                                 renderRcaModule();
-                            }
-                            const partsData = await callBackend('getUrgentParts');
-                            if (Array.isArray(partsData)) {
-                                urgentPartsStore = partsData;
                                 renderUrgentPartsTable(urgentPartsStore);
-                            }
-                            const populasiData = await callBackend('getPopulasiData');
-                            if (Array.isArray(populasiData)) {
-                                populasiUnitStore = populasiData;
                                 renderPopulasiTable();
-                            }
-                            const woData = await callBackend('getWoData');
-                            if (Array.isArray(woData)) {
-                                woStore = woData;
                                 renderWoTable();
-                            }
-                            const farData = await callBackend('getFarData');
-                            if (Array.isArray(farData)) {
-                                farDataStore = farData;
                                 renderFarModule();
                             }
                         } catch (e) {
@@ -6772,7 +6803,7 @@
             localStorage.setItem('PICA_GAS_URL', newGasUrl);
 
             const restartRequired = (USE_FIREBASE !== newUseFirebase || GAS_URL !== newGasUrl);
-            
+
             USE_FIREBASE = newUseFirebase;
             AUTO_SYNC_INTERVAL = newSyncInterval;
             GAS_URL = newGasUrl;
@@ -7995,7 +8026,7 @@
                     : `<div class="h-12 bg-gradient-to-r from-orange-600 to-orange-700 rounded-t-xl flex items-center px-4">
                          <span class="text-white font-black font-mono text-sm">${item.unit_code}</span>
                        </div>`;
-                
+
                 const isEditor = (currentUserRole === 'editor');
                 const actionButtons = isEditor ? `
                             <button onclick="openFarModal('${item.id}')" class="flex-1 text-center text-[10px] font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 py-1.5 rounded-lg transition-all">Edit</button>
@@ -9147,8 +9178,8 @@
                 const hasChildren = subChildren.length > 0;
                 const subHtml = buildOrgTreeHTML(member.id);
 
-                                const isEditor = (currentUserRole === 'editor');
-                                const actionHtml = isEditor ? `
+                const isEditor = (currentUserRole === 'editor');
+                const actionHtml = isEditor ? `
                                 <!-- Actions on Hover (Pusatkan di atas kartu agar rapi) -->
                                 <div class="absolute right-1/2 translate-x-1/2 -top-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-white border border-slate-200 px-2 py-0.5 rounded-full shadow-md z-30">
                                     <button type="button" onclick="editOrgMember('${member.id}')" title="Edit" class="text-slate-500 hover:text-indigo-600">
@@ -9165,8 +9196,8 @@
                                     </button>
                                 </div>
                                 ` : '';
-                                
-                                html += `
+
+                html += `
                                     <div class="org-tree-branch flex flex-col items-center">
                                         <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
                                             <div class="inline-flex flex-col bg-white border border-slate-200 hover:border-indigo-500 rounded-lg p-3 shadow-sm min-w-[170px] max-w-[210px] text-center transition-all group relative">
@@ -9209,7 +9240,7 @@
                     const children = orgDataStore.filter(c => c.parentId === m.id);
                     const hasChildren = children.length > 0;
                     const isEditor = (currentUserRole === 'editor');
-                const actionHtml = isEditor ? `
+                    const actionHtml = isEditor ? `
                                 <!-- Actions on Hover (Pusatkan di atas kartu agar rapi) -->
                                 <div class="absolute right-1/2 translate-x-1/2 -top-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded-full shadow-md z-30">
                                     <button type="button" onclick="editOrgMember('${m.id}')" title="Edit" class="text-slate-300 hover:text-indigo-400">
@@ -9227,7 +9258,7 @@
                                 </div>
                 ` : '';
 
-                chartHtml += `
+                    chartHtml += `
                         <div class="org-tree-node ${hasChildren ? 'org-tree-parent-node' : ''} flex flex-col items-center">
                             <div class="inline-flex flex-col bg-slate-900 border border-slate-800 text-white rounded-lg p-3.5 shadow-md min-w-[190px] max-w-[230px] text-center relative group">
                                 <span class="text-xs font-black uppercase tracking-wider truncate w-full" title="${m.name}">${m.name}</span>
