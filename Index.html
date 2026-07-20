@@ -43,10 +43,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <!-- HTML2Canvas CDN untuk Ekspor ke Gambar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <!-- Firebase SDK (v8.10.1) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js" defer></script>
 
     <style>
         /* ========================================================
@@ -1835,14 +1831,7 @@
                     </h3>
                     <p class="text-xs text-slate-500">Kelola dan monitor status Work Order (WO) operasional.</p>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="syncWoSheetToFirebase()"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded text-xs flex items-center space-x-1.5 transition shadow-sm cursor-pointer"
-                        title="Sinkronkan Google Sheet ke Firebase">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                        <span>Sync Sheet to Firebase</span>
-                    </button>
-                </div>
+
             </div>
 
             <!-- WO Analytics Dashboard -->
@@ -1983,14 +1972,7 @@
                     <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider">Dashboard Kanban WO</h3>
                     <p class="text-xs text-slate-500">Monitor dan kelola status Work Order secara visual.</p>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="syncWoSheetToFirebase()"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded text-xs flex items-center space-x-1.5 transition shadow-sm cursor-pointer"
-                        title="Sinkronkan Google Sheet ke Firebase">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                        <span>Sync Sheet to Firebase</span>
-                    </button>
-                </div>
+
             </div>
 
             <!-- Kanban Filters -->
@@ -2935,7 +2917,7 @@
                 </button>
                 <button type="button" onclick="switchSettingsTab('firebase')" id="tab-btn-firebase"
                     class="flex-1 py-2.5 text-center text-xs font-black uppercase tracking-wider text-slate-500 hover:text-slate-900">
-                    Sumber Data &amp; Sync
+                    Auto Sync Google Sheet
                 </button>
                 <button type="button" onclick="switchSettingsTab('users')" id="tab-btn-users"
                     class="flex-1 py-2.5 text-center text-xs font-black uppercase tracking-wider text-slate-500 hover:text-slate-900">
@@ -3089,15 +3071,8 @@
                             <i data-lucide="database" class="w-4 h-4 text-indigo-600"></i>
                             <span>Sumber Data Utama &amp; Auto Sync</span>
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div class="flex flex-col space-y-1">
-                                <label class="font-bold text-slate-700">Sumber Data</label>
-                                <select id="sett-data-source"
-                                    class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
-                                    <option value="googlesheet">Google Sheet (GAS)</option>
-                                    <option value="firebase">Firebase (Realtime)</option>
-                                </select>
-                            </div>
+                        <input type="hidden" id="sett-data-source" value="googlesheet">
+                        <div class="grid grid-cols-1 gap-3">
                             <div class="flex flex-col space-y-1">
                                 <label class="font-bold text-slate-700">Interval Auto Sync (Google Sheet)</label>
                                 <select id="sett-sync-interval"
@@ -3118,167 +3093,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-4 rounded border border-slate-200 space-y-4">
-                        <h4
-                            class="font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 text-xs">
-                            <i data-lucide="cloud-cog" class="w-4 h-4 text-indigo-600"></i>
-                            <span>Kelola Migrasi &amp; Backup per Modul</span>
-                        </h4>
-                        <p class="text-slate-600 text-[11px] leading-relaxed">
-                            Pilih modul spesifik untuk disinkronisasikan antara <b>Google Sheets</b> dan <b>Cloud
-                                Firebase</b>. Hal ini mencegah penimpaan data yang tidak disengaja pada modul lain.
-                        </p>
 
-                        <div class="overflow-x-auto border border-slate-200 rounded-lg">
-                            <table class="w-full text-[11px] text-left">
-                                <thead class="bg-slate-100 uppercase font-bold text-slate-700">
-                                    <tr>
-                                        <th class="p-2.5">Nama Modul (Sidebar)</th>
-                                        <th class="p-2.5 text-center" style="width: 35%;">Sheets → Firebase</th>
-                                        <th class="p-2.5 text-center" style="width: 35%;">Firebase → Sheets</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-200 bg-white font-medium">
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">PICA Active Board</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('pica')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('pica')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">Work Order (WO)</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('wo')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('wo')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">Monitoring Part Urgent</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('urgent_part')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('urgent_part')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">Analisa Biaya Repair (RCA)</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('rca')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('rca')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">Master Populasi Unit</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('populasi_unit')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('populasi_unit')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">FAR (Failure Analysis)</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('far')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('far')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">Accurate Parser</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('accurate')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('accurate')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-2.5 font-bold text-slate-850">Target & Pengaturan</td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="migrateSingleToFirebase('settings')"
-                                                class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Migrasi</span>
-                                            </button>
-                                        </td>
-                                        <td class="p-2.5">
-                                            <button type="button" onclick="backupSingleToGoogleSheets('settings')"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-2 py-1.5 rounded transition cursor-pointer flex items-center justify-center space-x-1 w-full shadow-sm">
-                                                <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-                                                <span>Backup</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- TAB CONTENT 4: KELOLA USER/ADMIN -->
@@ -3876,31 +3691,12 @@
 
 
     <script>
-        // --- FIREBASE CONFIGURATION & INITIALIZATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyDwUo9lGAVbBekZKwdVNa8ux_TDOqd51KA",
-            authDomain: "gen-lang-client-0064579309.firebaseapp.com",
-            databaseURL: "https://gen-lang-client-0064579309-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "gen-lang-client-0064579309",
-            storageBucket: "gen-lang-client-0064579309.firebasestorage.app",
-            messagingSenderId: "548744780368",
-            appId: "1:548744780368:web:f96848b6e9739263388f55"
-        };
         // --- DATA SOURCE & SYNC CONFIGURATION ---
-        let USE_FIREBASE = localStorage.getItem('PICA_USE_FIREBASE') === 'true'; // Default to false
+        const USE_FIREBASE = false;
+        const db = null;
         let GAS_URL = localStorage.getItem('PICA_GAS_URL') || "https://script.google.com/macros/s/AKfycbzv6xH-d49-3_JRbC_oJNHkFrmINbKXljBQyQ1U0LBVXXZaOAajuhi2aZjsH3XvlU3Vyg/exec";
         let AUTO_SYNC_INTERVAL = parseInt(localStorage.getItem('PICA_SYNC_INTERVAL')) || 0; // Default to 0 (disabled)
         let syncTimer = null;
-
-        if (USE_FIREBASE && typeof firebase !== "undefined" && !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = (USE_FIREBASE && typeof firebase !== "undefined") ? firebase.database() : null;
-        if (db) {
-            firebase.auth().signInAnonymously().catch((error) => {
-                console.warn("Firebase Anonymous Auth Failed:", error.message);
-            });
-        }
 
         // REAL INTEGRATION FOR LIVE SERVER
         if (typeof google === 'undefined') {
@@ -4057,7 +3853,6 @@
             const partAddBtns = document.querySelectorAll('button[onclick="openPartModal()"]');
             const farAddBtns = document.querySelectorAll('button[onclick="openFarModal()"]');
             const orgAddBtns = document.querySelectorAll('button[onclick="openOrgMemberModal()"]');
-            const woSyncBtns = document.querySelectorAll('button[onclick="syncWoSheetToFirebase()"]');
             const sopAddBtn = document.getElementById('btn-add-sop-item');
 
             const displayStyle = isEditor ? 'flex' : 'none';
@@ -4068,7 +3863,6 @@
             partAddBtns.forEach(btn => btn.style.display = displayStyle);
             farAddBtns.forEach(btn => btn.style.display = displayStyle);
             orgAddBtns.forEach(btn => btn.style.display = displayStyle);
-            woSyncBtns.forEach(btn => btn.style.display = displayStyle);
             if (sopAddBtn) sopAddBtn.style.display = isEditor ? 'inline-flex' : 'none';
 
             if (formInputSidebarBtn) formInputSidebarBtn.style.display = displayStyle;
@@ -4446,193 +4240,6 @@
             return new Promise((resolve, reject) => {
                 const cleanKey = (key) => String(key).replace(/[\.\#\$\[\]\/]/g, "-");
 
-                // 1. JIKA FIREBASE AKTIF DAN TERKONEKSI, PRIORITASKAN FIREBASE LANGSUNG (ONLINE/REALTIME)
-                if (db) {
-                    if (action === 'getOptimizedDataFull') {
-                        Promise.all([
-                            db.ref('pica_db').once('value'),
-                            db.ref('rca_db').once('value'),
-                            db.ref('urgent_parts_db').once('value'),
-                            db.ref('populasi_unit_db').once('value'),
-                            db.ref('far_db').once('value'),
-                            db.ref('accurate_pr_db').once('value'),
-                            db.ref('wo').once('value'),
-                            db.ref('settings_db/targets_config').once('value'),
-                            db.ref('settings_db/system_settings_config').once('value'),
-                            db.ref('users_db').once('value')
-                        ]).then(([pica, rca, parts, populasi, far, accurate, wo, targets, settings, users]) => {
-                            resolve({
-                                success: true,
-                                pica: Object.values(pica.val() || {}),
-                                rca: Object.values(rca.val() || {}),
-                                urgentParts: Object.values(parts.val() || {}),
-                                populasi: Object.values(populasi.val() || {}),
-                                far: Object.values(far.val() || {}),
-                                accurate: Object.values(accurate.val() || {}),
-                                wo: Object.values(wo.val() || {}),
-                                users: Object.values(users.val() || {}),
-                                targets: targets.val() ? JSON.parse(targets.val()) : {},
-                                settings: settings.val() ? JSON.parse(settings.val()) : {}
-                            });
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'getUsersData') {
-                        db.ref('users_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveUserData') {
-                        const payload = params.data;
-                        if (!payload.id) {
-                            payload.id = 'U_' + Math.random().toString(36).substr(2, 9);
-                        }
-                        db.ref('users_db/' + cleanKey(payload.id)).set(payload)
-                            .then(() => {
-                                return db.ref('users_db').once('value');
-                            })
-                            .then(snap => {
-                                resolve({ success: true, data: Object.values(snap.val() || {}) });
-                            })
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'deleteUserData') {
-                        db.ref('users_db/' + cleanKey(params.id)).remove()
-                            .then(() => {
-                                return db.ref('users_db').once('value');
-                            })
-                            .then(snap => {
-                                resolve({ success: true, data: Object.values(snap.val() || {}) });
-                            })
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'getData') {
-                        db.ref('pica_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'getRcaData') {
-                        db.ref('rca_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'getUrgentParts') {
-                        db.ref('urgent_parts_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'getPopulasiData') {
-                        db.ref('populasi_unit_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'getFarData') {
-                        db.ref('far_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'getAccurateData') {
-                        db.ref('accurate_pr_db').once('value').then(snap => {
-                            resolve(Object.values(snap.val() || {}));
-                        }).catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveData') {
-                        const payload = params.data;
-                        if (!payload.id) {
-                            payload.id = 'ID_' + Math.random().toString(36).substr(2, 9);
-                        }
-                        db.ref('pica_db/' + cleanKey(payload.id)).set(payload)
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'deleteData') {
-                        db.ref('pica_db/' + cleanKey(params.id)).remove()
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveRcaData') {
-                        const payload = params.data;
-                        if (!payload.id || payload.id.startsWith('RCA_DRAFT_')) {
-                            payload.id = 'RCA_' + Math.random().toString(36).substr(2, 9);
-                        }
-                        db.ref('rca_db/' + cleanKey(payload.id)).set(payload)
-                            .then(() => resolve({ success: true, id: payload.id }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'deleteRcaData') {
-                        db.ref('rca_db/' + cleanKey(params.id)).remove()
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveUrgentPart') {
-                        const payload = params.data;
-                        if (!payload.id) {
-                            payload.id = 'UP_' + Math.random().toString(36).substr(2, 9);
-                        }
-                        db.ref('urgent_parts_db/' + cleanKey(payload.id)).set(payload)
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'deleteUrgentPart') {
-                        db.ref('urgent_parts_db/' + cleanKey(params.id)).remove()
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'savePopulasiData') {
-                        const payload = params.data;
-                        if (!payload.id) {
-                            payload.id = 'POP_' + Math.random().toString(36).substr(2, 9);
-                        }
-                        db.ref('populasi_unit_db/' + cleanKey(payload.id)).set(payload)
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'deletePopulasiData') {
-                        db.ref('populasi_unit_db/' + cleanKey(params.id)).remove()
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveFarData') {
-                        const payload = params.data;
-                        if (!payload.id) {
-                            payload.id = 'FAR_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                        }
-                        db.ref('far_db/' + cleanKey(payload.id)).set(payload)
-                            .then(() => resolve({ success: true, id: payload.id }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'deleteFarData') {
-                        db.ref('far_db/' + cleanKey(params.id)).remove()
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveTargets') {
-                        db.ref('settings_db/targets_config').set(JSON.stringify(params.targets))
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveSystemSettings') {
-                        db.ref('settings_db/system_settings_config').set(JSON.stringify(params.settings))
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'saveAccurateBulk') {
-                        const rows = params.data || [];
-                        const updates = {};
-                        rows.forEach(r => {
-                            if (!r.id) r.id = 'AC_' + Math.random().toString(36).substr(2, 9);
-                            updates[cleanKey(r.id)] = r;
-                        });
-                        db.ref('accurate_pr_db').set(updates)
-                            .then(() => resolve({ success: true, count: rows.length }))
-                            .catch(err => reject(err));
-                        return;
-                    } else if (action === 'clearAccurateData') {
-                        db.ref('accurate_pr_db').remove()
-                            .then(() => resolve({ success: true }))
-                            .catch(err => reject(err));
-                        return;
-                    }
-                }
 
                 // 2. KONEKSI GOOGLE APPS SCRIPT (Production / Live Server)
                 if (typeof google !== 'undefined' && typeof google.script !== 'undefined') {
@@ -7077,198 +6684,6 @@
             }
         }
 
-        async function migrateSingleToFirebase(moduleKey) {
-            if (!db) return Swal.fire('Error', 'Firebase belum aktif.', 'error');
-
-            const moduleLabels = {
-                'pica': 'PICA Active Board',
-                'wo': 'Work Order (WO)',
-                'urgent_part': 'Monitoring Part Urgent',
-                'rca': 'Analisa Biaya Repair (RCA)',
-                'populasi_unit': 'Master Populasi Unit',
-                'far': 'FAR (Failure Analysis)',
-                'accurate': 'Accurate Parser',
-                'settings': 'Target & Pengaturan Sistem'
-            };
-
-            const result = await Swal.fire({
-                title: `Migrasi ${moduleLabels[moduleKey]}?`,
-                html: `Sistem akan mengambil data terbaru <b>${moduleLabels[moduleKey]}</b> dari Google Sheets dan menuliskannya ke Firebase Cloud.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Migrasikan!'
-            });
-
-            if (!result.isConfirmed) return;
-            showLoading(true);
-
-            try {
-                if (typeof google === 'undefined' || typeof google.script === 'undefined') {
-                    throw new Error("Koneksi Google Apps Script tidak aktif. Gunakan link web app resmi.");
-                }
-
-                const fetchFreshData = () => {
-                    return new Promise((resolve, reject) => {
-                        google.script.run
-                            .withSuccessHandler(res => resolve(res))
-                            .withFailureHandler(err => reject(err))
-                            .executeAction('getOptimizedDataFull', {});
-                    });
-                };
-
-                const res = await fetchFreshData();
-                if (!res || !res.success) {
-                    throw new Error(res ? res.message : "Gagal mengambil data dari Google Sheets.");
-                }
-
-                const cleanKey = (key) => String(key).replace(/[\.\#\$\[\]\/]/g, "-");
-                const seenIdsMap = {};
-
-                const processNode = (items, dbName, prefix) => {
-                    const nodeUpdates = {};
-                    if (!items) return nodeUpdates;
-                    if (!seenIdsMap[dbName]) seenIdsMap[dbName] = new Set();
-
-                    items.forEach((item) => {
-                        let itemId = item.id ? String(item.id).trim() : "";
-                        if (!itemId || seenIdsMap[dbName].has(itemId)) {
-                            itemId = prefix + Math.random().toString(36).substr(2, 9).toUpperCase();
-                            item.id = itemId;
-                        }
-                        seenIdsMap[dbName].add(itemId);
-                        nodeUpdates[cleanKey(itemId)] = item;
-                    });
-                    return nodeUpdates;
-                };
-
-                let targetRef = null;
-                let dataToUpdate = null;
-
-                if (moduleKey === 'pica') {
-                    targetRef = db.ref('pica_db');
-                    dataToUpdate = processNode(res.pica, 'pica_db', 'ID_');
-                } else if (moduleKey === 'wo') {
-                    targetRef = db.ref('wo');
-                    dataToUpdate = processNode(res.wo, 'wo', 'WO_');
-                } else if (moduleKey === 'urgent_part') {
-                    targetRef = db.ref('urgent_parts_db');
-                    dataToUpdate = processNode(res.urgentParts, 'urgent_parts_db', 'UP_');
-                } else if (moduleKey === 'rca') {
-                    targetRef = db.ref('rca_db');
-                    dataToUpdate = processNode(res.rca, 'rca_db', 'RCA_');
-                } else if (moduleKey === 'populasi_unit') {
-                    targetRef = db.ref('populasi_unit_db');
-                    dataToUpdate = processNode(res.populasi, 'populasi_unit_db', 'POP_');
-                } else if (moduleKey === 'far') {
-                    targetRef = db.ref('far_db');
-                    dataToUpdate = processNode(res.far, 'far_db', 'FAR_');
-                } else if (moduleKey === 'accurate') {
-                    targetRef = db.ref('accurate_pr_db');
-                    dataToUpdate = processNode(res.accurate, 'accurate_pr_db', 'AC_');
-                } else if (moduleKey === 'settings') {
-                    const settingsUpdates = {};
-                    if (res.targets) {
-                        settingsUpdates['targets_config'] = JSON.stringify(res.targets);
-                    }
-                    if (res.settings) {
-                        settingsUpdates['system_settings_config'] = JSON.stringify(res.settings);
-                    }
-                    targetRef = db.ref('settings_db');
-                    dataToUpdate = settingsUpdates;
-                }
-
-                if (targetRef && dataToUpdate !== null) {
-                    await targetRef.set(dataToUpdate);
-                }
-
-                showLoading(false);
-                Swal.fire('Sukses', `Data ${moduleLabels[moduleKey]} berhasil dimigrasikan ke Firebase!`, 'success');
-                initApp();
-            } catch (e) {
-                showLoading(false);
-                console.error("Migration Error:", e);
-                Swal.fire('Gagal', 'Terjadi kesalahan saat migrasi: ' + e.message, 'error');
-            }
-        }
-
-        async function backupSingleToGoogleSheets(moduleKey) {
-            if (!db) return Swal.fire('Error', 'Firebase belum aktif.', 'error');
-
-            const moduleLabels = {
-                'pica': 'PICA Active Board',
-                'wo': 'Work Order (WO)',
-                'urgent_part': 'Monitoring Part Urgent',
-                'rca': 'Analisa Biaya Repair (RCA)',
-                'populasi_unit': 'Master Populasi Unit',
-                'far': 'FAR (Failure Analysis)',
-                'accurate': 'Accurate Parser',
-                'settings': 'Target & Pengaturan Sistem'
-            };
-
-            const firebaseNodes = {
-                'pica': 'pica_db',
-                'wo': 'wo',
-                'urgent_part': 'urgent_parts_db',
-                'rca': 'rca_db',
-                'populasi_unit': 'populasi_unit_db',
-                'far': 'far_db',
-                'accurate': 'accurate_pr_db',
-                'settings': 'settings_db'
-            };
-
-            const result = await Swal.fire({
-                title: `Backup ${moduleLabels[moduleKey]}?`,
-                html: `Sistem akan mengambil data Cloud Firebase saat ini untuk <b>${moduleLabels[moduleKey]}</b> dan menulisnya kembali ke spreadsheet Google Sheets.`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#dc2626',
-                confirmButtonText: 'Ya, Backup!'
-            });
-
-            if (!result.isConfirmed) return;
-            showLoading(true);
-
-            try {
-                if (typeof google === 'undefined' || typeof google.script === 'undefined') {
-                    throw new Error("Koneksi Google Apps Script tidak aktif. Gunakan link web app resmi.");
-                }
-
-                const nodeName = firebaseNodes[moduleKey];
-                const snap = await db.ref(nodeName).once('value');
-                const nodeData = snap.val();
-
-                if (!nodeData) {
-                    throw new Error(`Data ${moduleLabels[moduleKey]} di Firebase kosong.`);
-                }
-
-                const payload = {};
-                payload[nodeName] = nodeData;
-
-                const sendBackup = (data) => {
-                    return new Promise((resolve, reject) => {
-                        google.script.run
-                            .withSuccessHandler(res => resolve(res))
-                            .withFailureHandler(err => reject(err))
-                            .executeAction('runFullBackup', { data: data });
-                    });
-                };
-
-                const res = await sendBackup(payload);
-                showLoading(false);
-                if (res && res.success) {
-                    Swal.fire('Backup Sukses', `Data ${moduleLabels[moduleKey]} dari Firebase berhasil direkap ke Google Sheets!`, 'success');
-                } else {
-                    Swal.fire('Gagal Backup', res ? res.message : "Error tidak diketahui", 'error');
-                }
-            } catch (err) {
-                showLoading(false);
-                console.error("Backup Error:", err);
-                Swal.fire('Error', err.toString(), 'error');
-            }
-        }
 
         function openSettingsModal() {
             // Load Target Units
@@ -7306,7 +6721,7 @@
             updateSignatureIndicator('ktt', systemSettings.sigKttTtd);
 
             // Load Data Source & Sync Settings
-            document.getElementById('sett-data-source').value = USE_FIREBASE ? 'firebase' : 'googlesheet';
+            document.getElementById('sett-data-source').value = 'googlesheet';
             document.getElementById('sett-sync-interval').value = String(AUTO_SYNC_INTERVAL);
             document.getElementById('sett-gas-url').value = GAS_URL;
 
@@ -7546,18 +6961,15 @@
             showLoading(true);
 
             // Get Data Source & Sync Settings
-            const selectedSource = document.getElementById('sett-data-source').value;
-            const newUseFirebase = (selectedSource === 'firebase');
             const newSyncInterval = parseInt(document.getElementById('sett-sync-interval').value) || 0;
             const newGasUrl = document.getElementById('sett-gas-url').value.trim();
 
-            localStorage.setItem('PICA_USE_FIREBASE', String(newUseFirebase));
+            localStorage.setItem('PICA_USE_FIREBASE', 'false');
             localStorage.setItem('PICA_SYNC_INTERVAL', String(newSyncInterval));
             localStorage.setItem('PICA_GAS_URL', newGasUrl);
 
-            const restartRequired = (USE_FIREBASE !== newUseFirebase || GAS_URL !== newGasUrl);
+            const restartRequired = (GAS_URL !== newGasUrl);
 
-            USE_FIREBASE = newUseFirebase;
             AUTO_SYNC_INTERVAL = newSyncInterval;
             GAS_URL = newGasUrl;
 
@@ -8411,48 +7823,6 @@
             }
         }
 
-        async function syncWoSheetToFirebase() {
-            if (!db) {
-                Swal.fire('Koneksi Gagal', 'Firebase tidak terhubung. Pastikan jaringan internet aktif.', 'error');
-                return;
-            }
-
-            showLoading(true);
-            try {
-                // 1. Fetch from Google Sheet (callBackend gets it from Apps Script)
-                const sheetData = await callBackend('getWoData');
-                const woList = Array.isArray(sheetData) ? sheetData : [];
-
-                if (woList.length === 0) {
-                    Swal.fire('Data Kosong', 'Tidak ada data Work Order ditemukan di Google Sheet.', 'warning');
-                    showLoading(false);
-                    return;
-                }
-
-                // 2. Format and Batch set to Firebase
-                const cleanKey = (key) => String(key).replace(/[\.\#\$\[\]\/]/g, "-");
-                const updates = {};
-                woList.forEach(item => {
-                    if (item["NO WO"]) {
-                        updates[cleanKey(item["NO WO"])] = item;
-                    }
-                });
-
-                await db.ref('wo_db').set(updates);
-
-                // 3. Update Local Memory & UI
-                woStore = woList;
-                localStorage.setItem('WO_DB', JSON.stringify(woStore));
-                renderWoTable();
-
-                Swal.fire('Sinkronisasi Berhasil', `Berhasil menyinkronkan ${woList.length} data Work Order dari Google Sheet ke Firebase Database.`, 'success');
-            } catch (err) {
-                console.error("Gagal sinkronisasi WO:", err);
-                Swal.fire('Gagal Sinkronisasi', 'Terjadi kesalahan saat menyinkronkan data: ' + err.message, 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
 
         function openWoModal() {
             document.getElementById('wo-form').reset();
