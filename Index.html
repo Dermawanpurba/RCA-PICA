@@ -4136,7 +4136,13 @@
         // --- DATA SOURCE & SYNC CONFIGURATION ---
         const USE_FIREBASE = false;
         const db = null;
-        let GAS_URL = localStorage.getItem('PICA_GAS_URL') || "https://script.google.com/macros/s/AKfycbzv6xH-d49-3_JRbC_oJNHkFrmINbKXljBQyQ1U0LBVXXZaOAajuhi2aZjsH3XvlU3Vyg/exec";
+        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzv6xH-d49-3_JRbC_oJNHkFrmINbKXljBQyQ1U0LBVXXZaOAajuhi2aZjsH3XvlU3Vyg/exec";
+        let savedGasUrl = localStorage.getItem('PICA_GAS_URL');
+        if (!savedGasUrl || savedGasUrl.trim() === "" || savedGasUrl.includes("MACRO_ID")) {
+            savedGasUrl = DEFAULT_GAS_URL;
+            localStorage.setItem('PICA_GAS_URL', DEFAULT_GAS_URL);
+        }
+        let GAS_URL = savedGasUrl;
         let AUTO_SYNC_INTERVAL = parseInt(localStorage.getItem('PICA_SYNC_INTERVAL')) || 0; // Default to 0 (disabled)
         let syncTimer = null;
 
@@ -4654,6 +4660,7 @@
         let partsCurrentPage = 1;
         let populasiCurrentPage = 1;
         let rcaCurrentPage = 1;
+        let lastRcaQuery = "";
         let farCurrentPage = 1;
         const ITEMS_PER_PAGE = 30;
         const PICA_ITEMS_PER_PAGE = 5;
@@ -5134,6 +5141,9 @@
                     usersStore = Array.isArray(res.users) ? res.users : [];
                     backlogDataStore = Array.isArray(res.backlog) ? res.backlog : [];
                     planServiceDataStore = Array.isArray(res.planService) ? res.planService : [];
+                    localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
+                    localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
+                    localStorage.setItem('URGENT_PARTS_DB', JSON.stringify(urgentPartsStore));
                     localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
                     localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
                     localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
