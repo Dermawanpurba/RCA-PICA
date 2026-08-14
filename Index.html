@@ -2033,7 +2033,13 @@
                     <p class="text-xs text-slate-500">Kelola master data unit untuk auto-fill form RCA dan data lainnya.
                     </p>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                        <input type="text" id="populasi-search-input" onkeyup="filterPopulasi()"
+                            placeholder="Cari Code / Type / S/N / Engine..."
+                            class="pl-9 pr-3 py-1.5 border border-industrial-border rounded text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 w-64 transition">
+                    </div>
                     <button onclick="openPopulasiModal()"
                         class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded text-xs flex items-center space-x-1.5 transition shadow-sm">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
@@ -5144,6 +5150,10 @@
                     localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
                     localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
                     localStorage.setItem('URGENT_PARTS_DB', JSON.stringify(urgentPartsStore));
+                    localStorage.setItem('POPULASI_UNIT_DB', JSON.stringify(populasiUnitStore));
+                    localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                    localStorage.setItem('FAR_DB', JSON.stringify(farDataStore));
+                    localStorage.setItem('ACCURATE_PR_DB', JSON.stringify(accurateDataStore));
                     localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
                     localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
                     localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
@@ -5249,6 +5259,14 @@
                                 woStore = Array.isArray(res.wo) ? res.wo : [];
                                 farDataStore = Array.isArray(res.far) ? res.far : [];
                                 accurateDataStore = Array.isArray(res.accurate) ? res.accurate : [];
+
+                                localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
+                                localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
+                                localStorage.setItem('URGENT_PARTS_DB', JSON.stringify(urgentPartsStore));
+                                localStorage.setItem('POPULASI_UNIT_DB', JSON.stringify(populasiUnitStore));
+                                localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                                localStorage.setItem('FAR_DB', JSON.stringify(farDataStore));
+                                localStorage.setItem('ACCURATE_PR_DB', JSON.stringify(accurateDataStore));
 
                                 if (res.targets && Object.keys(res.targets).length > 0) {
                                     targetsConfig = res.targets;
@@ -8078,31 +8096,62 @@
         }
 
         // --- POPULASI UNIT LOGIC ---
+        let populasiSearchQuery = "";
+
+        function filterPopulasi() {
+            const input = document.getElementById('populasi-search-input');
+            populasiSearchQuery = input ? input.value.trim().toLowerCase() : "";
+            populasiCurrentPage = 1;
+            renderPopulasiTable();
+        }
+
         function renderPopulasiTable() {
             const tbody = document.getElementById('populasi-tbody');
             if (!tbody) return;
             tbody.innerHTML = "";
 
-            if (populasiUnitStore.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 font-sans">Data populasi unit masih kosong.</td></tr>`;
+            let filteredData = populasiUnitStore || [];
+            if (populasiSearchQuery) {
+                filteredData = filteredData.filter(u => {
+                    const code = String(u.code || u.unit_code || u['code number'] || u['Code'] || '').toLowerCase();
+                    const type = String(u.type || u.unit_type || u['unit type'] || u['Type'] || '').toLowerCase();
+                    const sn = String(u.sn || u.serial_number || u['serial number'] || u['SN'] || '').toLowerCase();
+                    const engine = String(u.engine || u.engine_model || u['engine model'] || u['Engine'] || '').toLowerCase();
+                    return code.includes(populasiSearchQuery) || 
+                           type.includes(populasiSearchQuery) || 
+                           sn.includes(populasiSearchQuery) || 
+                           engine.includes(populasiSearchQuery);
+                });
+            }
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 font-sans">${populasiSearchQuery ? 'Tidak ada data unit yang cocok dengan pencarian.' : 'Data populasi unit masih kosong.'}</td></tr>`;
+                const pagination = document.getElementById('populasi-pagination');
+                if (pagination) pagination.innerHTML = "";
                 return;
             }
 
-            const totalItems = populasiUnitStore.length;
+            const totalItems = filteredData.length;
             const startIndex = (populasiCurrentPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
-            const paginatedData = populasiUnitStore.slice(startIndex, endIndex);
+            const paginatedData = filteredData.slice(startIndex, endIndex);
 
             paginatedData.forEach((unit, index) => {
                 const globalIndex = index + 1 + startIndex;
+                const unitCode = unit.code || unit.unit_code || unit['code number'] || unit['Code'] || '-';
+                const unitType = unit.type || unit.unit_type || unit['unit type'] || unit['Type'] || '-';
+                const unitSn = unit.sn || unit.serial_number || unit['serial number'] || unit['SN'] || '-';
+                const unitEngine = unit.engine || unit.engine_model || unit['engine model'] || unit['Engine'] || '-';
+                const unitId = unit.id || ('POP_' + globalIndex);
+
                 let actionsHtml = "";
                 if (currentUserRole === 'editor') {
                     actionsHtml = `
                         <div class="flex justify-center space-x-2">
-                            <button onclick="editPopulasiUnit('${unit.id}')" class="text-indigo-600 hover:text-indigo-800" title="Edit">
+                            <button onclick="editPopulasiUnit('${unitId}')" class="text-indigo-600 hover:text-indigo-800" title="Edit">
                                 <i data-lucide="edit" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="deletePopulasiUnit('${unit.id}')" class="text-red-600 hover:text-red-800" title="Hapus">
+                            <button onclick="deletePopulasiUnit('${unitId}')" class="text-red-600 hover:text-red-800" title="Hapus">
                                 <i data-lucide="trash" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -8114,10 +8163,10 @@
                 const row = `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3 text-center border-r border-industrial-border font-bold text-slate-500">${globalIndex}</td>
-                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900">${unit.code}</td>
-                        <td class="p-3 border-r border-industrial-border">${unit.type}</td>
-                        <td class="p-3 border-r border-industrial-border">${unit.sn}</td>
-                        <td class="p-3 border-r border-industrial-border">${unit.engine}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900">${unitCode}</td>
+                        <td class="p-3 border-r border-industrial-border">${unitType}</td>
+                        <td class="p-3 border-r border-industrial-border">${unitSn}</td>
+                        <td class="p-3 border-r border-industrial-border">${unitEngine}</td>
                         <td class="p-3 text-center">
                             ${actionsHtml}
                         </td>
@@ -8143,16 +8192,19 @@
             e.preventDefault();
             const payload = {
                 id: document.getElementById('form-populasi-id').value,
-                code: document.getElementById('form-populasi-code').value.toUpperCase(),
-                type: document.getElementById('form-populasi-type').value,
-                sn: document.getElementById('form-populasi-sn').value,
-                engine: document.getElementById('form-populasi-engine').value
+                code: document.getElementById('form-populasi-code').value.toUpperCase().trim(),
+                type: document.getElementById('form-populasi-type').value.trim(),
+                sn: document.getElementById('form-populasi-sn').value.trim(),
+                engine: document.getElementById('form-populasi-engine').value.trim()
             };
 
             showLoading(true);
             try {
                 const res = await callBackend('savePopulasiData', { data: payload });
-                populasiUnitStore = res.data;
+                if (res && res.data) {
+                    populasiUnitStore = res.data;
+                }
+                localStorage.setItem('POPULASI_UNIT_DB', JSON.stringify(populasiUnitStore));
                 renderPopulasiTable();
                 closePopulasiModal();
                 Swal.fire({
@@ -8170,13 +8222,13 @@
         }
 
         function editPopulasiUnit(id) {
-            const unit = populasiUnitStore.find(u => u.id === id);
+            const unit = populasiUnitStore.find(u => String(u.id) === String(id));
             if (unit) {
-                document.getElementById('form-populasi-id').value = unit.id;
-                document.getElementById('form-populasi-code').value = unit.code;
-                document.getElementById('form-populasi-type').value = unit.type;
-                document.getElementById('form-populasi-sn').value = unit.sn;
-                document.getElementById('form-populasi-engine').value = unit.engine;
+                document.getElementById('form-populasi-id').value = unit.id || "";
+                document.getElementById('form-populasi-code').value = unit.code || unit.unit_code || unit['code number'] || "";
+                document.getElementById('form-populasi-type').value = unit.type || unit.unit_type || "";
+                document.getElementById('form-populasi-sn').value = unit.sn || unit.serial_number || "";
+                document.getElementById('form-populasi-engine').value = unit.engine || unit.engine_model || "";
                 document.getElementById('populasi-modal').classList.remove('hidden');
             }
         }
@@ -8195,7 +8247,10 @@
                     showLoading(true);
                     try {
                         const res = await callBackend('deletePopulasiData', { id: id });
-                        populasiUnitStore = res.data;
+                        if (res && res.data) {
+                            populasiUnitStore = res.data;
+                        }
+                        localStorage.setItem('POPULASI_UNIT_DB', JSON.stringify(populasiUnitStore));
                         renderPopulasiTable();
                         Swal.fire('Terhapus!', 'Data unit telah dihapus.', 'success');
                     } catch (err) {
