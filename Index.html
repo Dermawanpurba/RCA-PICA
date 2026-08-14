@@ -46,7 +46,7 @@
 
     <style>
         /* ========================================================
-           SISTEM CETAK MANDIRI — ISOLASI PRINT PER SEKSI
+           SISTEM CETAK MANDIRI â€” ISOLASI PRINT PER SEKSI
            ======================================================== */
         @page {
             size: A4 landscape;
@@ -68,7 +68,7 @@
                 display: none !important;
             }
 
-            /* Kecuali div print-only — tampilkan penuh */
+            /* Kecuali div print-only â€” tampilkan penuh */
             body>#print-only {
                 display: block !important;
                 width: 100% !important;
@@ -263,7 +263,6 @@
             min-width: 0;
             overflow: hidden;
             flex-shrink: 0;
-            zoom: 1;
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -459,7 +458,7 @@
         }
 
         /* ========================================================
-           UI/UX REFINEMENT — OPERASIONAL, RESPONSIVE, ACCESSIBLE
+           UI/UX REFINEMENT â€” OPERASIONAL, RESPONSIVE, ACCESSIBLE
            ======================================================== */
         :root {
             --ui-primary: #4f46e5;
@@ -472,21 +471,25 @@
 
         html {
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         body {
             background:
                 radial-gradient(circle at 90% 0%, rgba(99, 102, 241, .08), transparent 28rem),
                 #f4f7fb;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         /* Sidebar tetap ringkas, tetapi seluruh menu selalu dapat dijangkau. */
         #sidebar-desktop {
-            zoom: 1;
         }
 
         #view-dashboard {
-            zoom: 1;
         }
 
         #sidebar-desktop > .w-64 {
@@ -862,6 +865,16 @@
                             <i data-lucide="layout-kanban" class="w-4 h-4 text-indigo-400"></i>
                             <span class="text-xs font-medium">Dashboard Kanban WO</span>
                         </button>
+                        <button onclick="switchMenu('plan-service')" id="btn-nav-plan-service"
+                            class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
+                            <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i>
+                            <span class="text-xs font-medium">Plan Service Hari Ini</span>
+                        </button>
+                        <button onclick="switchMenu('backlog')" id="btn-nav-backlog"
+                            class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
+                            <i data-lucide="layers" class="w-4 h-4 text-purple-400"></i>
+                            <span class="text-xs font-medium">Backlog System</span>
+                        </button>
                         <button onclick="switchMenu('urgent-part')" id="btn-nav-urgent-part"
                             class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
                             <i data-lucide="package-open" class="w-4 h-4"></i>
@@ -972,6 +985,16 @@
             <i data-lucide="layout-kanban" class="w-5 h-5 text-indigo-600"></i>
             <span class="text-[9px] mt-0.5 font-bold">Kanban WO</span>
         </button>
+        <button onclick="switchMenu('plan-service')" id="m-btn-nav-plan-service"
+            class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-amber-500"></i>
+            <span class="text-[9px] mt-0.5 font-bold">Plan Service</span>
+        </button>
+        <button onclick="switchMenu('backlog')" id="m-btn-nav-backlog"
+            class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
+            <i data-lucide="layers" class="w-5 h-5 text-purple-500"></i>
+            <span class="text-[9px] mt-0.5 font-bold">Backlog</span>
+        </button>
         <button onclick="switchMenu('urgent-part')" id="m-btn-nav-urgent-part"
             class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
             <i data-lucide="package-open" class="w-5 h-5 text-amber-600"></i>
@@ -1059,7 +1082,7 @@
                         Unit di PICA</span>
                     <span id="kpi-total-unit" class="text-3xl font-black font-mono text-slate-900 block mt-1">14</span>
                     <span
-                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-indigo-500 transition-colors">→
+                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-indigo-500 transition-colors">â†’
                         Lihat PICA Board</span>
                 </div>
                 <div onclick="switchMenu('table')"
@@ -1069,7 +1092,7 @@
                         For Use (RFU)</span>
                     <span id="kpi-rfu" class="text-3xl font-black font-mono text-emerald-600 block mt-1">11</span>
                     <span
-                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-emerald-500 transition-colors">→
+                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-emerald-500 transition-colors">â†’
                         Lihat PICA Board</span>
                 </div>
                 <div onclick="switchMenu('table')"
@@ -1079,7 +1102,7 @@
                         (B/D)</span>
                     <span id="kpi-bd" class="text-3xl font-black font-mono text-rose-600 block mt-1">3</span>
                     <span
-                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-rose-500 transition-colors">→
+                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-rose-500 transition-colors">â†’
                         Lihat PICA Board</span>
                 </div>
                 <div onclick="switchMenu('table')"
@@ -1089,7 +1112,7 @@
                         Availabilitas (PA)</span>
                     <span id="kpi-pa" class="text-3xl font-black font-mono text-amber-600 block mt-1">78.5%</span>
                     <span
-                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-amber-500 transition-colors">→
+                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-amber-500 transition-colors">â†’
                         Lihat PICA Board</span>
                 </div>
                 <div onclick="switchMenu('urgent-part')"
@@ -1099,7 +1122,7 @@
                         Part (Waiting)</span>
                     <span id="kpi-waiting" class="text-3xl font-black font-mono text-indigo-600 block mt-1">4</span>
                     <span
-                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-indigo-500 transition-colors">→
+                        class="text-[9px] text-slate-400 font-mono mt-1 block group-hover:text-indigo-500 transition-colors">â†’
                         Monitoring Part Urgent</span>
                 </div>
             </div>
@@ -1115,7 +1138,7 @@
                             Sebaran Kesiapan Armada (Plan Running vs Realitas)</h3>
                         <span
                             class="text-[10px] text-indigo-500 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Klik
-                            → PICA Board</span>
+                            â†’ PICA Board</span>
                     </div>
                     <div class="space-y-4" id="armada-progress-bars">
                         <!-- Dynamic rendered progress bar per armada category -->
@@ -1273,6 +1296,229 @@
                 <!-- Pagination -->
                 <div id="pica-pagination"
                     class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+            </div>
+        </section>
+
+        <!-- CONTAINER: BACKLOG SYSTEM VIEW -->
+        <section id="view-backlog" class="hidden space-y-6">
+            <!-- SUMMARY KPI CARD BACKLOG -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-purple-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Total Item Backlog</span>
+                    <span id="backlog-kpi-total" class="text-3xl font-black font-mono text-purple-700 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Kerusakan & Servis Terpending</span>
+                </div>
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-rose-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Critical / High Priority</span>
+                    <span id="backlog-kpi-critical" class="text-3xl font-black font-mono text-rose-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Membutuhkan Penanganan Segera</span>
+                </div>
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-amber-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Waiting Part / Component</span>
+                    <span id="backlog-kpi-waiting" class="text-3xl font-black font-mono text-amber-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Menunggu Pengadaan Spare Part</span>
+                </div>
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-indigo-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">On Progress / Scheduled</span>
+                    <span id="backlog-kpi-progress" class="text-3xl font-black font-mono text-indigo-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Dalam Pengerjaan Mekanik</span>
+                </div>
+            </div>
+
+            <!-- FILTERS & ACTION BAR -->
+            <div class="no-print premium-card p-5 rounded-xl flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2 flex-1">
+                    <div class="relative w-full md:max-w-xs">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="search-backlog" oninput="applyBacklogFilters()"
+                            placeholder="Cari Unit / Problem / PIC / Action..."
+                            class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg pl-9 pr-3 py-2 w-full text-slate-800 focus:outline-none focus:border-purple-500 focus:bg-white transition-all">
+                    </div>
+                    <select id="filter-backlog-category" onchange="applyBacklogFilters()"
+                        class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-purple-500 transition-all">
+                        <option value="">Semua Kategori</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Hydraulic">Hydraulic</option>
+                        <option value="Engine">Engine</option>
+                        <option value="Undercarriage">Undercarriage</option>
+                        <option value="Scheduled Maintenance">Scheduled Maintenance</option>
+                    </select>
+                    <select id="filter-backlog-priority" onchange="applyBacklogFilters()"
+                        class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-purple-500 transition-all">
+                        <option value="">Semua Prioritas</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Normal">Normal</option>
+                    </select>
+                    <select id="filter-backlog-status" onchange="applyBacklogFilters()"
+                        class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-purple-500 transition-all">
+                        <option value="">Semua Status</option>
+                        <option value="Waiting Part">Waiting Part</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Pending Repair">Pending Repair</option>
+                        <option value="Completed">Completed / RFU</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="openBacklogModal()" id="btn-add-backlog"
+                        class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center space-x-1.5 shadow-md transition-all">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>Tambah Item Backlog</span>
+                    </button>
+                    <button onclick="printSection('backlog-print-area')"
+                        class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-2 rounded-lg text-xs flex items-center space-x-1 transition-all">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Cetak</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- BACKLOG TABLE CONTAINER -->
+            <div id="backlog-print-area" class="premium-card p-5 rounded-xl">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="layers" class="w-4 h-4 text-purple-600"></i>
+                            Backlog Board - Penanganan Kerusakan Unit & Servis
+                        </h3>
+                        <p class="text-[10px] text-slate-500 font-mono">Daftar item backlog operational repair dan ketersediaan spare part</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left border-collapse border border-slate-200">
+                        <thead class="bg-slate-900 text-slate-100 uppercase tracking-wider font-bold text-[10px]">
+                            <tr>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 4%;">No</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 14%;">Unit & Plan</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 22%;">Problem / Deskripsi Kerusakan</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 12%;">Kategori</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 20%;">Rencana Tindakan / Part Needed</th>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 10%;">Target Date</th>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 8%;">Prioritas</th>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 10%;">Status</th>
+                                <th class="p-3 text-center no-print" style="width: 8%;">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="backlog-tbody" class="divide-y divide-slate-200 font-mono text-slate-800">
+                            <!-- Dynamic Rows -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="backlog-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
+            </div>
+        </section>
+
+        <!-- CONTAINER PLAN SERVICE HARI INI -->
+        <section id="view-plan-service" class="hidden space-y-4">
+            <!-- SUMMARY KPI CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 no-print">
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-amber-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Total Plan Service</span>
+                    <span id="ps-kpi-total" class="text-3xl font-black font-mono text-amber-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Total Jadwal Perawatan Terdaftar</span>
+                </div>
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-indigo-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Plan Service Hari Ini</span>
+                    <span id="ps-kpi-today" class="text-3xl font-black font-mono text-indigo-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Target Pengerjaan Hari Ini</span>
+                </div>
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-blue-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Dalam Pengerjaan</span>
+                    <span id="ps-kpi-progress" class="text-3xl font-black font-mono text-blue-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Sedang Dikerjakan Mekanik</span>
+                </div>
+                <div class="premium-card p-5 rounded-xl border-l-4 border-l-emerald-500">
+                    <span class="text-[11px] text-slate-500 block tracking-wider uppercase font-bold">Service Selesai (RFU)</span>
+                    <span id="ps-kpi-completed" class="text-3xl font-black font-mono text-emerald-600 block mt-1">0</span>
+                    <span class="text-[9px] text-slate-400 font-mono mt-1 block">Unit Siap Operasi Kembali</span>
+                </div>
+            </div>
+
+            <!-- FILTERS & ACTION BAR -->
+            <div class="no-print premium-card p-5 rounded-xl flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2 flex-1">
+                    <div class="relative w-full md:max-w-xs">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="search-plan-service" oninput="applyPlanServiceFilters()"
+                            placeholder="Cari Unit / Tipe Service / Mekanik / Catatan..."
+                            class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg pl-9 pr-3 py-2 w-full text-slate-800 focus:outline-none focus:border-amber-500 focus:bg-white transition-all">
+                    </div>
+                    <select id="filter-ps-plan" onchange="applyPlanServiceFilters()"
+                        class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-amber-500 transition-all">
+                        <option value="">Semua Plan Armada</option>
+                        <option value="EXCAVATOR">EXCAVATOR</option>
+                        <option value="DOZER">DOZER</option>
+                        <option value="MOTOR GREDER">MOTOR GREDER</option>
+                        <option value="DONGFENG">DONGFENG</option>
+                        <option value="HINO">HINO</option>
+                        <option value="MAN">MAN</option>
+                        <option value="SITRAK">SITRAK</option>
+                        <option value="WATER PUMP">WATER PUMP</option>
+                        <option value="COMPACTOR">COMPACTOR</option>
+                    </select>
+                    <select id="filter-ps-status" onchange="applyPlanServiceFilters()"
+                        class="bg-slate-50/50 border border-slate-200 text-xs rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-amber-500 transition-all">
+                        <option value="">Semua Status</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed / RFU</option>
+                        <option value="Postponed">Postponed</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="openPlanServiceModal()" id="btn-add-plan-service"
+                        class="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center space-x-1.5 shadow-md transition-all">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>Input Plan Service Hari Ini</span>
+                    </button>
+                    <button onclick="printSection('plan-service-print-area')"
+                        class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-2 rounded-lg text-xs flex items-center space-x-1 transition-all">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Cetak</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PLAN SERVICE TABLE CONTAINER -->
+            <div id="plan-service-print-area" class="premium-card p-5 rounded-xl">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="calendar-check" class="w-4 h-4 text-amber-600"></i>
+                            Plan Service Hari Ini & Monitoring Perawatan Berkala
+                        </h3>
+                        <p class="text-[10px] text-slate-500 font-mono">Daftar unit yang terjadwal Periodic Maintenance & Service mekanik</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left border-collapse border border-slate-200">
+                        <thead class="bg-slate-900 text-slate-100 uppercase tracking-wider font-bold text-[10px]">
+                            <tr>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 4%;">No</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 14%;">Unit Code & Plan</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 14%;">Jenis Service / PS</th>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 11%;">Tanggal Plan</th>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 10%;">Target HM</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 15%;">Mekanik / PIC</th>
+                                <th class="p-3 border-r border-slate-800" style="width: 18%;">Catatan Pengerjaan</th>
+                                <th class="p-3 text-center border-r border-slate-800" style="width: 8%;">Status</th>
+                                <th class="p-3 text-center no-print" style="width: 6%;">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="plan-service-tbody" class="divide-y divide-slate-200 font-mono text-slate-800">
+                            <!-- Dynamic Rows -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="plan-service-pagination" class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 no-print"></div>
             </div>
         </section>
 
@@ -1986,53 +2232,46 @@
                     <input type="month" id="kanban-filter-month" onchange="renderKanbanWo()"
                         class="w-full bg-slate-50 border border-industrial-border rounded px-3 py-2 text-xs text-slate-950 focus:outline-none focus:border-indigo-600">
                 </div>
-                <div>
-                    <button onclick="openWoModal()"
-                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-2 rounded text-xs flex items-center space-x-1.5 transition shadow-sm cursor-pointer w-full justify-center">
-                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-                        <span>Buat Notifikasi Schedule Service</span>
-                    </button>
-                </div>
             </div>
 
             <!-- Kanban Board -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[500px]">
-                <!-- Column 1: Unscheduled -->
+                <!-- Column 1: WO OPEN -->
                 <div class="bg-white border border-industrial-border rounded-xl shadow-sm flex flex-col h-[650px] overflow-hidden">
                     <div class="p-3 bg-red-50/50 border-b border-industrial-border flex justify-between items-center shrink-0">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                            <h4 class="text-xs font-black uppercase text-red-700 tracking-wider">UNSCHEDULED (OPEN)</h4>
+                            <h4 class="text-xs font-black uppercase text-red-700 tracking-wider">WO OPEN</h4>
                         </div>
-                        <span id="kanban-unscheduled-count" class="px-2 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold rounded-full">0</span>
+                        <span id="kanban-open-count" class="px-2 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold rounded-full">0</span>
                     </div>
-                    <div id="kanban-unscheduled-list" ondragover="allowDropWo(event)" ondrop="dropWo(event, 'UNSCHEDULED')"
+                    <div id="kanban-open-list" ondragover="allowDropWo(event)" ondrop="dropWo(event, 'OPEN')"
                         class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/30">
                         <!-- JS renders cards here -->
                     </div>
                 </div>
 
-                <!-- Column 2: Scheduled -->
+                <!-- Column 2: NOTIFIKASI PLAN SERVICE -->
                 <div class="bg-white border border-industrial-border rounded-xl shadow-sm flex flex-col h-[650px] overflow-hidden">
                     <div class="p-3 bg-amber-50/50 border-b border-industrial-border flex justify-between items-center shrink-0">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                            <h4 class="text-xs font-black uppercase text-amber-700 tracking-wider">SCHEDULED (OPEN)</h4>
+                            <h4 class="text-xs font-black uppercase text-amber-700 tracking-wider">NOTIFIKASI PLAN SERVICE</h4>
                         </div>
-                        <span id="kanban-scheduled-count" class="px-2 py-0.5 text-[10px] bg-amber-100 text-amber-800 font-bold rounded-full">0</span>
+                        <span id="kanban-plan-service-count" class="px-2 py-0.5 text-[10px] bg-amber-100 text-amber-800 font-bold rounded-full">0</span>
                     </div>
-                    <div id="kanban-scheduled-list" ondragover="allowDropWo(event)" ondrop="dropWo(event, 'SCHEDULED')"
+                    <div id="kanban-plan-service-list" ondragover="allowDropWo(event)" ondrop="dropWo(event, 'PLAN_SERVICE')"
                         class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/30">
                         <!-- JS renders cards here -->
                     </div>
                 </div>
 
-                <!-- Column 3: Closed -->
+                <!-- Column 3: WO CLOSED -->
                 <div class="bg-white border border-industrial-border rounded-xl shadow-sm flex flex-col h-[650px] overflow-hidden">
                     <div class="p-3 bg-green-50/50 border-b border-industrial-border flex justify-between items-center shrink-0">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-                            <h4 class="text-xs font-black uppercase text-green-700 tracking-wider">CLOSED</h4>
+                            <h4 class="text-xs font-black uppercase text-green-700 tracking-wider">WO CLOSED</h4>
                         </div>
                         <span id="kanban-closed-count" class="px-2 py-0.5 text-[10px] bg-green-100 text-green-800 font-bold rounded-full">0</span>
                     </div>
@@ -3421,6 +3660,209 @@
         </div>
     </div>
 
+    <!-- BACKLOG ITEM MODAL -->
+    <div id="backlog-modal" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[100] no-print p-4">
+        <div class="bg-white border border-slate-200 w-full max-w-xl p-6 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+                <h3 id="backlog-modal-title" class="text-sm font-black text-slate-900 uppercase tracking-wider">Tambah Item Backlog</h3>
+                <button type="button" onclick="closeBacklogModal()" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="backlog-form" onsubmit="saveBacklogItem(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="backlog-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Kode Unit</label>
+                        <input type="text" id="backlog-unit-code" required placeholder="Contoh: EXCA 109 / DT 701"
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-mono font-bold focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Plan Armada</label>
+                        <select id="backlog-plan" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-purple-500">
+                            <option value="EXCAVATOR">EXCAVATOR</option>
+                            <option value="DOZER">DOZER</option>
+                            <option value="MOTOR GREDER">MOTOR GREDER</option>
+                            <option value="DONGFENG">DONGFENG</option>
+                            <option value="HINO">HINO</option>
+                            <option value="MAN">MAN</option>
+                            <option value="SITRAK">SITRAK</option>
+                            <option value="WATER PUMP">WATER PUMP</option>
+                            <option value="COMPACTOR">COMPACTOR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Deskripsi Problem / Kerusakan</label>
+                    <textarea id="backlog-problem" required rows="3" placeholder="Jelaskan kendala teknis / kerusakan unit..."
+                        class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-purple-500"></textarea>
+                </div>
+
+                <div id="backlog-cat-prio-row" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Kategori Pekerjaan</label>
+                        <select id="backlog-category" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-purple-500">
+                            <option value="Mechanical">Mechanical</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Hydraulic">Hydraulic</option>
+                            <option value="Engine">Engine</option>
+                            <option value="Undercarriage">Undercarriage</option>
+                            <option value="Scheduled Maintenance">Scheduled Maintenance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Prioritas</label>
+                        <select id="backlog-priority" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-purple-500">
+                            <option value="Critical">Critical (Sangat Mendesak)</option>
+                            <option value="High">High (Mendesak)</option>
+                            <option value="Medium" selected>Medium (Normal)</option>
+                            <option value="Normal">Normal (Rutin)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Rencana Tindakan & Spare Part Kebutuhan</label>
+                    <textarea id="backlog-action-plan" required rows="3" placeholder="Rencana perbaikan, part number yang dibutuhkan..."
+                        class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-purple-500"></textarea>
+                </div>
+
+                <div id="backlog-stat-target-row" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Status Backlog</label>
+                        <select id="backlog-status" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-purple-500">
+                            <option value="Waiting Part">Waiting Part</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Pending Repair">Pending Repair</option>
+                            <option value="Completed">Completed / Ready</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Target Selesai (Target Date)</label>
+                        <input type="date" id="backlog-target-date" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-mono focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-3 border-t border-slate-200">
+                    <button type="button" onclick="closeBacklogModal()"
+                        class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded-lg">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold px-5 py-2 rounded-lg flex items-center space-x-1 shadow-md">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>SIMPAN ITEM BACKLOG</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    <!-- PLAN SERVICE ITEM MODAL -->
+    <div id="plan-service-modal" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[100] no-print p-4">
+        <div class="bg-white border border-slate-200 w-full max-w-xl p-6 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+                <h3 id="plan-service-modal-title" class="text-sm font-black text-slate-900 uppercase tracking-wider">Input Plan Service Hari Ini</h3>
+                <button type="button" onclick="closePlanServiceModal()" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="plan-service-form" onsubmit="savePlanServiceItem(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="ps-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Kode Unit</label>
+                        <input type="text" id="ps-unit-code" required placeholder="Contoh: EXCA 109 / DT 701"
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-mono font-bold focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Plan Armada</label>
+                        <select id="ps-plan" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-amber-500">
+                            <option value="EXCAVATOR">EXCAVATOR</option>
+                            <option value="DOZER">DOZER</option>
+                            <option value="MOTOR GREDER">MOTOR GREDER</option>
+                            <option value="DONGFENG">DONGFENG</option>
+                            <option value="HINO">HINO</option>
+                            <option value="MAN">MAN</option>
+                            <option value="SITRAK">SITRAK</option>
+                            <option value="WATER PUMP">WATER PUMP</option>
+                            <option value="COMPACTOR">COMPACTOR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Jenis Service / PS</label>
+                        <select id="ps-service-type" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-amber-500">
+                            <option value="PS 250">PS 250 Hours</option>
+                            <option value="PS 500">PS 500 Hours</option>
+                            <option value="PS 1000">PS 1000 Hours</option>
+                            <option value="PS 2000">PS 2000 Hours</option>
+                            <option value="PM Service">PM Service (Perawatan Berkala)</option>
+                            <option value="General Service">General Service & Inspection</option>
+                            <option value="Overhaul Engine">Overhaul Component / Engine</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Tanggal Plan Service</label>
+                        <input type="date" id="ps-plan-date" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-mono focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Target HM Unit</label>
+                        <input type="text" id="ps-target-hm" placeholder="Contoh: 12,500 HM"
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-mono focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Mekanik / PIC Pengerjaan</label>
+                        <input type="text" id="ps-mechanic" placeholder="Nama Mekanik / Tim PIC..."
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Status Service</label>
+                        <select id="ps-status" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 font-bold focus:outline-none focus:border-amber-500">
+                            <option value="Scheduled">Scheduled (Terjadwal)</option>
+                            <option value="In Progress">In Progress (Pengerjaan)</option>
+                            <option value="Completed">Completed (RFU)</option>
+                            <option value="Postponed">Postponed (Ditunda)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1 uppercase tracking-wide font-bold">Catatan / Keterangan</label>
+                        <input type="text" id="ps-notes" placeholder="Catatan filter, oli, atau instruksi khusus..."
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-950 focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-3 border-t border-slate-200">
+                    <button type="button" onclick="closePlanServiceModal()"
+                        class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded-lg">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold px-5 py-2 rounded-lg flex items-center space-x-1 shadow-md">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>SIMPAN PLAN SERVICE</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- SOP MODAL -->
     <div id="sop-modal"
         class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 overflow-y-auto no-print">
@@ -3666,7 +4108,7 @@
         </div>
         <!-- Tool hint bar -->
         <div class="bg-slate-800/80 px-3 py-1 text-[10px] text-slate-400 font-mono shrink-0 flex items-center gap-2">
-            <span id="annot-tool-hint">Mode: Lingkaran — klik & drag untuk menggambar lingkaran di area yang ingin
+            <span id="annot-tool-hint">Mode: Lingkaran â€” klik & drag untuk menggambar lingkaran di area yang ingin
                 difokuskan</span>
         </div>
         <!-- Canvas container -->
@@ -3768,6 +4210,9 @@
                     el.style.pointerEvents = 'auto';
                 });
                 applyRolePermissions();
+                if (currentUserRole === 'operation') {
+                    switchMenu('kanban-wo');
+                }
             }
         }
 
@@ -3788,6 +4233,8 @@
                     role = 'editor';
                 } else if (u === 'purchasing' && p === 'purchasing') {
                     role = 'purchasing';
+                } else if (u === 'operation' && p === 'operation') {
+                    role = 'operation';
                 }
             }
 
@@ -3841,8 +4288,35 @@
 
             const isEditor = (role === 'editor');
             const isPurchasing = (role === 'purchasing');
+            const isOperation = (role === 'operation');
 
-            // Hide/show sidebar buttons
+            // Nav buttons configuration
+            const navIdsToHideForOp = [
+                'btn-nav-dashboard', 'btn-nav-table', 'btn-nav-urgent-part', 'btn-nav-rca',
+                'btn-nav-populasi-unit', 'btn-nav-wo', 'btn-nav-far', 'btn-nav-org-structure',
+                'btn-nav-sop-jobdesc', 'btn-nav-accurate-parser', 'btn-nav-accurate-comparison',
+                'm-btn-nav-dashboard', 'm-btn-nav-table', 'm-btn-nav-urgent-part', 'm-btn-nav-rca',
+                'm-btn-nav-populasi-unit', 'm-btn-nav-wo', 'm-btn-nav-far', 'm-btn-nav-org-structure',
+                'm-btn-nav-sop-jobdesc', 'm-btn-nav-accurate-parser', 'm-btn-nav-accurate-comparison'
+            ];
+
+            if (isOperation) {
+                navIdsToHideForOp.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = 'none';
+                });
+                ['btn-nav-kanban-wo', 'm-btn-nav-kanban-wo', 'btn-nav-backlog', 'm-btn-nav-backlog', 'btn-nav-plan-service', 'm-btn-nav-plan-service'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = '';
+                });
+            } else {
+                navIdsToHideForOp.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = '';
+                });
+            }
+
+            // Hide/show sidebar action buttons
             const formInputSidebarBtn = document.querySelector('button[onclick="openFormModal()"]');
             const settingsSidebarBtn = document.querySelector('button[onclick="openSettingsModal()"]');
 
@@ -3854,6 +4328,7 @@
             const farAddBtns = document.querySelectorAll('button[onclick="openFarModal()"]');
             const orgAddBtns = document.querySelectorAll('button[onclick="openOrgMemberModal()"]');
             const sopAddBtn = document.getElementById('btn-add-sop-item');
+            const backlogAddBtn = document.getElementById('btn-add-backlog');
 
             const displayStyle = isEditor ? 'flex' : 'none';
 
@@ -3864,6 +4339,7 @@
             farAddBtns.forEach(btn => btn.style.display = displayStyle);
             orgAddBtns.forEach(btn => btn.style.display = displayStyle);
             if (sopAddBtn) sopAddBtn.style.display = isEditor ? 'inline-flex' : 'none';
+            if (backlogAddBtn) backlogAddBtn.style.display = (isEditor || isOperation) ? 'inline-flex' : 'none';
 
             if (formInputSidebarBtn) formInputSidebarBtn.style.display = displayStyle;
             if (settingsSidebarBtn) settingsSidebarBtn.style.display = displayStyle;
@@ -4157,7 +4633,8 @@
         const DEFAULT_USERS_DATA = [
             { id: "U_1", username: "viewer", password: "viewer", role: "viewer" },
             { id: "U_2", username: "editor", password: "editor", role: "editor" },
-            { id: "U_3", username: "purchasing", password: "purchasing", role: "purchasing" }
+            { id: "U_3", username: "purchasing", password: "purchasing", role: "purchasing" },
+            { id: "U_4", username: "operation", password: "operation", role: "operation" }
         ];
         let usersStore = [];
         let currentSortedPica = [];
@@ -4180,10 +4657,32 @@
         let farCurrentPage = 1;
         const ITEMS_PER_PAGE = 30;
         const PICA_ITEMS_PER_PAGE = 5;
-        let lastRcaQuery = "";
-        let lastFarFilterStatus = "";
-        let lastFarFilterPriority = "";
-
+        const DEFAULT_PLAN_SERVICE_DATA = [
+            {
+                id: "PS_1",
+                unit_code: "EXCA 109",
+                plan: "EXCAVATOR",
+                service_type: "PS 250",
+                plan_date: new Date().toISOString().split('T')[0],
+                target_hm: "12,500 HM",
+                mechanic: "Budi & Tim",
+                status: "In Progress",
+                notes: "Ganti Oli Mesin & Filter Primary",
+                created_at: new Date().toISOString().split('T')[0]
+            },
+            {
+                id: "PS_2",
+                unit_code: "DT 701",
+                plan: "DONGFENG",
+                service_type: "PS 500",
+                plan_date: new Date().toISOString().split('T')[0],
+                target_hm: "8,200 HM",
+                mechanic: "Agus / Joko",
+                status: "Scheduled",
+                notes: "Pengecekan Baut Roda & Filter Solar",
+                created_at: new Date().toISOString().split('T')[0]
+            }
+        ];
 
         const DEFAULT_SOP_DATA = [
             {
@@ -4280,6 +4779,8 @@
                             const localAcc = localStorage.getItem('ACCURATE_PR_DB');
                             const localWo = localStorage.getItem('WO_DB') || '[]';
                             const localUsers = localStorage.getItem('USERS_DB');
+                            const localBacklog = localStorage.getItem('BACKLOG_DB');
+                            const localPlanService = localStorage.getItem('PLAN_SERVICE_DB');
                             resolve({
                                 success: true,
                                 pica: currentDb,
@@ -4290,9 +4791,32 @@
                                 accurate: localAcc ? JSON.parse(localAcc) : [],
                                 wo: JSON.parse(localWo),
                                 users: localUsers ? JSON.parse(localUsers) : [...DEFAULT_USERS_DATA],
+                                backlog: localBacklog ? JSON.parse(localBacklog) : [...DEFAULT_BACKLOG_DATA],
+                                planService: localPlanService ? JSON.parse(localPlanService) : [...DEFAULT_PLAN_SERVICE_DATA],
                                 targets: targetsConfig,
                                 settings: systemSettings
                             });
+                        } else if (action === 'getPlanServiceData') {
+                            const localPlanService = localStorage.getItem('PLAN_SERVICE_DB');
+                            resolve(localPlanService ? JSON.parse(localPlanService) : [...DEFAULT_PLAN_SERVICE_DATA]);
+                        } else if (action === 'savePlanServiceData') {
+                            const payload = params.data;
+                            const localPlanService = localStorage.getItem('PLAN_SERVICE_DB');
+                            let currentPlanServiceDb = localPlanService ? JSON.parse(localPlanService) : [...DEFAULT_PLAN_SERVICE_DATA];
+                            if (payload.id) {
+                                currentPlanServiceDb = currentPlanServiceDb.map(item => item.id === payload.id ? payload : item);
+                            } else {
+                                payload.id = 'PS_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                                currentPlanServiceDb.unshift(payload);
+                            }
+                            localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(currentPlanServiceDb));
+                            resolve({ success: true, data: currentPlanServiceDb });
+                        } else if (action === 'deletePlanServiceData') {
+                            const localPlanService = localStorage.getItem('PLAN_SERVICE_DB');
+                            let currentPlanServiceDb = localPlanService ? JSON.parse(localPlanService) : [...DEFAULT_PLAN_SERVICE_DATA];
+                            currentPlanServiceDb = currentPlanServiceDb.filter(item => item.id !== params.id);
+                            localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(currentPlanServiceDb));
+                            resolve({ success: true, data: currentPlanServiceDb });
                         } else if (action === 'getData') {
                             resolve(currentDb);
                         } else if (action === 'getRcaData') {
@@ -4597,6 +5121,10 @@
                 const res = await callBackend('getOptimizedDataFull');
                 if (res && res.success) {
                     picaDataStore = Array.isArray(res.pica) ? res.pica : [];
+                    picaDataStore.forEach((item, idx) => {
+                        if (!item.id) item.id = "PICA_" + (idx + 2);
+                        if (!item.row_idx) item.row_idx = idx + 2;
+                    });
                     rcaDataStore = Array.isArray(res.rca) ? res.rca : [];
                     urgentPartsStore = Array.isArray(res.urgentParts) ? res.urgentParts : [];
                     populasiUnitStore = Array.isArray(res.populasi) ? res.populasi : [];
@@ -4604,7 +5132,11 @@
                     farDataStore = Array.isArray(res.far) ? res.far : [];
                     accurateDataStore = Array.isArray(res.accurate) ? res.accurate : [];
                     usersStore = Array.isArray(res.users) ? res.users : [];
+                    backlogDataStore = Array.isArray(res.backlog) ? res.backlog : [];
+                    planServiceDataStore = Array.isArray(res.planService) ? res.planService : [];
                     localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
+                    localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
+                    localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
                     
                     if (res.targets && Object.keys(res.targets).length > 0) {
                         targetsConfig = res.targets;
@@ -4630,6 +5162,8 @@
                 renderWoTable();
                 renderRcaModule();
                 renderFarModule();
+                renderBacklogModule();
+                renderPlanServiceModule();
             } catch (err) {
                 console.error("Terjadi galat:", err);
                 Swal.fire({
@@ -5191,7 +5725,7 @@
             paginatedData.forEach((item, index) => {
                 const globalIndex = index + 1 + startIndex;
 
-                // Flexible field resolution — works regardless of field name casing/spacing
+                // Flexible field resolution â€” works regardless of field name casing/spacing
                 const unitCode = getObjectValue(item, 'unit_code') || getObjectValue(item, 'Unit') || item.unit_code || '-';
                 const planVal = getObjectValue(item, 'plan') || item.plan || '';
                 const noMr = getObjectValue(item, 'no_mr') || getObjectValue(item, 'No MR') || item.no_mr || '-';
@@ -6255,8 +6789,17 @@
 
         // --- 8. NAVIGATION SWITCHER ---
         function switchMenu(menuId) {
+            if (currentUserRole === 'operation' && menuId !== 'kanban-wo' && menuId !== 'backlog' && menuId !== 'plan-service') {
+                menuId = 'kanban-wo';
+            }
             document.getElementById('view-dashboard').classList.add('hidden');
             document.getElementById('view-table').classList.add('hidden');
+            if (document.getElementById('view-backlog')) {
+                document.getElementById('view-backlog').classList.add('hidden');
+            }
+            if (document.getElementById('view-plan-service')) {
+                document.getElementById('view-plan-service').classList.add('hidden');
+            }
             document.getElementById('view-urgent-part').classList.add('hidden');
             document.getElementById('view-rca').classList.add('hidden');
             document.getElementById('view-populasi-unit').classList.add('hidden');
@@ -6287,6 +6830,28 @@
                 document.getElementById('view-table').classList.remove('hidden');
                 document.getElementById('btn-nav-table').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold transition-all shadow-md shadow-indigo-900/40";
                 document.getElementById('m-btn-nav-table').className = "mobile-nav-btn text-indigo-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
+            } else if (menuId === 'backlog') {
+                if (document.getElementById('view-backlog')) {
+                    document.getElementById('view-backlog').classList.remove('hidden');
+                }
+                if (document.getElementById('btn-nav-backlog')) {
+                    document.getElementById('btn-nav-backlog').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold transition-all shadow-md shadow-purple-900/40";
+                }
+                if (document.getElementById('m-btn-nav-backlog')) {
+                    document.getElementById('m-btn-nav-backlog').className = "mobile-nav-btn text-purple-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
+                }
+                renderBacklogModule();
+            } else if (menuId === 'plan-service') {
+                if (document.getElementById('view-plan-service')) {
+                    document.getElementById('view-plan-service').classList.remove('hidden');
+                }
+                if (document.getElementById('btn-nav-plan-service')) {
+                    document.getElementById('btn-nav-plan-service').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-amber-600 to-amber-700 text-white font-semibold transition-all shadow-md shadow-amber-900/40";
+                }
+                if (document.getElementById('m-btn-nav-plan-service')) {
+                    document.getElementById('m-btn-nav-plan-service').className = "mobile-nav-btn text-amber-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
+                }
+                renderPlanServiceModule();
             } else if (menuId === 'urgent-part') {
                 document.getElementById('view-urgent-part').classList.remove('hidden');
                 document.getElementById('btn-nav-urgent-part').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold transition-all shadow-md shadow-indigo-900/40";
@@ -6359,6 +6924,289 @@
                 loadAccurateComparison();
             }
 
+        }
+
+        // ============================================================
+        // BACKLOG SYSTEM MODULE
+        // ============================================================
+        const DEFAULT_BACKLOG_DATA = [
+            {
+                id: "BL_001",
+                unit_code: "EXCA 109",
+                plan: "EXCAVATOR",
+                problem: "Recoil Spring RH Broken & Under Carriage wear out",
+                category: "Undercarriage",
+                action_plan: "Replace Recoil Spring RH & Track Link. Part MR/2026/05/102",
+                priority: "Critical",
+                status: "Waiting Part",
+                target_date: "2026-06-25",
+                created_at: "2026-06-10"
+            },
+            {
+                id: "BL_002",
+                unit_code: "DT 701",
+                plan: "DONGFENG",
+                problem: "King Pin LH wear out & Bushing loose",
+                category: "Mechanical",
+                action_plan: "Replace King Pin LH & Re-bushing front axle",
+                priority: "High",
+                status: "In Progress",
+                target_date: "2026-06-28",
+                created_at: "2026-06-15"
+            },
+            {
+                id: "BL_003",
+                unit_code: "MAN 801",
+                plan: "MAN",
+                problem: "Transmisi Slip & Clutch Plate Terbakar",
+                category: "Engine",
+                action_plan: "Overhaul Transmisi & Replace Clutch Disc Assembly",
+                priority: "Critical",
+                status: "Waiting Part",
+                target_date: "2026-07-05",
+                created_at: "2026-06-18"
+            }
+        ];
+
+        let backlogDataStore = [];
+        let backlogCurrentPage = 1;
+
+        function renderBacklogModule() {
+            const localBacklog = localStorage.getItem('BACKLOG_DB');
+            if (localBacklog) {
+                try { backlogDataStore = JSON.parse(localBacklog); } catch(e) { backlogDataStore = [...DEFAULT_BACKLOG_DATA]; }
+            } else {
+                backlogDataStore = [...DEFAULT_BACKLOG_DATA];
+                localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
+            }
+            applyBacklogFilters();
+        }
+
+        function applyBacklogFilters() {
+            const query = (document.getElementById('search-backlog')?.value || '').toLowerCase().trim();
+            const cat = document.getElementById('filter-backlog-category')?.value || '';
+            const prio = document.getElementById('filter-backlog-priority')?.value || '';
+            const stat = document.getElementById('filter-backlog-status')?.value || '';
+
+            let total = backlogDataStore.length;
+            let critical = 0;
+            let waiting = 0;
+            let progress = 0;
+
+            backlogDataStore.forEach(b => {
+                if (b.priority === 'Critical' || b.priority === 'High') critical++;
+                if (b.status === 'Waiting Part') waiting++;
+                if (b.status === 'In Progress') progress++;
+            });
+
+            if (document.getElementById('backlog-kpi-total')) document.getElementById('backlog-kpi-total').innerText = total;
+            if (document.getElementById('backlog-kpi-critical')) document.getElementById('backlog-kpi-critical').innerText = critical;
+            if (document.getElementById('backlog-kpi-waiting')) document.getElementById('backlog-kpi-waiting').innerText = waiting;
+            if (document.getElementById('backlog-kpi-progress')) document.getElementById('backlog-kpi-progress').innerText = progress;
+
+            const filtered = backlogDataStore.filter(item => {
+                const matchQuery = !query || [item.unit_code, item.plan, item.problem, item.action_plan, item.category].some(v => v && String(v).toLowerCase().includes(query));
+                const matchCat = !cat || item.category === cat;
+                const matchPrio = !prio || item.priority === prio;
+                const matchStat = !stat || item.status === stat;
+                return matchQuery && matchCat && matchPrio && matchStat;
+            });
+
+            renderBacklogTable(filtered);
+        }
+
+        function renderBacklogTable(rows) {
+            const tbody = document.getElementById('backlog-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Tidak ada item backlog yang sesuai dengan filter.</td></tr>`;
+                return;
+            }
+
+            const canEdit = (currentUserRole === 'editor' || currentUserRole === 'operation');
+
+            rows.forEach((item, index) => {
+                let prioBadge = '';
+                if (item.priority === 'Critical') prioBadge = 'bg-rose-100 text-rose-800 border-rose-300 font-black';
+                else if (item.priority === 'High') prioBadge = 'bg-amber-100 text-amber-800 border-amber-300 font-bold';
+                else if (item.priority === 'Medium') prioBadge = 'bg-indigo-50 text-indigo-700 border-indigo-200';
+                else prioBadge = 'bg-slate-100 text-slate-700 border-slate-200';
+
+                let statBadge = '';
+                if (item.status === 'Completed') statBadge = 'bg-emerald-100 text-emerald-800 font-black';
+                else if (item.status === 'Waiting Part') statBadge = 'bg-amber-100 text-amber-800 font-bold';
+                else if (item.status === 'In Progress') statBadge = 'bg-indigo-100 text-indigo-800 font-bold';
+                else statBadge = 'bg-slate-100 text-slate-700';
+
+                const actionsHtml = canEdit ? `
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="editBacklogItem('${item.id}')" title="Edit Item" class="p-1 text-indigo-600 hover:bg-indigo-50 rounded">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="deleteBacklogItem('${item.id}')" title="Hapus Item" class="p-1 text-rose-600 hover:bg-rose-50 rounded">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                ` : '-';
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+                tr.innerHTML = `
+                    <td class="p-3 text-center border-r border-slate-200 font-bold">${index + 1}</td>
+                    <td class="p-3 border-r border-slate-200">
+                        <span class="font-black text-slate-900 block text-[11px] font-mono">${item.unit_code}</span>
+                        <span class="text-[9px] text-slate-500 font-bold uppercase block">${item.plan}</span>
+                    </td>
+                    <td class="p-3 border-r border-slate-200 text-slate-900 font-medium text-[11px] leading-relaxed">${item.problem.replace(/\n/g, '<br>')}</td>
+                    <td class="p-3 border-r border-slate-200">
+                        <span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold text-[9px] border border-purple-200 inline-block">${item.category}</span>
+                    </td>
+                    <td class="p-3 border-r border-slate-200 text-slate-700 text-[11px] font-mono">${item.action_plan ? item.action_plan.replace(/\n/g, '<br>') : '-'}</td>
+                    <td class="p-3 text-center border-r border-slate-200 font-mono font-bold text-slate-800 text-[11px]">${formatDateString(item.target_date)}</td>
+                    <td class="p-3 text-center border-r border-slate-200">
+                        <span class="px-2 py-0.5 rounded text-[9px] uppercase border inline-block ${prioBadge}">${item.priority}</span>
+                    </td>
+                    <td class="p-3 text-center border-r border-slate-200">
+                        <span class="px-2 py-0.5 rounded text-[9px] uppercase inline-block ${statBadge}">${item.status}</span>
+                    </td>
+                    <td class="p-3 text-center no-print">${actionsHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function toggleBacklogModalFieldsForRole() {
+            const catPrioRow = document.getElementById('backlog-cat-prio-row');
+            const statTargetRow = document.getElementById('backlog-stat-target-row');
+            const catEl = document.getElementById('backlog-category');
+            const prioEl = document.getElementById('backlog-priority');
+            const statEl = document.getElementById('backlog-status');
+            const targetDateEl = document.getElementById('backlog-target-date');
+
+            if (currentUserRole === 'operation') {
+                if (catPrioRow) catPrioRow.style.display = 'none';
+                if (statTargetRow) statTargetRow.style.display = 'none';
+                if (catEl) catEl.removeAttribute('required');
+                if (prioEl) prioEl.removeAttribute('required');
+                if (statEl) statEl.removeAttribute('required');
+                if (targetDateEl) targetDateEl.removeAttribute('required');
+            } else {
+                if (catPrioRow) catPrioRow.style.display = '';
+                if (statTargetRow) statTargetRow.style.display = '';
+                if (catEl) catEl.setAttribute('required', 'true');
+                if (prioEl) prioEl.setAttribute('required', 'true');
+                if (statEl) statEl.setAttribute('required', 'true');
+                if (targetDateEl) targetDateEl.setAttribute('required', 'true');
+            }
+        }
+
+        function openBacklogModal() {
+            document.getElementById('backlog-modal-title').innerText = "Tambah Item Backlog Pekerjaan";
+            document.getElementById('backlog-form').reset();
+            document.getElementById('backlog-id').value = "";
+            toggleBacklogModalFieldsForRole();
+            document.getElementById('backlog-modal').classList.remove('hidden');
+        }
+
+        function closeBacklogModal() {
+            document.getElementById('backlog-modal').classList.add('hidden');
+        }
+
+        function editBacklogItem(id) {
+            const item = backlogDataStore.find(b => b.id === id);
+            if (!item) return;
+
+            document.getElementById('backlog-modal-title').innerText = "Edit Item Backlog Pekerjaan";
+            document.getElementById('backlog-id').value = item.id;
+            document.getElementById('backlog-unit-code').value = item.unit_code;
+            document.getElementById('backlog-plan').value = item.plan;
+            document.getElementById('backlog-problem').value = item.problem;
+            document.getElementById('backlog-category').value = item.category || "Mechanical";
+            document.getElementById('backlog-priority').value = item.priority || "Medium";
+            document.getElementById('backlog-action-plan').value = item.action_plan;
+            document.getElementById('backlog-status').value = item.status || "Pending Repair";
+            document.getElementById('backlog-target-date').value = item.target_date || new Date().toISOString().split('T')[0];
+
+            toggleBacklogModalFieldsForRole();
+            document.getElementById('backlog-modal').classList.remove('hidden');
+        }
+
+        async function saveBacklogItem(event) {
+            event.preventDefault();
+            const id = document.getElementById('backlog-id').value;
+            const existingItem = id ? backlogDataStore.find(b => b.id === id) : null;
+
+            const payload = {
+                id: id || ('BL_' + Math.random().toString(36).substr(2, 9).toUpperCase()),
+                unit_code: document.getElementById('backlog-unit-code').value.trim(),
+                plan: document.getElementById('backlog-plan').value,
+                problem: document.getElementById('backlog-problem').value.trim(),
+                category: (currentUserRole === 'operation' && existingItem) ? existingItem.category : (document.getElementById('backlog-category').value || "Mechanical"),
+                priority: (currentUserRole === 'operation' && existingItem) ? existingItem.priority : (document.getElementById('backlog-priority').value || "Medium"),
+                action_plan: document.getElementById('backlog-action-plan').value.trim(),
+                status: (currentUserRole === 'operation' && existingItem) ? existingItem.status : (document.getElementById('backlog-status').value || "Pending Repair"),
+                target_date: (currentUserRole === 'operation' && existingItem) ? existingItem.target_date : (document.getElementById('backlog-target-date').value || new Date().toISOString().split('T')[0]),
+                created_at: existingItem ? existingItem.created_at : new Date().toISOString().split('T')[0]
+            };
+
+            showLoading(true);
+            try {
+                if (id) {
+                    backlogDataStore = backlogDataStore.map(b => b.id === id ? payload : b);
+                } else {
+                    backlogDataStore.unshift(payload);
+                }
+                localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
+                closeBacklogModal();
+                applyBacklogFilters();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Item Backlog Disimpan',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: '#ffffff',
+                    color: '#1e293b'
+                });
+            } catch (err) {
+                console.error("Gagal menyimpan backlog:", err);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function deleteBacklogItem(id) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus item backlog ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                background: '#ffffff',
+                color: '#1e293b'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    backlogDataStore = backlogDataStore.filter(b => b.id !== id);
+                    localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
+                    applyBacklogFilters();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Item Backlog Dihapus',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: '#ffffff',
+                        color: '#1e293b'
+                    });
+                }
+            });
         }
 
         // --- SISTEM CETAK MANDIRI (CLONE TO PRINT-ONLY DIV) ---
@@ -6733,7 +7581,7 @@
         function updateSignatureIndicator(key, value) {
             const element = document.getElementById(`indicator-sig-${key}`);
             if (value && value !== "") {
-                element.innerText = "✓ Siap Cetak";
+                element.innerText = "âœ“ Siap Cetak";
                 element.className = "text-[9px] text-emerald-600 font-bold font-mono";
             } else {
                 element.innerText = "Belum Ada";
@@ -7057,7 +7905,7 @@
             const target = picaDataStore.find(item => item.id === id);
             if (!target) return;
 
-            document.getElementById('modal-title').innerText = "Edit PICA ID: " + id;
+            document.getElementById('modal-title').innerText = "Edit PICA: " + (target.unit_code || target.plan);
             document.getElementById('pica-id').value = target.id;
             document.getElementById('form-plan').value = target.plan;
             document.getElementById('form-plan-type').value = target.plan_type || "Plan Running";
@@ -7091,8 +7939,12 @@
             event.preventDefault();
             showLoading(true);
 
+            const picaId = document.getElementById('pica-id').value || null;
+            const target = picaDataStore.find(item => item.id === picaId);
+
             const payload = {
-                id: document.getElementById('pica-id').value || null,
+                id: picaId,
+                row_idx: target ? target.row_idx : null,
                 plan: document.getElementById('form-plan').value,
                 plan_type: document.getElementById('form-plan-type').value,
                 unit_code: document.getElementById('form-unit-code').value.toUpperCase(),
@@ -7493,11 +8345,8 @@
                 }
             });
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="25" class="p-4 text-center text-slate-500 font-sans">Data Work Order (WO) kosong atau tidak ditemukan.</td></tr>`;
-                return;
-            }
-
+            // ALWAYS update pagination (even when filtered.length === 0)
+            // This prevents stale 8999 count when woStore is cleared
             const totalItems = filtered.length;
             const startIndex = (woCurrentPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -7596,7 +8445,7 @@
                         <td class="p-3 border-r border-industrial-border">${item["End BD"] || '-'}</td>
                         <td class="p-3 border-r border-industrial-border font-bold text-red-700">${item["TOTAL_2"] || '-'}</td>
                         <td class="p-3 border-r border-industrial-border">${item["SCH_UNH"] || '-'}</td>
-                        <td class="p-3 text-center">${actionsHtml}</td>
+                        <td class="p-3 border-r border-industrial-border text-center">${actionsHtml}</td>
                     </tr>
                 `;
                 tbody.insertAdjacentHTML('beforeend', row);
@@ -7616,6 +8465,7 @@
                 paginationDiv.innerHTML = pagHtml;
             }
             lucide.createIcons();
+
         }
 
         function changeWoPage(page) {
@@ -7653,35 +8503,57 @@
                 });
             }
 
-            // Separate items into columns
-            const unscheduledList = [];
-            const scheduledList = [];
-            const closedList = [];
+            // ============================================================
+            // KLASIFIKASI KOLOM KANBAN (diambil dari sheet "WO")
+            // - WO OPEN      : STATUS WO = OPEN (bukan scheduled)
+            // - PLAN SERVICE : STATUS WO = OPEN dan ber-flag SCHEDULED
+            // - WO CLOSED    : STATUS WO = CLOSE / CLOSED
+            // ============================================================
+            const getSchedFlag = (item) => String(item["SCH_UNH"] || item["SCH/UNH"] || "").toUpperCase();
 
-            items.forEach(item => {
-                const status = (item["STATUS WO"] || "").toUpperCase();
-                const schUnh = (item["SCH/UNH"] || "").toUpperCase();
-
-                if (status === 'OPEN') {
-                    if (schUnh === 'SCHEDULED') {
-                        scheduledList.push(item);
-                    } else {
-                        unscheduledList.push(item);
-                    }
-                } else if (status === 'CLOSE' || status === 'CLOSED') {
-                    closedList.push(item);
-                }
+            const closedList = items.filter(item => {
+                const status = String(item["STATUS WO"] || "").toUpperCase();
+                return status === 'CLOSE' || status === 'CLOSED';
             });
 
-            // Sort lists by date descending
-            const sortByDate = (a, b) => {
-                const valA = a["START DATETIME"] || a["START DATE"] || "";
-                const valB = b["START DATETIME"] || b["START DATE"] || "";
-                return String(valB).localeCompare(String(valA));
-            };
-            unscheduledList.sort(sortByDate);
-            scheduledList.sort(sortByDate);
-            closedList.sort(sortByDate);
+            const planServiceList = items.filter(item => {
+                const status = String(item["STATUS WO"] || "").toUpperCase();
+                const isClosed = status === 'CLOSE' || status === 'CLOSED';
+                return !isClosed && getSchedFlag(item) === 'SCHEDULED';
+            });
+
+            const openWOList = items.filter(item => {
+                const status = String(item["STATUS WO"] || "").toUpperCase();
+                const isClosed = status === 'CLOSE' || status === 'CLOSED';
+                return !isClosed && getSchedFlag(item) !== 'SCHEDULED';
+            });
+
+            // Build Plan Service Notification List
+            const planServiceNotifications = [];
+
+            // 1. Data from Plan Service Hari Ini module
+            planServiceDataStore.forEach(ps => {
+                planServiceNotifications.push({
+                    unit: ps.unit_code || '-',
+                    type: ps.service_type || 'Plan Service',
+                    date: ps.plan_date || '-',
+                    mechanic: ps.mechanic || '-',
+                    notes: ps.notes || ps.target_hm || '-',
+                    status: ps.status || 'Scheduled'
+                });
+            });
+
+            // 2. Data from Scheduled WOs
+            planServiceList.forEach(item => {
+                planServiceNotifications.push({
+                    unit: item["NO ID"] || '-',
+                    type: item["NO WO"] || 'WO Scheduled',
+                    date: item["START DATE"] || '-',
+                    mechanic: item["ACTION"] || '-',
+                    notes: item["PROBLEM"] || '-',
+                    status: 'WO Open'
+                });
+            });
 
             // Generate HTML for each column
             const renderCards = (list, targetCol) => {
@@ -7720,17 +8592,260 @@
                 }).join('');
             };
 
-            // Render columns
-            document.getElementById('kanban-unscheduled-count').innerText = unscheduledList.length;
-            document.getElementById('kanban-unscheduled-list').innerHTML = renderCards(unscheduledList, 'UNSCHEDULED');
+            const renderPlanNotificationCards = (list) => {
+                if (list.length === 0) {
+                    return `<div class="text-center py-8 text-slate-450 text-xs italic bg-slate-50/50 border border-dashed border-slate-200 rounded-lg font-sans">Belum ada Notifikasi Plan Service</div>`;
+                }
+                return list.map(item => {
+                    return `
+                        <div onclick="switchMenu('plan-service')"
+                            class="p-3 bg-gradient-to-r from-amber-50/50 to-white hover:bg-amber-100/50 border border-amber-200 rounded-lg shadow-sm hover:shadow transition cursor-pointer space-y-2 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="font-mono font-black text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded text-[10px]">${item.type}</span>
+                                <span class="font-bold text-slate-800 font-mono text-[11px] bg-white border border-slate-200 px-2 py-0.5 rounded">${item.unit}</span>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-slate-700 uppercase text-[9px] tracking-wide mb-0.5">Catatan / Detail:</h5>
+                                <p class="text-slate-650 font-sans break-words line-clamp-2" title="${item.notes}">${item.notes}</p>
+                            </div>
+                            <div class="flex justify-between items-center text-[9px] text-slate-500 font-mono border-t border-amber-100 pt-2 mt-1">
+                                <span class="font-bold text-amber-800">${item.mechanic && item.mechanic !== '-' ? 'PIC: ' + item.mechanic : item.date}</span>
+                                <span class="px-1.5 py-0.5 rounded font-bold uppercase text-[8px] bg-amber-500 text-white shadow-sm">${item.status}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            };
 
-            document.getElementById('kanban-scheduled-count').innerText = scheduledList.length;
-            document.getElementById('kanban-scheduled-list').innerHTML = renderCards(scheduledList, 'SCHEDULED');
+            // Render columns
+            document.getElementById('kanban-open-count').innerText = openWOList.length;
+            document.getElementById('kanban-open-list').innerHTML = renderCards(openWOList, 'WO OPEN');
+
+            document.getElementById('kanban-plan-service-count').innerText = planServiceNotifications.length;
+            document.getElementById('kanban-plan-service-list').innerHTML = renderPlanNotificationCards(planServiceNotifications);
 
             document.getElementById('kanban-closed-count').innerText = closedList.length;
             document.getElementById('kanban-closed-list').innerHTML = renderCards(closedList, 'CLOSED');
             
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        // --- PLAN SERVICE HARI INI MODULE LOGIC ---
+        let planServiceDataStore = [];
+        let planServiceCurrentPage = 1;
+
+        function renderPlanServiceModule() {
+            applyPlanServiceFilters();
+        }
+
+        function applyPlanServiceFilters() {
+            const search = (document.getElementById('search-plan-service')?.value || '').toLowerCase().trim();
+            const planFilter = document.getElementById('filter-ps-plan')?.value || '';
+            const statusFilter = document.getElementById('filter-ps-status')?.value || '';
+
+            let filtered = [...planServiceDataStore];
+
+            if (search) {
+                filtered = filtered.filter(item => {
+                    return (item.unit_code || '').toLowerCase().includes(search) ||
+                        (item.service_type || '').toLowerCase().includes(search) ||
+                        (item.mechanic || '').toLowerCase().includes(search) ||
+                        (item.notes || '').toLowerCase().includes(search);
+                });
+            }
+
+            if (planFilter) {
+                filtered = filtered.filter(item => (item.plan || '') === planFilter);
+            }
+
+            if (statusFilter) {
+                filtered = filtered.filter(item => (item.status || '') === statusFilter);
+            }
+
+            // Update KPI cards
+            const total = planServiceDataStore.length;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayCount = planServiceDataStore.filter(i => (i.plan_date || '') === todayStr).length;
+            const progressCount = planServiceDataStore.filter(i => (i.status || '') === 'In Progress').length;
+            const completedCount = planServiceDataStore.filter(i => (i.status || '') === 'Completed').length;
+
+            if (document.getElementById('ps-kpi-total')) document.getElementById('ps-kpi-total').innerText = total;
+            if (document.getElementById('ps-kpi-today')) document.getElementById('ps-kpi-today').innerText = todayCount;
+            if (document.getElementById('ps-kpi-progress')) document.getElementById('ps-kpi-progress').innerText = progressCount;
+            if (document.getElementById('ps-kpi-completed')) document.getElementById('ps-kpi-completed').innerText = completedCount;
+
+            renderPlanServiceTable(filtered);
+        }
+
+        function renderPlanServiceTable(data) {
+            const tbody = document.getElementById('plan-service-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="p-6 text-center text-slate-400 font-bold">Belum ada Plan Service terdaftar. Klik "Input Plan Service Hari Ini" untuk menambah data.</td></tr>';
+                return;
+            }
+
+            const isEditor = (currentUserRole === 'editor');
+            const isOperation = (currentUserRole === 'operation');
+            const canEdit = isEditor || isOperation;
+
+            data.forEach((item, idx) => {
+                let badgeStatus = '';
+                if (item.status === 'Completed') {
+                    badgeStatus = `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Completed</span>`;
+                } else if (item.status === 'In Progress') {
+                    badgeStatus = `<span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[10px]">In Progress</span>`;
+                } else if (item.status === 'Postponed') {
+                    badgeStatus = `<span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded text-[10px]">Postponed</span>`;
+                } else {
+                    badgeStatus = `<span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">Scheduled</span>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-amber-50/40 transition border-b border-slate-200';
+                tr.innerHTML = `
+                    <td class="p-3 text-center border-r border-slate-200 font-bold text-slate-500">${idx + 1}</td>
+                    <td class="p-3 border-r border-slate-200">
+                        <div class="font-black text-slate-900 font-mono">${item.unit_code || '-'}</div>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase">${item.plan || '-'}</span>
+                    </td>
+                    <td class="p-3 border-r border-slate-200 font-bold text-amber-700 font-mono">${item.service_type || '-'}</td>
+                    <td class="p-3 text-center border-r border-slate-200 font-mono text-slate-700">${item.plan_date || '-'}</td>
+                    <td class="p-3 text-center border-r border-slate-200 font-mono text-slate-800 font-bold">${item.target_hm || '-'}</td>
+                    <td class="p-3 border-r border-slate-200 font-semibold text-slate-800">${item.mechanic || '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-slate-600 font-sans break-words">${item.notes || '-'}</td>
+                    <td class="p-3 text-center border-r border-slate-200">${badgeStatus}</td>
+                    <td class="p-3 text-center no-print">
+                        ${canEdit ? `
+                        <div class="flex items-center justify-center space-x-1">
+                            <button onclick="editPlanServiceItem('${item.id}')" class="p-1 text-amber-600 hover:bg-amber-100 rounded" title="Edit Plan Service"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="deletePlanServiceItem('${item.id}')" class="p-1 text-rose-600 hover:bg-rose-100 rounded" title="Hapus Plan Service"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </div>` : '-'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function openPlanServiceModal(editId = null) {
+            document.getElementById('plan-service-form').reset();
+            document.getElementById('ps-id').value = '';
+            document.getElementById('ps-plan-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('plan-service-modal-title').innerText = 'Input Plan Service Hari Ini';
+
+            if (editId) {
+                const item = planServiceDataStore.find(p => p.id === editId);
+                if (item) {
+                    document.getElementById('plan-service-modal-title').innerText = 'Edit Plan Service â€” ' + item.unit_code;
+                    document.getElementById('ps-id').value = item.id;
+                    document.getElementById('ps-unit-code').value = item.unit_code || '';
+                    document.getElementById('ps-plan').value = item.plan || 'EXCAVATOR';
+                    document.getElementById('ps-service-type').value = item.service_type || 'PS 250';
+                    document.getElementById('ps-plan-date').value = item.plan_date || new Date().toISOString().split('T')[0];
+                    document.getElementById('ps-target-hm').value = item.target_hm || '';
+                    document.getElementById('ps-mechanic').value = item.mechanic || '';
+                    document.getElementById('ps-status').value = item.status || 'Scheduled';
+                    document.getElementById('ps-notes').value = item.notes || '';
+                }
+            }
+
+            document.getElementById('plan-service-modal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function closePlanServiceModal() {
+            document.getElementById('plan-service-modal').classList.add('hidden');
+        }
+
+        async function savePlanServiceItem(event) {
+            event.preventDefault();
+            showLoading(true);
+            try {
+                const existingId = document.getElementById('ps-id').value;
+                const payload = {
+                    id: existingId || ('PS_' + Math.random().toString(36).substr(2, 9).toUpperCase()),
+                    unit_code: document.getElementById('ps-unit-code').value.trim().toUpperCase(),
+                    plan: document.getElementById('ps-plan').value,
+                    service_type: document.getElementById('ps-service-type').value,
+                    plan_date: document.getElementById('ps-plan-date').value,
+                    target_hm: document.getElementById('ps-target-hm').value.trim(),
+                    mechanic: document.getElementById('ps-mechanic').value.trim(),
+                    status: document.getElementById('ps-status').value,
+                    notes: document.getElementById('ps-notes').value.trim(),
+                    created_at: new Date().toISOString().split('T')[0]
+                };
+
+                const res = await callBackend('savePlanServiceData', { data: payload });
+                if (res && res.success) {
+                    closePlanServiceModal();
+                    if (Array.isArray(res.data)) {
+                        planServiceDataStore = res.data;
+                    } else {
+                        const idx = planServiceDataStore.findIndex(p => p.id === payload.id);
+                        if (idx !== -1) planServiceDataStore[idx] = payload;
+                        else planServiceDataStore.unshift(payload);
+                    }
+                    localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
+
+                    renderPlanServiceModule();
+                    renderKanbanWo(); // Refresh notification column in Kanban WO
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Plan Service Tersimpan',
+                        text: `Jadwal service ${payload.unit_code} berhasil disimpan.`,
+                        timer: 1600,
+                        showConfirmButton: false,
+                        background: '#ffffff',
+                        color: '#1e293b'
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menyimpan',
+                    text: err.toString(),
+                    confirmButtonColor: '#dc2626'
+                });
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deletePlanServiceItem(id) {
+            const confirm = await Swal.fire({
+                title: 'Hapus Plan Service?',
+                text: 'Item jadwal service ini akan dihapus dari sistem.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            });
+
+            if (confirm.isConfirmed) {
+                showLoading(true);
+                try {
+                    const res = await callBackend('deletePlanServiceData', { id: id });
+                    if (res && res.success) {
+                        planServiceDataStore = planServiceDataStore.filter(p => p.id !== id);
+                        localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
+                        renderPlanServiceModule();
+                        renderKanbanWo();
+                        Swal.fire({ icon: 'success', title: 'Terhapus', timer: 1200, showConfirmButton: false });
+                    }
+                } catch (e) {
+                    Swal.fire({ icon: 'error', title: 'Gagal Menghapus', text: e.toString() });
+                } finally {
+                    showLoading(false);
+                }
+            }
         }
 
         function dragWo(ev, noWo) {
@@ -7753,16 +8868,20 @@
             if (!item) return;
 
             let hasChanged = false;
-            if (targetCol === 'UNSCHEDULED') {
-                if (item["STATUS WO"] !== 'OPEN' || item["SCH/UNH"] !== 'UNSCHEDULED') {
+            if (targetCol === 'OPEN') {
+                const schedFlag = String(item["SCH_UNH"] || item["SCH/UNH"] || "").toUpperCase();
+                if (item["STATUS WO"] !== 'OPEN' || schedFlag === 'SCHEDULED') {
                     item["STATUS WO"] = 'OPEN';
-                    item["SCH/UNH"] = 'UNSCHEDULED';
+                    item["SCH_UNH"] = 'UNSCHEDULED';
+                    delete item["SCH/UNH"];
                     hasChanged = true;
                 }
-            } else if (targetCol === 'SCHEDULED') {
-                if (item["STATUS WO"] !== 'OPEN' || item["SCH/UNH"] !== 'SCHEDULED') {
+            } else if (targetCol === 'PLAN_SERVICE') {
+                const schedFlag = String(item["SCH_UNH"] || item["SCH/UNH"] || "").toUpperCase();
+                if (item["STATUS WO"] !== 'OPEN' || schedFlag !== 'SCHEDULED') {
                     item["STATUS WO"] = 'OPEN';
-                    item["SCH/UNH"] = 'SCHEDULED';
+                    item["SCH_UNH"] = 'SCHEDULED';
+                    delete item["SCH/UNH"];
                     hasChanged = true;
                 }
             } else if (targetCol === 'CLOSED') {
@@ -7875,7 +8994,7 @@
                 document.getElementById('form-wo-end-bd').value = item["End BD"] || "";
                 document.getElementById('form-wo-total2').value = item["TOTAL_2"] || "";
 
-                const isSch = (item["SCH/UNH"] || "").toUpperCase() === "SCHEDULED";
+                const isSch = String(item["SCH_UNH"] || item["SCH/UNH"] || "").toUpperCase() === "SCHEDULED";
                 document.getElementById('wo-modal-title').innerText = isSch 
                     ? "Edit Notifikasi Schedule Service" 
                     : "Edit Work Order (WO)";
@@ -8055,7 +9174,12 @@
         let farPhotoBuffer = []; // temporary buffer for photos being added in form
 
         function saveFarToStorage() {
-            localStorage.setItem('PICA_FAR_DATA', JSON.stringify(farDataStore));
+            try {
+                localStorage.setItem('PICA_FAR_DATA', JSON.stringify(farDataStore));
+                localStorage.setItem('FAR_DB', JSON.stringify(farDataStore));
+            } catch (e) {
+                console.warn("Kapasitas penyimpanan lokal penuh saat menyimpan FAR:", e);
+            }
         }
 
         function openFarModal(editId = null) {
@@ -8070,7 +9194,7 @@
             if (editId) {
                 const item = farDataStore.find(f => f.id === editId);
                 if (!item) return;
-                document.getElementById('far-modal-title').innerText = 'Edit FAR — ' + item.unit_code;
+                document.getElementById('far-modal-title').innerText = 'Edit FAR â€” ' + item.unit_code;
                 document.getElementById('far-id').value = item.id;
                 document.getElementById('far-unit-code').value = item.unit_code || '';
                 document.getElementById('far-unit-type').value = item.unit_type || 'EXCAVATOR';
@@ -8149,8 +9273,8 @@
 
             try {
                 for (let file of toProcess) {
-                    // Compress to max 1600px (HD resolution) at 80% quality
-                    const compressedData = await compressImage(file, 1600, 1600, 0.80);
+                    // Compress to max 800px at 65% quality for lightweight storage (~40-60KB per image)
+                    const compressedData = await compressImage(file, 800, 800, 0.65);
                     farPhotoBuffer.push({ data: compressedData, caption: '' });
                 }
                 renderFarPhotoPreview();
@@ -8204,7 +9328,7 @@
             event.preventDefault();
             showLoading(true);
             try {
-                // Upload base64 photos to Google Drive first
+                // Upload base64 photos to Google Drive first if backend available
                 const uploadedPhotos = [];
                 for (let i = 0; i < farPhotoBuffer.length; i++) {
                     const photo = farPhotoBuffer[i];
@@ -8213,10 +9337,14 @@
                         const timestamp = Date.now();
                         const fileName = `FAR_${unitCode}_${timestamp}_${i}.jpg`;
 
-                        const res = await callBackend('uploadTtdToDrive', { fileName: fileName, fileData: photo.data });
-                        if (res.success && res.driveUrl) {
-                            uploadedPhotos.push({ data: res.driveUrl, caption: photo.caption || '' });
-                        } else {
+                        try {
+                            const res = await callBackend('uploadTtdToDrive', { fileName: fileName, fileData: photo.data });
+                            if (res && res.success && res.driveUrl) {
+                                uploadedPhotos.push({ data: res.driveUrl, caption: photo.caption || '' });
+                            } else {
+                                uploadedPhotos.push(photo);
+                            }
+                        } catch (e) {
                             uploadedPhotos.push(photo);
                         }
                     } else {
@@ -8226,7 +9354,7 @@
 
                 const existingId = document.getElementById('far-id').value;
                 const payload = {
-                    id: existingId || null,
+                    id: existingId || ('FAR_' + Math.random().toString(36).substr(2, 9).toUpperCase()),
                     unit_code: document.getElementById('far-unit-code').value.trim().toUpperCase(),
                     unit_type: document.getElementById('far-unit-type').value,
                     hm: document.getElementById('far-hm').value.trim(),
@@ -8244,23 +9372,45 @@
                     updated_at: new Date().toISOString().split('T')[0]
                 };
 
-                const response = await callBackend('saveFarData', { data: payload });
-                if (response.success) {
-                    Swal.fire({ icon: 'success', title: 'FAR Tersimpan', text: `FAR unit ${payload.unit_code} berhasil disimpan.`, timer: 1800, showConfirmButton: false });
-                    closeFarModal();
+                let response;
+                try {
+                    response = await callBackend('saveFarData', { data: payload });
+                } catch(e) {
+                    response = { success: true };
+                }
 
-                    // Refresh data
-                    const farData = await callBackend('getFarData');
-                    farDataStore = Array.isArray(farData) ? farData : [];
+                if (response && response.success) {
+                    closeFarModal();
+                    try {
+                        const farData = await callBackend('getFarData');
+                        farDataStore = Array.isArray(farData) ? farData : [];
+                    } catch(e) {
+                        const idx = farDataStore.findIndex(f => f.id === payload.id);
+                        if (idx !== -1) farDataStore[idx] = payload;
+                        else farDataStore.unshift(payload);
+                    }
+                    saveFarToStorage();
                     renderFarModule();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'FAR Tersimpan',
+                        text: `FAR unit ${payload.unit_code} berhasil disimpan.`,
+                        timer: 1800,
+                        showConfirmButton: false,
+                        background: '#ffffff',
+                        color: '#1e293b'
+                    });
                 }
             } catch (err) {
-                console.error(err);
+                console.error("Gagal menyimpan FAR:", err);
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal Menyimpan FAR',
                     text: err.toString(),
-                    confirmButtonColor: '#dc2626'
+                    confirmButtonColor: '#dc2626',
+                    background: '#ffffff',
+                    color: '#1e293b'
                 });
             } finally {
                 showLoading(false);
@@ -8485,11 +9635,11 @@
         let _annotImgHeight = 0;
 
         const ANNOT_HINTS = {
-            circle: 'Mode: Lingkaran — drag untuk menggambar lingkaran di area yang ingin difokuskan',
-            rect: 'Mode: Kotak — drag untuk membuat kotak highlight',
-            arrow: 'Mode: Panah — drag dari pangkal ke ujung panah',
-            freehand: 'Mode: Gambar Bebas — tekan & geser untuk menggambar bebas',
-            text: 'Mode: Teks — klik pada titik yang ingin diberi label teks'
+            circle: 'Mode: Lingkaran â€” drag untuk menggambar lingkaran di area yang ingin difokuskan',
+            rect: 'Mode: Kotak â€” drag untuk membuat kotak highlight',
+            arrow: 'Mode: Panah â€” drag dari pangkal ke ujung panah',
+            freehand: 'Mode: Gambar Bebas â€” tekan & geser untuk menggambar bebas',
+            text: 'Mode: Teks â€” klik pada titik yang ingin diberi label teks'
         };
 
         function openAnnotationEditor(photoIdx) {
@@ -10125,7 +11275,7 @@
 
     </script>
 
-    <!-- DEDICATED PRINT CONTAINER — berada langsung di dalam body (bukan dalam main/aside/section) -->
+    <!-- DEDICATED PRINT CONTAINER â€” berada langsung di dalam body (bukan dalam main/aside/section) -->
     <!-- Saat print: hanya div ini yang tampil. Diisi oleh JS printSection() dengan clone konten target -->
     <div id="print-only" style="display:none;"></div>
 
