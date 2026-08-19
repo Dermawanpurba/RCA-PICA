@@ -4217,7 +4217,7 @@
                                     target._fcb = null; // Reset
 
                                     const controller = new AbortController();
-                                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                                    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
                                     fetch(GAS_URL, {
                                         method: 'POST',
@@ -4230,16 +4230,19 @@
                                     })
                                         .then(response => {
                                             clearTimeout(timeoutId);
+                                            if (!response.ok) throw new Error("HTTP " + response.status + " — cek Deploy GAS (Anyone) & URL");
                                             return response.json();
                                         })
                                         .then(res => {
-                                            if (res.error && fcb) fcb(res.error);
-                                            else if (scb) scb(res.data !== undefined ? res.data : res);
+                                            // GAS doPost mengembalikan {status, data} atau {status:'error', error}
+                                            if (res.status === 'error' && fcb) { fcb(res.error); return; }
+                                            if (res.error && fcb) { fcb(res.error); return; }
+                                            if (scb) scb(res.data !== undefined ? res.data : res);
                                         })
                                         .catch(err => {
                                             clearTimeout(timeoutId);
-                                            console.warn("Fetch API Error / Timeout (Menggunakan fallback lokal):", err);
-                                            if (fcb) fcb(err);
+                                            console.error("Fetch GAS gagal:", err);
+                                            if (fcb) fcb(err.message || String(err));
                                         });
                                 };
                             }
@@ -4802,19 +4805,44 @@
                 { id: "org_5", name: "Hamzah", title: "Inspector / Teknisi", parentId: "org_2" }
             ];
 
-            // --- 2. SAFE API WRAPPER FOR GOOGLE APPS SCRIPT ---
+            // --- 2. SAFE API WRAPPER FOR GOOGLE APPS SCRIPT (FIXED: error visible, no silent fallback) ---
             async function callBackend(action, params = {}) {
                 return new Promise((resolve, reject) => {
                     const cleanKey = (key) => String(key).replace(/[\.\#\$\[\]\/]/g, "-");
 
+                    const isGasProxy = typeof google !== 'undefined' && typeof google.script !== 'undefined' && typeof google.script.run !== 'undefined' && typeof google.script.run.executeAction === 'function';
+                    const isRealGas = isGasProxy && GAS_URL && !GAS_URL.includes("MACRO_ID") && GAS_URL.startsWith("https://");
 
-                    // 2. KONEKSI GOOGLE APPS SCRIPT (Production / Live Server)
-                    if (typeof google !== 'undefined' && typeof google.script !== 'undefined') {
+                    // 2. KONEKSI GOOGLE APPS SCRIPT (Production / Live Server) — dengan timeout guard & error transparan
+                    if (isGasProxy) {
+                        let settled = false;
+                        const timer = setTimeout(() => {
+                            if (!settled) {
+                                settled = true;
+                                const msg = "Timeout koneksi Google Sheets (GAS). Periksa deploy Web App & GAS_URL di Settings.";
+                                console.error(msg);
+                                Swal.fire({ icon: 'error', title: 'Koneksi Gagal', text: msg, confirmButtonColor: '#dc2626' });
+                                reject(new Error(msg));
+                            }
+                        }, 12000);
                         google.script.run
-                            .withSuccessHandler(res => resolve(res))
-                            .withFailureHandler(err => reject(err))
+                            .withSuccessHandler(res => { if (settled) return; settled = true; clearTimeout(timer); resolve(res); })
+                            .withFailureHandler(err => {
+                                if (settled) return; settled = true; clearTimeout(timer);
+                                const msg = (err && err.message) ? err.message : String(err);
+                                console.error("GAS executeAction failed:", msg);
+                                // JANGAN silent fallback jika GAS_URL valid — tampilkan error agar user tahu data belum ke Sheets
+                                if (isRealGas) {
+                                    Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: msg, confirmButtonColor: '#dc2626' });
+                                }
+                                reject(err);
+                            })
                             .executeAction(action, params);
                         return;
+                    }
+                    // Jika bukan GAS (preview lokal/file://), baru gunakan mock — beri info ringan
+                    if (!isRealGas) {
+                        console.warn("callBackend: GAS tidak terdeteksi, memakai mock lokal (data hanya di localStorage). Action:", action);
                     }
 
                     // 3. MOCK SIMULASI LOKAL (Offline Preview)
@@ -5202,6 +5230,9 @@
                         usersStore = Array.isArray(res.users) ? res.users : [];
                         backlogDataStore = Array.isArray(res.backlog) ? res.backlog : [];
                         planServiceDataStore = Array.isArray(res.planService) ? res.planService : [];
+                        orgDataStore = Array.isArray(res.org) ? res.org : [];
+                        sopDataStore = Array.isArray(res.sop) ? res.sop : [];
+                        jobdescDataStore = Array.isArray(res.jobdesc) ? res.jobdesc : [];
                         localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
                         localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
                         localStorage.setItem('URGENT_PARTS_DB', JSON.stringify(urgentPartsStore));
@@ -5212,6 +5243,9 @@
                         localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
                         localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
                         localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
+                        localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
+                        localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
+                        localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
 
                         if (res.targets && Object.keys(res.targets).length > 0) {
                             targetsConfig = res.targets;
@@ -5269,6 +5303,16 @@
                     farDataStore = JSON.parse(localFar);
                     const localUsers = localStorage.getItem('USERS_DB');
                     usersStore = localUsers ? JSON.parse(localUsers) : [...DEFAULT_USERS_DATA];
+                    const localBacklogDb = localStorage.getItem('BACKLOG_DB');
+                    backlogDataStore = localBacklogDb ? JSON.parse(localBacklogDb) : [...DEFAULT_BACKLOG_DATA];
+                    const localPsDb = localStorage.getItem('PLAN_SERVICE_DB');
+                    planServiceDataStore = localPsDb ? JSON.parse(localPsDb) : [];
+                    const localOrgDb = localStorage.getItem('ORG_STRUCTURE_DB');
+                    orgDataStore = localOrgDb ? JSON.parse(localOrgDb) : [...DEFAULT_ORG_DATA];
+                    const localSopDb = localStorage.getItem('SOP_DATA_DB');
+                    sopDataStore = localSopDb ? JSON.parse(localSopDb) : [...DEFAULT_SOP_DATA];
+                    const localJdDb = localStorage.getItem('JOBDESC_DATA_DB');
+                    jobdescDataStore = localJdDb ? JSON.parse(localJdDb) : [...DEFAULT_JOBDESC_DATA];
 
                     applySystemSettingsToUI();
                     renderDashboard();
@@ -5308,6 +5352,12 @@
                                     woStore = Array.isArray(res.wo) ? res.wo : [];
                                     farDataStore = Array.isArray(res.far) ? res.far : [];
                                     accurateDataStore = Array.isArray(res.accurate) ? res.accurate : [];
+                                    backlogDataStore = Array.isArray(res.backlog) ? res.backlog : backlogDataStore;
+                                    planServiceDataStore = Array.isArray(res.planService) ? res.planService : planServiceDataStore;
+                                    orgDataStore = Array.isArray(res.org) ? res.org : orgDataStore;
+                                    sopDataStore = Array.isArray(res.sop) ? res.sop : sopDataStore;
+                                    jobdescDataStore = Array.isArray(res.jobdesc) ? res.jobdesc : jobdescDataStore;
+                                    usersStore = Array.isArray(res.users) ? res.users : usersStore;
 
                                     localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
                                     localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
@@ -5316,6 +5366,12 @@
                                     localStorage.setItem('WO_DB', JSON.stringify(woStore));
                                     localStorage.setItem('FAR_DB', JSON.stringify(farDataStore));
                                     localStorage.setItem('ACCURATE_PR_DB', JSON.stringify(accurateDataStore));
+                                    localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
+                                    localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
+                                    localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
+                                    localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
+                                    localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
+                                    localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
 
                                     if (res.targets && Object.keys(res.targets).length > 0) {
                                         targetsConfig = res.targets;
@@ -7232,10 +7288,16 @@
 
                 showLoading(true);
                 try {
-                    if (id) {
-                        backlogDataStore = backlogDataStore.map(b => b.id === id ? payload : b);
+                    const res = await callBackend('saveBacklogData', { data: payload });
+                    if (res && (res.success || res.data)) {
+                        if (res.data) backlogDataStore = res.data;
+                        else {
+                            if (id) backlogDataStore = backlogDataStore.map(b => b.id === id ? payload : b);
+                            else backlogDataStore.unshift(payload);
+                        }
                     } else {
-                        backlogDataStore.unshift(payload);
+                        if (id) backlogDataStore = backlogDataStore.map(b => b.id === id ? payload : b);
+                        else backlogDataStore.unshift(payload);
                     }
                     localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
                     closeBacklogModal();
@@ -7243,7 +7305,7 @@
 
                     Swal.fire({
                         icon: 'success',
-                        title: 'Item Backlog Disimpan',
+                        title: 'Item Backlog Disimpan ke Sheets',
                         timer: 1500,
                         showConfirmButton: false,
                         background: '#ffffff',
@@ -7251,13 +7313,14 @@
                     });
                 } catch (err) {
                     console.error("Gagal menyimpan backlog:", err);
+                    Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: String(err), confirmButtonColor: '#dc2626' });
                 } finally {
                     showLoading(false);
                 }
             }
 
-            function deleteBacklogItem(id) {
-                Swal.fire({
+            async function deleteBacklogItem(id) {
+                const result = await Swal.fire({
                     title: 'Konfirmasi Hapus',
                     text: "Apakah Anda yakin ingin menghapus item backlog ini?",
                     icon: 'warning',
@@ -7268,22 +7331,19 @@
                     cancelButtonText: 'Batal',
                     background: '#ffffff',
                     color: '#1e293b'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        backlogDataStore = backlogDataStore.filter(b => b.id !== id);
-                        localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
-                        applyBacklogFilters();
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Item Backlog Dihapus',
-                            timer: 1500,
-                            showConfirmButton: false,
-                            background: '#ffffff',
-                            color: '#1e293b'
-                        });
-                    }
                 });
+                if (!result.isConfirmed) return;
+                showLoading(true);
+                try {
+                    const res = await callBackend('deleteBacklogData', { id: id });
+                    if (res && res.data) backlogDataStore = res.data;
+                    else backlogDataStore = backlogDataStore.filter(b => b.id !== id);
+                    localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
+                    applyBacklogFilters();
+                    Swal.fire({ icon: 'success', title: 'Item Backlog Dihapus dari Sheets', timer: 1500, showConfirmButton: false });
+                } catch (err) {
+                    Swal.fire({ icon: 'error', title: 'Gagal Hapus', text: String(err), confirmButtonColor: '#dc2626' });
+                } finally { showLoading(false); }
             }
 
             // --- SISTEM CETAK MANDIRI (CLONE TO PRINT-ONLY DIV) ---
@@ -8155,24 +8215,27 @@
 
                 try {
                     const response = await callBackend('saveData', { data: payload });
-                    if (response.success) {
+                    if (response && response.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Data Berhasil Disimpan',
+                            title: 'Data Berhasil Disimpan ke Sheets',
                             showConfirmButton: false,
                             timer: 1500,
                             background: '#ffffff',
                             color: '#1e293b'
                         });
                         closeFormModal();
-                        initApp();
+                        await initApp();
+                    } else {
+                        const msg = (response && response.message) ? response.message : 'Response tidak success dari server';
+                        throw new Error(msg);
                     }
                 } catch (err) {
                     console.error(err);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal Menyimpan Data',
-                        text: err.toString(),
+                        title: 'Gagal Menyimpan ke Google Sheets',
+                        text: (err && err.message ? err.message : String(err)) + "\n\nData TIDAK tersimpan ke Sheets. Cek GAS_URL di Settings dan Deploy Web App (Anyone).",
                         confirmButtonColor: '#dc2626',
                         background: '#ffffff',
                         color: '#1e293b'
@@ -11135,36 +11198,38 @@
                 document.getElementById('org-member-modal').classList.remove('hidden');
             }
 
-            function saveOrgMember(event) {
+            async function saveOrgMember(event) {
                 event.preventDefault();
                 const id = document.getElementById('org-member-id').value;
-                const name = document.getElementById('org-member-name').value.trim();
-                const title = document.getElementById('org-member-title').value.trim();
-                const parentId = document.getElementById('org-member-parent').value || null;
-
-                if (id) {
-                    orgDataStore = orgDataStore.map(m => m.id === id ? { ...m, name, title, parentId } : m);
-                } else {
-                    const newId = 'org_' + Math.random().toString(36).substr(2, 9);
-                    orgDataStore.push({ id: newId, name, title, parentId });
-                }
-
-                localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
-                closeOrgMemberModal();
-                renderOrgModule();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Data Anggota Tim Disimpan',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#ffffff',
-                    color: '#1e293b'
-                });
+                const payload = {
+                    id: id || undefined,
+                    name: document.getElementById('org-member-name').value.trim(),
+                    title: document.getElementById('org-member-title').value.trim(),
+                    parentId: document.getElementById('org-member-parent').value || ""
+                };
+                showLoading(true);
+                try {
+                    const res = await callBackend('saveOrgData', { data: payload });
+                    if (res && res.data) orgDataStore = res.data;
+                    else {
+                        if (id) orgDataStore = orgDataStore.map(m => m.id === id ? { ...m, ...payload, id } : m);
+                        else {
+                            const nid = (res && res.id) ? res.id : ('org_' + Math.random().toString(36).substr(2, 9));
+                            orgDataStore.push({ ...payload, id: nid });
+                        }
+                    }
+                    localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
+                    closeOrgMemberModal();
+                    renderOrgModule();
+                    Swal.fire({ icon: 'success', title: 'Data Anggota Disimpan ke Sheets', showConfirmButton: false, timer: 1500, background: '#ffffff', color: '#1e293b' });
+                } catch(err){
+                    console.error('saveOrgMember gagal',err);
+                    Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: String(err), confirmButtonColor: '#dc2626' });
+                } finally { showLoading(false); }
             }
 
-            function deleteOrgMember(id) {
-                Swal.fire({
+            async function deleteOrgMember(id) {
+                const result = await Swal.fire({
                     title: 'Konfirmasi Hapus',
                     text: "Apakah Anda yakin ingin menghapus anggota ini? Anggota di bawahnya akan kehilangan relasi atasan langsung.",
                     icon: 'warning',
@@ -11175,24 +11240,22 @@
                     cancelButtonText: 'Batal',
                     background: '#ffffff',
                     color: '#1e293b'
-                }).then((result) => {
-                    if (result.isConfirmed) {
+                });
+                if (!result.isConfirmed) return;
+                showLoading(true);
+                try {
+                    const res = await callBackend('deleteOrgData', { id: id });
+                    if (res && res.data) orgDataStore = res.data;
+                    else {
                         orgDataStore = orgDataStore.filter(m => m.id !== id);
                         orgDataStore = orgDataStore.map(m => m.parentId === id ? { ...m, parentId: null } : m);
-
-                        localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
-                        renderOrgModule();
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Anggota Berhasil Dihapus',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            background: '#ffffff',
-                            color: '#1e293b'
-                        });
                     }
-                });
+                    localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
+                    renderOrgModule();
+                    Swal.fire({ icon: 'success', title: 'Anggota Dihapus dari Sheets', showConfirmButton: false, timer: 1500, background: '#ffffff', color: '#1e293b' });
+                } catch(err){
+                    Swal.fire({ icon: 'error', title: 'Gagal Hapus', text: String(err), confirmButtonColor: '#dc2626' });
+                } finally { showLoading(false); }
             }
 
             // ============================================================
@@ -11376,36 +11439,37 @@
                 document.getElementById('sop-modal').classList.remove('hidden');
             }
 
-            function saveSopDataItem(event) {
+            async function saveSopDataItem(event) {
                 event.preventDefault();
                 const id = document.getElementById('sop-id').value;
-                const title = document.getElementById('sop-title-input').value.trim();
-                const category = document.getElementById('sop-category-input').value;
-                const content = document.getElementById('sop-content-input').value.trim();
-
-                if (id) {
-                    sopDataStore = sopDataStore.map(s => s.id === id ? { ...s, title, category, content } : s);
-                } else {
-                    const newId = 'sop_' + Math.random().toString(36).substr(2, 9);
-                    sopDataStore.push({ id: newId, title, category, content });
-                }
-
-                localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
-                closeSopModal();
-                renderSopModuleContent();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'SOP Berhasil Disimpan',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#ffffff',
-                    color: '#1e293b'
-                });
+                const payload = {
+                    id: id || undefined,
+                    title: document.getElementById('sop-title-input').value.trim(),
+                    category: document.getElementById('sop-category-input').value,
+                    content: document.getElementById('sop-content-input').value.trim()
+                };
+                showLoading(true);
+                try {
+                    const res = await callBackend('saveSopData', { data: payload });
+                    if (res && res.data) sopDataStore = res.data;
+                    else {
+                        if (id) sopDataStore = sopDataStore.map(s => s.id === id ? { ...s, ...payload, id } : s);
+                        else {
+                            const nid = (res && res.id) ? res.id : ('sop_' + Math.random().toString(36).substr(2, 9));
+                            sopDataStore.push({ ...payload, id: nid });
+                        }
+                    }
+                    localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
+                    closeSopModal();
+                    renderSopModuleContent();
+                    Swal.fire({ icon: 'success', title: 'SOP Disimpan ke Sheets', showConfirmButton: false, timer: 1500, background: '#ffffff', color: '#1e293b' });
+                } catch(err){
+                    Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: String(err), confirmButtonColor: '#dc2626' });
+                } finally { showLoading(false); }
             }
 
-            function deleteSopItem(id) {
-                Swal.fire({
+            async function deleteSopItem(id) {
+                const result = await Swal.fire({
                     title: 'Konfirmasi Hapus',
                     text: "Apakah Anda yakin ingin menghapus data SOP ini?",
                     icon: 'warning',
@@ -11416,22 +11480,18 @@
                     cancelButtonText: 'Batal',
                     background: '#ffffff',
                     color: '#1e293b'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        sopDataStore = sopDataStore.filter(s => s.id !== id);
-                        localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
-                        renderSopModuleContent();
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'SOP Berhasil Dihapus',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            background: '#ffffff',
-                            color: '#1e293b'
-                        });
-                    }
                 });
+                if (!result.isConfirmed) return;
+                showLoading(true);
+                try {
+                    const res = await callBackend('deleteSopData', { id: id });
+                    if (res && res.data) sopDataStore = res.data;
+                    else sopDataStore = sopDataStore.filter(s => s.id !== id);
+                    localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
+                    renderSopModuleContent();
+                    Swal.fire({ icon: 'success', title: 'SOP Dihapus dari Sheets', showConfirmButton: false, timer: 1500, background: '#ffffff', color: '#1e293b' });
+                } catch(err){ Swal.fire({ icon: 'error', title: 'Gagal Hapus', text: String(err), confirmButtonColor: '#dc2626' }); }
+                finally { showLoading(false); }
             }
 
             function editJobdescItem(id) {
@@ -11447,36 +11507,36 @@
                 document.getElementById('jobdesc-modal').classList.remove('hidden');
             }
 
-            function saveJobdescDataItem(event) {
+            async function saveJobdescDataItem(event) {
                 event.preventDefault();
                 const id = document.getElementById('jobdesc-id').value;
-                const role = document.getElementById('jobdesc-role-input').value.trim();
-                const responsibility = document.getElementById('jobdesc-responsibility-input').value.trim();
-                const duties = document.getElementById('jobdesc-duties-input').value.trim();
-
-                if (id) {
-                    jobdescDataStore = jobdescDataStore.map(j => j.id === id ? { ...j, role, responsibility, duties } : j);
-                } else {
-                    const newId = 'jd_' + Math.random().toString(36).substr(2, 9);
-                    jobdescDataStore.push({ id: newId, role, responsibility, duties });
-                }
-
-                localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
-                closeJobdescModal();
-                renderJobdescModuleContent();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Data Peranan Berhasil Disimpan',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#ffffff',
-                    color: '#1e293b'
-                });
+                const payload = {
+                    id: id || undefined,
+                    role: document.getElementById('jobdesc-role-input').value.trim(),
+                    responsibility: document.getElementById('jobdesc-responsibility-input').value.trim(),
+                    duties: document.getElementById('jobdesc-duties-input').value.trim()
+                };
+                showLoading(true);
+                try {
+                    const res = await callBackend('saveJobdescData', { data: payload });
+                    if (res && res.data) jobdescDataStore = res.data;
+                    else {
+                        if (id) jobdescDataStore = jobdescDataStore.map(j => j.id === id ? { ...j, ...payload, id } : j);
+                        else {
+                            const nid = (res && res.id) ? res.id : ('jd_' + Math.random().toString(36).substr(2, 9));
+                            jobdescDataStore.push({ ...payload, id: nid });
+                        }
+                    }
+                    localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
+                    closeJobdescModal();
+                    renderJobdescModuleContent();
+                    Swal.fire({ icon: 'success', title: 'Jobdesc Disimpan ke Sheets', showConfirmButton: false, timer: 1500, background: '#ffffff', color: '#1e293b' });
+                } catch(err){ Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: String(err), confirmButtonColor: '#dc2626' }); }
+                finally { showLoading(false); }
             }
 
-            function deleteJobdescItem(id) {
-                Swal.fire({
+            async function deleteJobdescItem(id) {
+                const result = await Swal.fire({
                     title: 'Konfirmasi Hapus',
                     text: "Apakah Anda yakin ingin menghapus data peranan ini?",
                     icon: 'warning',
@@ -11487,22 +11547,18 @@
                     cancelButtonText: 'Batal',
                     background: '#ffffff',
                     color: '#1e293b'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        jobdescDataStore = jobdescDataStore.filter(j => j.id !== id);
-                        localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
-                        renderJobdescModuleContent();
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Data Peranan Berhasil Dihapus',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            background: '#ffffff',
-                            color: '#1e293b'
-                        });
-                    }
                 });
+                if (!result.isConfirmed) return;
+                showLoading(true);
+                try {
+                    const res = await callBackend('deleteJobdescData', { id: id });
+                    if (res && res.data) jobdescDataStore = res.data;
+                    else jobdescDataStore = jobdescDataStore.filter(j => j.id !== id);
+                    localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
+                    renderJobdescModuleContent();
+                    Swal.fire({ icon: 'success', title: 'Jobdesc Dihapus dari Sheets', showConfirmButton: false, timer: 1500, background: '#ffffff', color: '#1e293b' });
+                } catch(err){ Swal.fire({ icon: 'error', title: 'Gagal Hapus', text: String(err), confirmButtonColor: '#dc2626' }); }
+                finally { showLoading(false); }
             }
 
         </script>
