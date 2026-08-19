@@ -4189,14 +4189,29 @@
             let AUTO_SYNC_INTERVAL = parseInt(localStorage.getItem('PICA_SYNC_INTERVAL')) || 0; // Default to 0 (disabled)
             let syncTimer = null;
 
-            // REAL INTEGRATION FOR LIVE SERVER
-            if (typeof google === 'undefined') {
+            // REAL INTEGRATION FOR LIVE SERVER - FIX: selalu tampil & cek koneksi
+            (function initLiveBadge(){
                 const badge = document.getElementById('previewBadge');
-                if (badge) {
-                    badge.innerText = 'LIVE SERVER (Terkoneksi ke GAS)';
+                if (!badge) return;
+                const isGasConfigured = GAS_URL && !GAS_URL.includes("MACRO_ID") && GAS_URL.startsWith("https://");
+                if (typeof google === 'undefined' && isGasConfigured) {
+                    badge.innerText = 'LIVE SERVER';
                     badge.style.backgroundColor = '#2563eb';
                     badge.style.display = 'block';
+                    badge.title = GAS_URL;
+                    // health check ringan tanpa ganggu data
+                    fetch(GAS_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({functionName:'executeAction', parameters:['getOptimizedDataFull',{}]})})
+                      .then(r=>r.json()).then(j=>{
+                        if(j && (j.status==='success' || j.data)) { badge.innerText='LIVE SERVER ● ONLINE'; badge.style.backgroundColor='#16a34a'; }
+                        else { badge.innerText='LIVE SERVER ● ERROR'; badge.style.backgroundColor='#dc2626'; }
+                      }).catch(()=>{ badge.innerText='LIVE SERVER ● OFFLINE'; badge.style.backgroundColor='#dc2626'; badge.title='Gagal fetch GAS - cek Deploy Anyone & URL'; });
+                } else if (typeof google !== 'undefined' && typeof google.script !== 'undefined') {
+                    badge.innerText='GAS NATIVE';
+                    badge.style.backgroundColor='#16a34a';
+                    badge.style.display='block';
                 }
+            })();
+            if (typeof google === 'undefined') {
 
                 window.google = {
                     script: {
@@ -5249,9 +5264,14 @@
 
                         if (res.targets && Object.keys(res.targets).length > 0) {
                             targetsConfig = res.targets;
+                            try{ localStorage.setItem('PICA_TARGETS', JSON.stringify(targetsConfig)); }catch(e){}
+                        } else {
+                            // Sheets kosong -> tulis default ke Sheets agar sinkron awal
+                            try{ if(Object.keys(targetsConfig).length>0) callBackend('saveTargets',{targets: targetsConfig}); }catch(e){}
                         }
                         if (res.settings && Object.keys(res.settings).length > 0) {
                             systemSettings = res.settings;
+                            try{ localStorage.setItem('PICA_SYSTEM_SETTINGS', JSON.stringify(systemSettings)); }catch(e){}
                         }
                     } else {
                         throw new Error(res ? res.message : "Gagal mengambil data dari server");
@@ -5375,9 +5395,11 @@
 
                                     if (res.targets && Object.keys(res.targets).length > 0) {
                                         targetsConfig = res.targets;
+                                        try{ localStorage.setItem('PICA_TARGETS', JSON.stringify(targetsConfig)); }catch(e){}
                                     }
                                     if (res.settings && Object.keys(res.settings).length > 0) {
                                         systemSettings = res.settings;
+                                        try{ localStorage.setItem('PICA_SYSTEM_SETTINGS', JSON.stringify(systemSettings)); }catch(e){}
                                     }
 
                                     renderTable(picaDataStore);
@@ -8121,11 +8143,13 @@
                 };
 
                 try {
-                    await callBackend('saveTargets', { targets: updatedTargets });
+                    const r1 = await callBackend('saveTargets', { targets: updatedTargets });
+                    if(r1 && r1.success===false) throw new Error(r1.message||'saveTargets gagal');
                     targetsConfig = updatedTargets;
                     localStorage.setItem('PICA_TARGETS', JSON.stringify(targetsConfig));
 
-                    await callBackend('saveSystemSettings', { settings: updatedProfile });
+                    const r2 = await callBackend('saveSystemSettings', { settings: updatedProfile });
+                    if(r2 && r2.success===false) throw new Error(r2.message||'saveSystemSettings gagal');
                     systemSettings = updatedProfile;
                     localStorage.setItem('PICA_SYSTEM_SETTINGS', JSON.stringify(systemSettings));
 
