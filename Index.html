@@ -210,13 +210,69 @@
         /* Collapsible Sidebar Styles */
         #sidebar-wrapper {
             position: relative;
-            width: 256px;
-            max-width: 256px;
+            width: 288px;
+            max-width: 288px;
             min-width: 0;
             overflow: hidden;
             flex-shrink: 0;
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #sidebar-desktop {
+            overflow: hidden;
+        }
+
+        #sidebar-desktop nav {
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+        }
+
+        #sidebar-desktop nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #sidebar-desktop nav::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, .35);
+            border-radius: 999px;
+        }
+
+        [id$="-pagination"] {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: .35rem .5rem;
+            min-height: 42px;
+        }
+
+        [id$="-pagination"] > div:last-child {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .2rem;
+        }
+
+        [id$="-pagination"] button {
+            min-width: 30px;
+            min-height: 30px;
+        }
+
+        @media (max-width: 640px) {
+            [id$="-pagination"] {
+                align-items: stretch;
+                flex-direction: column;
+                gap: .5rem;
+                padding-bottom: .25rem;
+            }
+
+            [id$="-pagination"] > div:first-child,
+            [id$="-pagination"] > div:last-child {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         #sidebar-wrapper.collapsed {
@@ -227,7 +283,7 @@
 
         #sidebar-toggle-btn {
             position: fixed;
-            left: 256px;
+            left: 288px;
             top: 50%;
             transform: translateY(-50%);
             z-index: 100;
@@ -556,6 +612,41 @@
         .overflow-x-auto {
             overscroll-behavior-inline: contain;
             scrollbar-gutter: stable;
+        }
+
+        /* PICA Board: scrollbar vertikal terlihat di sisi kanan tabel. */
+        #pica-table-scroll,
+        #parts-table-scroll {
+            max-height: min(68vh, 720px);
+            overflow-x: auto;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #94a3b8 #e2e8f0;
+            border-right: 1px solid #cbd5e1;
+        }
+
+        #pica-table-scroll::-webkit-scrollbar,
+        #parts-table-scroll::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        #pica-table-scroll::-webkit-scrollbar-track,
+        #parts-table-scroll::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 999px;
+        }
+
+        #pica-table-scroll::-webkit-scrollbar-thumb,
+        #parts-table-scroll::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border: 2px solid #e2e8f0;
+            border-radius: 999px;
+        }
+
+        #pica-table-scroll::-webkit-scrollbar-thumb:hover,
+        #parts-table-scroll::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
         }
 
         table thead {
@@ -1222,7 +1313,7 @@
                     <span class="text-[9px] font-mono text-slate-600">Dokumen Operasional Resmi</span>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div id="pica-table-scroll" class="overflow-x-auto">
                     <table class="w-full text-left text-xs" id="pica-main-table">
                         <thead
                             class="bg-slate-100 border-b-2 border-industrial-border text-slate-700 uppercase font-bold text-[11px] tracking-wider">
@@ -1571,7 +1662,7 @@
                     <span class="text-[9px] font-mono text-slate-600">Dokumen Pembelian & Logistik</span>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div id="parts-table-scroll" class="overflow-x-auto">
                     <table class="w-full text-left text-xs" id="parts-main-table">
                         <thead
                             class="bg-slate-100 border-b-2 border-industrial-border text-slate-700 uppercase font-bold text-[11px] tracking-wider">
@@ -4519,213 +4610,14 @@
                 }
             }
 
-            // --- 1. MOCK DATA AWAL ---
-            const DEFAULT_MOCK_DATA = [
-                {
-                    id: "1",
-                    plan: "EXCAVATOR",
-                    plan_type: "Plan Running",
-                    unit_code: "EXCA 113",
-                    unit_hm: "12,563",
-                    unit_date: "2026-05-31",
-                    unit_status: "Running",
-                    problem: "1. T/A HYDRAULIC SYSTEM",
-                    identification: "1.1 Over pressure hydraulic system",
-                    corrective_action: "1.1.1 check hydraulic system line\n1.1.2 flushing hydraulic system line\n1.1.3 check wiring harnest hydraulic system\n1.1.4 Engine Swab to BSS 112",
-                    description: "MAN POWER",
-                    target_date: "2026-06-07"
-                },
-                {
-                    id: "2",
-                    plan: "EXCAVATOR",
-                    plan_type: "Plan Running",
-                    unit_code: "EXCA 109",
-                    unit_hm: "24,239",
-                    unit_date: "2026-04-10",
-                    unit_status: "Breakdown",
-                    problem: "1. UNDER CARRIAGE WORN OUT\n2. ELETRICAL PROBLEM",
-                    identification: "1.1 Bottom Roller Broken\n1.2 Idler Slag\n1.3 Carrier Roller Worn Out\n1.4 Recoil spring RH broken\n1.5 Seal Adjuster Broken\n2.1 Error Pada ECM\n2.2 Voltage To Injector Unread",
-                    corrective_action: "1.1.1 Remove & replace roller bottom RH/LH\n1.1.2 Check Wiring\n1.1.3 Recoil Spring di Berau/ Tanjung",
-                    description: "ON PROGGRES",
-                    target_date: "2026-06-14"
-                },
-                {
-                    id: "3",
-                    plan: "EXCAVATOR",
-                    plan_type: "Plan Running",
-                    unit_code: "EXCA 111",
-                    unit_hm: "17,590",
-                    unit_date: "2026-03-31",
-                    unit_status: "Breakdown",
-                    problem: "UNDER CARRIAGE BROKEN",
-                    identification: "1.1 Roller Broken\n2.1 Sproket Worn Out\n3.1 Track Link broken\n4.1 Iddler Broken Rh\n5.1 Swifel Joint swab to BSS 115",
-                    corrective_action: "1.1.1 Inspection & Check\n2.1.1 Check & Inspection\n3.1.1 Undercarriage Worn out",
-                    description: "WAITING PART",
-                    target_date: "2026-06-28"
-                },
-                {
-                    id: "4",
-                    plan: "DOZER",
-                    plan_type: "Plan Running",
-                    unit_code: "DZ 202",
-                    unit_hm: "6,550",
-                    unit_date: "2026-04-14",
-                    unit_status: "Running",
-                    problem: "ENGINE NOISE",
-                    identification: "1.1 Oil Pan Leaking\n1.2 Main Frame Broken",
-                    corrective_action: "1.1.1 Inspection & Check\n1.2.1 Remove Engine From Unit (Engine swab to 210)",
-                    description: "WAITING PART",
-                    target_date: "2026-07-14"
-                },
-                {
-                    id: "5",
-                    plan: "MOTOR GREDER",
-                    plan_type: "Plan Running",
-                    unit_code: "GD 301",
-                    unit_hm: "20,423.5",
-                    unit_date: "2025-11-06",
-                    unit_status: "Running",
-                    problem: "ENGINE BLOW BY",
-                    identification: "1.1 Ring Piston Worn out ( broken )\n1.2 Linner Worn Out",
-                    corrective_action: "1.1.1 Ovh Engine\n1.1.2 Check the wear level of the engine cylinder group components\n1.1.3 Replace Worn Components\n1.1.4 Injector Swab To 305",
-                    description: "WAITING PART & MAN POWER",
-                    target_date: "2026-06-30"
-                },
-                {
-                    id: "6",
-                    plan: "DONGFENG",
-                    plan_type: "Plan Running",
-                    unit_code: "DT 701",
-                    unit_hm: "10,500",
-                    unit_date: "2026-06-08",
-                    unit_status: "Running",
-                    problem: "KING PIN LH",
-                    identification: "KING PIN LH WORN OUT",
-                    corrective_action: "1.1.1 Replace King Pin LH",
-                    description: "ON PROGGRES",
-                    target_date: "2026-06-11"
-                },
-                {
-                    id: "7",
-                    plan: "DONGFENG",
-                    plan_type: "Plan Running",
-                    unit_code: "DT 708",
-                    unit_hm: "7,900",
-                    unit_date: "2026-06-07",
-                    unit_status: "Running",
-                    problem: "COOLANT KURANG ,BEARING RODA , KING PIN",
-                    identification: "1.1. KING PIN WORN OUT",
-                    corrective_action: "1.1.1 Replace King Pin",
-                    description: "ON PROGGRES",
-                    target_date: "2026-06-11"
-                },
-                {
-                    id: "8",
-                    plan: "DONGFENG",
-                    plan_type: "Di Luar Plan Running",
-                    unit_code: "DT 703",
-                    unit_hm: "2,719",
-                    unit_date: "2026-05-23",
-                    unit_status: "Breakdown",
-                    problem: "OPTIONAL ACCESSORIES",
-                    identification: "1.1. Ac Problem",
-                    corrective_action: "1.1.1 V-belt Ac (WP)",
-                    description: "WAITING PARTS",
-                    target_date: "2026-06-04"
-                },
-                {
-                    id: "9",
-                    plan: "MAN",
-                    plan_type: "Plan Running",
-                    unit_code: "MAN 801",
-                    unit_hm: "4,120",
-                    unit_date: "2026-06-01",
-                    unit_status: "Breakdown",
-                    problem: "TRANSMISI SLIP",
-                    identification: "Clutch Plate terbakar",
-                    corrective_action: "Replace Clutch Plate",
-                    description: "WAITING PARTS",
-                    target_date: "2026-06-15"
-                }
-            ];
+            // --- 1. MOCK DATA AWAL (Dikosongkan: data sample dihapus, sistem memuat data dari backend/localStorage) ---
+            const DEFAULT_MOCK_DATA = [];
 
-            // --- MOCK DATABASE ANALISA BIAYA (RCA) ---
-            const DEFAULT_RCA_DATA = [
-                {
-                    id: "RCA_001",
-                    pica_id: "9",
-                    date_report: "2026-04-29",
-                    no_report: "001/04/BSS/TKP",
-                    loc: "PT. Bersaudara Sukses Sejahtera site Tengku",
-                    loc_repair: "(WORKSHOP Tengku)",
-                    date_accident: "2026-04-06",
-                    desc: "Accident",
-                    hm: "14,040",
-                    km: "-",
-                    unit_type: "Hino FM 260JD",
-                    sn: "-",
-                    engine: "-",
-                    code_unit: "DT 919",
-                    inspector: "Hamzah",
-                    narrative: "Pada tanggal, 06 April 2026 jam 13:30, saat melakukan dumping di disposal unit rebah ke kiri, saat di Analisa oleh mekanik di temukan chassis crack.",
-                    prop_damage: "Chasis Crack",
-                    parts: [
-                        { part_no: "12", desc: "Besi UMP", price: 3200000, qty: 2, sat: "Btg", remarks: "Penguatan Chasis Utama" },
-                        { part_no: "8", desc: "Besi UMP", price: 2700000, qty: 3, sat: "Btg", remarks: "Untuk rangka pendukung" },
-                        { part_no: "-", desc: "Gas (LPG & Oxygen)", price: 150000, qty: 2, sat: "Tbg", remarks: "Untuk cutting & pemanasan" },
-                        { part_no: "-", desc: "Kawat Las LB-52", price: 250000, qty: 3, sat: "Box", remarks: "Agar sambungan las tidak getas" }
-                    ],
-                    labour: [
-                        { desc: "Jasa Pengelasan & Konstruksi Chasis", manpower: 2, price: 0, qty: 1, remarks: "Internal Team" }
-                    ]
-                }
-            ];
+            // --- MOCK DATABASE ANALISA BIAYA (RCA) (Dikosongkan: data sample dihapus) ---
+            const DEFAULT_RCA_DATA = [];
 
-            // --- MOCK DATABASE MONITORING PART URGENT ---
-            const DEFAULT_URGENT_PARTS_DATA = [
-                {
-                    id: "UP_001",
-                    pica_id: "2", // EXCA 109
-                    unit_code: "EXCA 109",
-                    plan: "EXCAVATOR",
-                    no_mr: "MR/2026/05/102",
-                    'tgl MR': "2026-06-10",
-                    part_no: "20Y-30-00021",
-                    description: "Recoil Spring Assy RH",
-                    qty: 1,
-                    satuan: "Assy",
-                    status_barang: "PO Issued",
-                    remark: "Menunggu pengiriman dari Balikpapan"
-                },
-                {
-                    id: "UP_002",
-                    pica_id: "3", // EXCA 111
-                    unit_code: "EXCA 111",
-                    plan: "EXCAVATOR",
-                    no_mr: "MR/2026/05/115",
-                    'tgl MR': "2026-06-12",
-                    part_no: "20Y-30-11110",
-                    description: "Track Link Assembly RH",
-                    qty: 2,
-                    satuan: "Assy",
-                    status_barang: "Waiting PR",
-                    remark: "Menunggu persetujuan KTT"
-                },
-                {
-                    id: "UP_003",
-                    pica_id: "9", // MAN 801
-                    unit_code: "MAN 801",
-                    plan: "MAN",
-                    no_mr: "MR/2026/06/044",
-                    'tgl MR': "2026-06-18",
-                    part_no: "81.30012.0123",
-                    description: "Clutch Plate & Disc Assembly",
-                    qty: 1,
-                    satuan: "Set",
-                    status_barang: "PR Created",
-                    remark: "PR sedang diproses tim Purchasing"
-                }
-            ];
+            // --- MOCK DATABASE MONITORING PART URGENT (Dikosongkan: data sample dihapus) ---
+            const DEFAULT_URGENT_PARTS_DATA = [];
 
             const DEFAULT_SYSTEM_SETTINGS = {
                 companyName: "PT BENAMAKMUR SELARAS SEJAHTERA",
@@ -5677,12 +5569,13 @@
                 const container = document.getElementById(containerId);
                 if (!container) return;
 
-                if (totalItems <= itemsPerPage) {
+                if (!totalItems || !itemsPerPage || totalItems <= itemsPerPage) {
                     container.innerHTML = "";
                     return;
                 }
 
                 const totalPages = Math.ceil(totalItems / itemsPerPage);
+                currentPage = Math.max(1, Math.min(Number(currentPage) || 1, totalPages));
                 const startItem = (currentPage - 1) * itemsPerPage + 1;
                 const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
