@@ -3341,6 +3341,14 @@
                                 placeholder="https://script.google.com/macros/s/.../exec"
                                 class="w-full bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 font-medium">
                         </div>
+                        <div class="flex flex-wrap items-center gap-2 pt-2">
+                            <button type="button" onclick="testGasConnection()" id="btn-test-gas" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded text-xs flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                <i data-lucide="wifi" class="w-3.5 h-3.5"></i> Test Koneksi GAS
+                            </button>
+                            <button type="button" onclick="window.checkLiveConnection && window.checkLiveConnection()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold px-3 py-2 rounded text-xs cursor-pointer">Refresh Badge</button>
+                            <span id="gas-test-status" class="text-[11px] text-slate-600 font-mono"></span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 leading-relaxed">Klik Test untuk cek apakah Web App sudah Deploy sebagai <b>Anyone</b> dan URL benar. Jika OFFLINE: buka GAS → Deploy → Manage deployments → Edit → Who has access = <b>Anyone</b> → Deploy New Version.</p>
                     </div>
 
 
@@ -4189,28 +4197,78 @@
             let AUTO_SYNC_INTERVAL = parseInt(localStorage.getItem('PICA_SYNC_INTERVAL')) || 0; // Default to 0 (disabled)
             let syncTimer = null;
 
-            // REAL INTEGRATION FOR LIVE SERVER - FIX: selalu tampil & cek koneksi
-            (function initLiveBadge(){
-                const badge = document.getElementById('previewBadge');
-                if (!badge) return;
+            // REAL INTEGRATION FOR LIVE SERVER - real-time badge + health check polling
+            let _liveCheckTimer=null;
+            window.updateLiveBadge=function(state, msg){
+                const badge=document.getElementById('previewBadge'); if(!badge) return;
+                const now=new Date().toLocaleTimeString('id-ID');
+                if(state==='online'){ badge.innerText='LIVE SERVER ● ONLINE'; badge.style.backgroundColor='#16a34a'; badge.style.display='block'; badge.title='ONLINE '+now+' — '+GAS_URL; }
+                else if(state==='offline'){ badge.innerText='LIVE SERVER ● OFFLINE'; badge.style.backgroundColor='#dc2626'; badge.style.display='block'; badge.title=(msg||'Gagal fetch GAS')+' '+now+' — cek Deploy Anyone & URL: '+GAS_URL; }
+                else if(state==='error'){ badge.innerText='LIVE SERVER ● ERROR'; badge.style.backgroundColor='#dc2626'; badge.style.display='block'; badge.title=(msg||'Error GAS')+' '+now; }
+                else if(state==='checking'){ badge.innerText='LIVE SERVER ● CHECKING...'; badge.style.backgroundColor='#2563eb'; badge.style.display='block'; }
+            };
+            window.checkLiveConnection=function(){
+                const badge=document.getElementById('previewBadge'); if(!badge) return Promise.resolve();
                 const isGasConfigured = GAS_URL && !GAS_URL.includes("MACRO_ID") && GAS_URL.startsWith("https://");
-                if (typeof google === 'undefined' && isGasConfigured) {
-                    badge.innerText = 'LIVE SERVER';
-                    badge.style.backgroundColor = '#2563eb';
-                    badge.style.display = 'block';
-                    badge.title = GAS_URL;
-                    // health check ringan tanpa ganggu data
-                    fetch(GAS_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({functionName:'executeAction', parameters:['getOptimizedDataFull',{}]})})
-                      .then(r=>r.json()).then(j=>{
-                        if(j && (j.status==='success' || j.data)) { badge.innerText='LIVE SERVER ● ONLINE'; badge.style.backgroundColor='#16a34a'; }
-                        else { badge.innerText='LIVE SERVER ● ERROR'; badge.style.backgroundColor='#dc2626'; }
-                      }).catch(()=>{ badge.innerText='LIVE SERVER ● OFFLINE'; badge.style.backgroundColor='#dc2626'; badge.title='Gagal fetch GAS - cek Deploy Anyone & URL'; });
-                } else if (typeof google !== 'undefined' && typeof google.script !== 'undefined') {
-                    badge.innerText='GAS NATIVE';
-                    badge.style.backgroundColor='#16a34a';
-                    badge.style.display='block';
-                }
+                if(typeof google !== 'undefined' && typeof google.script !== 'undefined'){ window.updateLiveBadge('online','GAS NATIVE'); badge.innerText='GAS NATIVE ● ONLINE'; return Promise.resolve(); }
+                if(!isGasConfigured){ window.updateLiveBadge('offline','GAS_URL belum dikonfigurasi'); return Promise.resolve(); }
+                window.updateLiveBadge('checking');
+                const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),45000);
+                const start=Date.now();
+                return fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({functionName:'executeAction',parameters:['ping',{}]}),signal:ctrl.signal})
+                  .then(r=>{ clearTimeout(t); if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+                  .then(j=>{
+                    const ms=Date.now()-start;
+                    if(j && (j.status==='success' || j.data)){ window.updateLiveBadge('online'); badge.title='ONLINE '+ms+'ms '+new Date().toLocaleTimeString('id-ID')+' — '+GAS_URL; return true; }
+                    else { window.updateLiveBadge('error', j.error||'Response tidak valid'); return false; }
+                  })
+                  .catch(err=>{
+                    clearTimeout(t);
+                    const isAbort = err && (err.name==='AbortError' || String(err).includes('abort'));
+                    window.updateLiveBadge('offline', isAbort? 'Timeout 45 detik (GAS cold start / jaringan)' : (err.message||String(err)));
+                    return false;
+                  });
+            };
+            (function initLiveBadge(){
+                window.checkLiveConnection();
+                if(_liveCheckTimer) clearInterval(_liveCheckTimer);
+                _liveCheckTimer=setInterval(()=>{ const overlay=document.getElementById('login-overlay'); if(overlay && !overlay.classList.contains('hidden')) return; window.checkLiveConnection(); },60000);
             })();
+            // Test Koneksi GAS dari Settings
+            window.testGasConnection=async function(){
+                const statusEl=document.getElementById('gas-test-status');
+                const btn=document.getElementById('btn-test-gas');
+                const urlEl=document.getElementById('sett-gas-url');
+                const url=(urlEl && urlEl.value.trim()) || GAS_URL;
+                if(!url || !url.startsWith('https://')){ if(statusEl) statusEl.innerHTML='<span class="text-rose-600">URL tidak valid</span>'; return; }
+                if(statusEl) statusEl.innerHTML='<span class="text-amber-600">⏳ Menghubungi GAS...</span>';
+                if(btn) btn.disabled=true;
+                const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),45000);
+                const t0=Date.now();
+                try{
+                    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({functionName:'executeAction',parameters:['ping',{}]}),signal:ctrl.signal});
+                    clearTimeout(to);
+                    const ms=Date.now()-t0;
+                    if(!res.ok) throw new Error('HTTP '+res.status+' — cek Deploy Anyone');
+                    const j=await res.json();
+                    if(j && (j.status==='success' || j.data)){
+                        if(statusEl) statusEl.innerHTML='<span class="text-emerald-600">● ONLINE '+ms+'ms — GAS terhubung</span>';
+                        Swal.fire({icon:'success',title:'Koneksi Berhasil',html:'GAS ONLINE<br><b>'+ms+'ms</b><br>'+url,text:'',confirmButtonColor:'#16a34a'});
+                        window.updateLiveBadge('online');
+                    } else {
+                        if(statusEl) statusEl.innerHTML='<span class="text-rose-600">● ERROR — '+(j.error||'response tidak valid')+'</span>';
+                        Swal.fire({icon:'error',title:'GAS Error',text: j.error||'Response tidak valid',confirmButtonColor:'#dc2626'});
+                        window.updateLiveBadge('error', j.error);
+                    }
+                } catch(err){
+                    clearTimeout(to);
+                    const isAbort=err && (err.name==='AbortError' || String(err).includes('abort'));
+                    const msg=isAbort? 'Timeout 45 detik — GAS cold start / jaringan lambat. Coba lagi.' : (err.message||String(err));
+                    if(statusEl) statusEl.innerHTML='<span class="text-rose-600">● OFFLINE — '+msg+'</span>';
+                    Swal.fire({icon:'error',title:'Koneksi Gagal',text: msg + '\n\nCek: 1) Deploy = Anyone  2) Publish New Version  3) URL benar',confirmButtonColor:'#dc2626'});
+                    window.updateLiveBadge('offline', msg);
+                } finally { if(btn) btn.disabled=false; }
+            };
             if (typeof google === 'undefined') {
 
                 window.google = {
@@ -4232,7 +4290,7 @@
                                     target._fcb = null; // Reset
 
                                     const controller = new AbortController();
-                                    const timeoutId = setTimeout(() => controller.abort(), 12000);
+                                    const timeoutId = setTimeout(() => controller.abort(), 60000);
 
                                     fetch(GAS_URL, {
                                         method: 'POST',
@@ -4249,15 +4307,19 @@
                                             return response.json();
                                         })
                                         .then(res => {
-                                            // GAS doPost mengembalikan {status, data} atau {status:'error', error}
-                                            if (res.status === 'error' && fcb) { fcb(res.error); return; }
-                                            if (res.error && fcb) { fcb(res.error); return; }
+                                            if (res.status === 'error' && fcb) { try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('error', res.error); }catch(e){} fcb(res.error); return; }
+                                            if (res.error && fcb) { try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('error', res.error); }catch(e){} fcb(res.error); return; }
+                                            try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('online'); }catch(e){}
                                             if (scb) scb(res.data !== undefined ? res.data : res);
                                         })
                                         .catch(err => {
                                             clearTimeout(timeoutId);
-                                            console.error("Fetch GAS gagal:", err);
-                                            if (fcb) fcb(err.message || String(err));
+                                            const isAbort = err && (err.name === 'AbortError' || String(err).includes('abort') || String(err).includes('Timeout'));
+                                            const pretty = isAbort ? "Timeout 60 detik — GAS cold start / jaringan lambat. Klik Test Koneksi di Settings." : (err.message || String(err));
+                                            console.error("Fetch GAS gagal:", err, isAbort?" [AbortTimeout]" : "");
+                                            if (fcb) fcb(pretty);
+                                            // update badge jadi offline jika abort
+                                            try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('offline', pretty); }catch(e){}
                                         });
                                 };
                             }
@@ -4828,27 +4890,36 @@
                     const isGasProxy = typeof google !== 'undefined' && typeof google.script !== 'undefined' && typeof google.script.run !== 'undefined' && typeof google.script.run.executeAction === 'function';
                     const isRealGas = isGasProxy && GAS_URL && !GAS_URL.includes("MACRO_ID") && GAS_URL.startsWith("https://");
 
-                    // 2. KONEKSI GOOGLE APPS SCRIPT (Production / Live Server) — dengan timeout guard & error transparan
+                    // 2. KONEKSI GOOGLE APPS SCRIPT (Production / Live Server) — timeout panjang untuk cold start GAS.
                     if (isGasProxy) {
                         let settled = false;
                         const timer = setTimeout(() => {
                             if (!settled) {
                                 settled = true;
-                                const msg = "Timeout koneksi Google Sheets (GAS). Periksa deploy Web App & GAS_URL di Settings.";
+                                const msg = "Timeout 60 detik ke Google Sheets (GAS). Klik Test Koneksi di Settings dan pastikan Deploy Web App = Anyone & Publish New Version.";
                                 console.error(msg);
+                                try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('offline', msg); }catch(e){}
                                 Swal.fire({ icon: 'error', title: 'Koneksi Gagal', text: msg, confirmButtonColor: '#dc2626' });
                                 reject(new Error(msg));
                             }
-                        }, 12000);
+                        }, 60000);
                         google.script.run
-                            .withSuccessHandler(res => { if (settled) return; settled = true; clearTimeout(timer); resolve(res); })
+                            .withSuccessHandler(res => {
+                                if (settled) return;
+                                settled = true;
+                                clearTimeout(timer);
+                                try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('online'); }catch(e){}
+                                resolve(res);
+                            })
                             .withFailureHandler(err => {
-                                if (settled) return; settled = true; clearTimeout(timer);
+                                if (settled) return;
+                                settled = true;
+                                clearTimeout(timer);
                                 const msg = (err && err.message) ? err.message : String(err);
                                 console.error("GAS executeAction failed:", msg);
-                                // JANGAN silent fallback jika GAS_URL valid — tampilkan error agar user tahu data belum ke Sheets
                                 if (isRealGas) {
-                                    Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: msg, confirmButtonColor: '#dc2626' });
+                                    try{ if(typeof window.updateLiveBadge==='function') window.updateLiveBadge('offline', msg); }catch(e){}
+                                    Swal.fire({ icon: 'error', title: 'Gagal Sync ke Sheets', text: msg + "\n\nSolusi: 1) Klik Test Koneksi di Settings  2) Pastikan Deploy = Anyone  3) Publish New Version", confirmButtonColor: '#dc2626' });
                                 }
                                 reject(err);
                             })
