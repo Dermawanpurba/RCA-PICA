@@ -968,20 +968,6 @@
                     </button>
                 </form>
 
-                <!-- Quick-login chips (mode demo/preview) -->
-                <div class="mt-5 pt-4 border-t border-slate-800/70">
-                    <p class="text-[9px] text-slate-500 uppercase tracking-wider font-bold mb-2">Akses Cepat (Demo)</p>
-                    <div class="flex flex-wrap justify-center gap-1.5">
-                        <button type="button" onclick="fillLoginCredentials('viewer')"
-                            class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono bg-slate-800/80 text-slate-400 border border-slate-700/60 hover:border-slate-500 hover:text-white transition-all cursor-pointer">viewer</button>
-                        <button type="button" onclick="fillLoginCredentials('editor')"
-                            class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono bg-slate-800/80 text-slate-400 border border-slate-700/60 hover:border-slate-500 hover:text-white transition-all cursor-pointer">editor</button>
-                        <button type="button" onclick="fillLoginCredentials('purchasing')"
-                            class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono bg-slate-800/80 text-slate-400 border border-slate-700/60 hover:border-slate-500 hover:text-white transition-all cursor-pointer">purchasing</button>
-                        <button type="button" onclick="fillLoginCredentials('operation')"
-                            class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono bg-slate-800/80 text-slate-400 border border-slate-700/60 hover:border-slate-500 hover:text-white transition-all cursor-pointer">operation</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -2496,7 +2482,7 @@
             </div>
 
             <!-- Kanban Board -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[500px]">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[500px]">
                 <!-- Column 1: WO OPEN -->
                 <div
                     class="bg-white border border-industrial-border rounded-xl shadow-sm flex flex-col h-[650px] overflow-hidden">
@@ -2510,26 +2496,6 @@
                             class="px-2 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold rounded-full">0</span>
                     </div>
                     <div id="kanban-open-list" ondragover="allowDropWo(event)" ondrop="dropWo(event, 'OPEN')"
-                        class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/30">
-                        <!-- JS renders cards here -->
-                    </div>
-                </div>
-
-                <!-- Column 2: NOTIFIKASI PLAN SERVICE -->
-                <div
-                    class="bg-white border border-industrial-border rounded-xl shadow-sm flex flex-col h-[650px] overflow-hidden">
-                    <div
-                        class="p-3 bg-amber-50/50 border-b border-industrial-border flex justify-between items-center shrink-0">
-                        <div class="flex items-center space-x-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                            <h4 class="text-xs font-black uppercase text-amber-700 tracking-wider">NOTIFIKASI PLAN
-                                SERVICE</h4>
-                        </div>
-                        <span id="kanban-plan-service-count"
-                            class="px-2 py-0.5 text-[10px] bg-amber-100 text-amber-800 font-bold rounded-full">0</span>
-                    </div>
-                    <div id="kanban-plan-service-list" ondragover="allowDropWo(event)"
-                        ondrop="dropWo(event, 'PLAN_SERVICE')"
                         class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/30">
                         <!-- JS renders cards here -->
                     </div>
@@ -4058,7 +4024,9 @@
                 </div>
             </form>
         </div>
-        <!-- PLAN SERVICE ITEM MODAL -->
+    </div>
+
+    <!-- PLAN SERVICE ITEM MODAL -->
         <div id="plan-service-modal"
             class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[100] no-print p-4">
             <div
@@ -4758,6 +4726,7 @@
                 const orgAddBtns = document.querySelectorAll('button[onclick="openOrgMemberModal()"]');
                 const sopAddBtn = document.getElementById('btn-add-sop-item');
                 const backlogAddBtn = document.getElementById('btn-add-backlog');
+                const planServiceAddBtn = document.getElementById('btn-add-plan-service');
 
                 const displayStyle = isEditor ? 'flex' : 'none';
 
@@ -4769,6 +4738,7 @@
                 orgAddBtns.forEach(btn => btn.style.display = displayStyle);
                 if (sopAddBtn) sopAddBtn.style.display = isEditor ? 'inline-flex' : 'none';
                 if (backlogAddBtn) backlogAddBtn.style.display = (isEditor || isOperation) ? 'inline-flex' : 'none';
+                if (planServiceAddBtn) planServiceAddBtn.style.display = (isEditor || isOperation) ? 'inline-flex' : 'none';
 
                 if (formInputSidebarBtn) formInputSidebarBtn.style.display = displayStyle;
                 if (settingsSidebarBtn) settingsSidebarBtn.style.display = displayStyle;
@@ -5043,6 +5013,9 @@
 
                             if (action === 'getOptimizedDataFull') {
                                 const localFarDb = localStorage.getItem('FAR_DB');
+                                const localOrgDb = localStorage.getItem('ORG_STRUCTURE_DB');
+                                const localSopDb = localStorage.getItem('SOP_DATA_DB');
+                                const localJobdescDb = localStorage.getItem('JOBDESC_DATA_DB');
                                 const localAcc = localStorage.getItem('ACCURATE_PR_DB');
                                 const localWo = localStorage.getItem('WO_DB') || '[]';
                                 const localUsers = localStorage.getItem('USERS_DB');
@@ -5055,6 +5028,9 @@
                                     urgentParts: currentPartsDb,
                                     populasi: currentPopulasiDb,
                                     far: localFarDb ? JSON.parse(localFarDb) : [],
+                                    org: localOrgDb ? JSON.parse(localOrgDb) : [...DEFAULT_ORG_DATA],
+                                    sop: localSopDb ? JSON.parse(localSopDb) : [...DEFAULT_SOP_DATA],
+                                    jobdesc: localJobdescDb ? JSON.parse(localJobdescDb) : [...DEFAULT_JOBDESC_DATA],
                                     accurate: localAcc ? JSON.parse(localAcc) : [],
                                     wo: JSON.parse(localWo),
                                     users: localUsers ? JSON.parse(localUsers) : [...DEFAULT_USERS_DATA],
@@ -5070,12 +5046,9 @@
                                 const payload = params.data;
                                 const localPlanService = localStorage.getItem('PLAN_SERVICE_DB');
                                 let currentPlanServiceDb = localPlanService ? JSON.parse(localPlanService) : [...DEFAULT_PLAN_SERVICE_DATA];
-                                if (payload.id) {
-                                    currentPlanServiceDb = currentPlanServiceDb.map(item => item.id === payload.id ? payload : item);
-                                } else {
-                                    payload.id = 'PS_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                                    currentPlanServiceDb.unshift(payload);
-                                }
+                                const index = currentPlanServiceDb.findIndex(item => item.id === payload.id);
+                                if (index !== -1) currentPlanServiceDb[index] = payload;
+                                else currentPlanServiceDb.unshift(payload);
                                 localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(currentPlanServiceDb));
                                 resolve({ success: true, data: currentPlanServiceDb });
                             } else if (action === 'deletePlanServiceData') {
@@ -5084,6 +5057,83 @@
                                 currentPlanServiceDb = currentPlanServiceDb.filter(item => item.id !== params.id);
                                 localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(currentPlanServiceDb));
                                 resolve({ success: true, data: currentPlanServiceDb });
+                            } else if (action === 'getBacklogData') {
+                                const localBacklog = localStorage.getItem('BACKLOG_DB');
+                                resolve(localBacklog ? JSON.parse(localBacklog) : [...DEFAULT_BACKLOG_DATA]);
+                            } else if (action === 'saveBacklogData') {
+                                const payload = params.data;
+                                const localBacklog = localStorage.getItem('BACKLOG_DB');
+                                let currentBacklogDb = localBacklog ? JSON.parse(localBacklog) : [...DEFAULT_BACKLOG_DATA];
+                                const index = currentBacklogDb.findIndex(item => item.id === payload.id);
+                                if (index !== -1) currentBacklogDb[index] = payload;
+                                else currentBacklogDb.unshift(payload);
+                                localStorage.setItem('BACKLOG_DB', JSON.stringify(currentBacklogDb));
+                                resolve({ success: true, data: currentBacklogDb });
+                            } else if (action === 'deleteBacklogData') {
+                                const localBacklog = localStorage.getItem('BACKLOG_DB');
+                                let currentBacklogDb = localBacklog ? JSON.parse(localBacklog) : [...DEFAULT_BACKLOG_DATA];
+                                currentBacklogDb = currentBacklogDb.filter(item => item.id !== params.id);
+                                localStorage.setItem('BACKLOG_DB', JSON.stringify(currentBacklogDb));
+                                resolve({ success: true, data: currentBacklogDb });
+                            } else if (action === 'getOrgData') {
+                                const localOrg = localStorage.getItem('ORG_STRUCTURE_DB');
+                                resolve(localOrg ? JSON.parse(localOrg) : [...DEFAULT_ORG_DATA]);
+                            } else if (action === 'saveOrgData') {
+                                const payload = { ...params.data };
+                                const localOrg = localStorage.getItem('ORG_STRUCTURE_DB');
+                                let currentOrgDb = localOrg ? JSON.parse(localOrg) : [...DEFAULT_ORG_DATA];
+                                if (!payload.id) payload.id = 'org_' + Math.random().toString(36).substr(2, 9);
+                                const index = currentOrgDb.findIndex(item => item.id === payload.id);
+                                if (index !== -1) currentOrgDb[index] = payload;
+                                else currentOrgDb.push(payload);
+                                localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(currentOrgDb));
+                                resolve({ success: true, data: currentOrgDb });
+                            } else if (action === 'deleteOrgData') {
+                                const localOrg = localStorage.getItem('ORG_STRUCTURE_DB');
+                                let currentOrgDb = localOrg ? JSON.parse(localOrg) : [...DEFAULT_ORG_DATA];
+                                currentOrgDb = currentOrgDb
+                                    .filter(item => item.id !== params.id)
+                                    .map(item => item.parentId === params.id ? { ...item, parentId: '' } : item);
+                                localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(currentOrgDb));
+                                resolve({ success: true, data: currentOrgDb });
+                            } else if (action === 'getSopData') {
+                                const localSop = localStorage.getItem('SOP_DATA_DB');
+                                resolve(localSop ? JSON.parse(localSop) : [...DEFAULT_SOP_DATA]);
+                            } else if (action === 'saveSopData') {
+                                const payload = { ...params.data };
+                                const localSop = localStorage.getItem('SOP_DATA_DB');
+                                let currentSopDb = localSop ? JSON.parse(localSop) : [...DEFAULT_SOP_DATA];
+                                if (!payload.id) payload.id = 'sop_' + Math.random().toString(36).substr(2, 9);
+                                const index = currentSopDb.findIndex(item => item.id === payload.id);
+                                if (index !== -1) currentSopDb[index] = payload;
+                                else currentSopDb.push(payload);
+                                localStorage.setItem('SOP_DATA_DB', JSON.stringify(currentSopDb));
+                                resolve({ success: true, data: currentSopDb });
+                            } else if (action === 'deleteSopData') {
+                                const localSop = localStorage.getItem('SOP_DATA_DB');
+                                let currentSopDb = localSop ? JSON.parse(localSop) : [...DEFAULT_SOP_DATA];
+                                currentSopDb = currentSopDb.filter(item => item.id !== params.id);
+                                localStorage.setItem('SOP_DATA_DB', JSON.stringify(currentSopDb));
+                                resolve({ success: true, data: currentSopDb });
+                            } else if (action === 'getJobdescData') {
+                                const localJobdesc = localStorage.getItem('JOBDESC_DATA_DB');
+                                resolve(localJobdesc ? JSON.parse(localJobdesc) : [...DEFAULT_JOBDESC_DATA]);
+                            } else if (action === 'saveJobdescData') {
+                                const payload = { ...params.data };
+                                const localJobdesc = localStorage.getItem('JOBDESC_DATA_DB');
+                                let currentJobdescDb = localJobdesc ? JSON.parse(localJobdesc) : [...DEFAULT_JOBDESC_DATA];
+                                if (!payload.id) payload.id = 'jd_' + Math.random().toString(36).substr(2, 9);
+                                const index = currentJobdescDb.findIndex(item => item.id === payload.id);
+                                if (index !== -1) currentJobdescDb[index] = payload;
+                                else currentJobdescDb.push(payload);
+                                localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(currentJobdescDb));
+                                resolve({ success: true, data: currentJobdescDb });
+                            } else if (action === 'deleteJobdescData') {
+                                const localJobdesc = localStorage.getItem('JOBDESC_DATA_DB');
+                                let currentJobdescDb = localJobdesc ? JSON.parse(localJobdesc) : [...DEFAULT_JOBDESC_DATA];
+                                currentJobdescDb = currentJobdescDb.filter(item => item.id !== params.id);
+                                localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(currentJobdescDb));
+                                resolve({ success: true, data: currentJobdescDb });
                             } else if (action === 'getData') {
                                 resolve(currentDb);
                             } else if (action === 'getRcaData') {
@@ -7245,6 +7295,7 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                         document.getElementById('m-btn-nav-far').className = "mobile-nav-btn text-orange-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
                     }
                     renderFarModule();
+                    refreshFarData();
                 } else if (menuId === 'org-structure') {
                     document.getElementById('view-org-structure').classList.remove('hidden');
                     document.getElementById('btn-nav-org-structure').className = "nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold transition-all shadow-md shadow-indigo-900/40";
@@ -7323,13 +7374,6 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
             let backlogCurrentPage = 1;
 
             function renderBacklogModule() {
-                const localBacklog = localStorage.getItem('BACKLOG_DB');
-                if (localBacklog) {
-                    try { backlogDataStore = JSON.parse(localBacklog); } catch (e) { backlogDataStore = [...DEFAULT_BACKLOG_DATA]; }
-                } else {
-                    backlogDataStore = [...DEFAULT_BACKLOG_DATA];
-                    localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
-                }
                 applyBacklogFilters();
             }
 
@@ -9283,37 +9327,9 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     }).join('');
                 };
 
-                const renderPlanNotificationCards = (list) => {
-                    if (list.length === 0) {
-                        return `<div class="text-center py-8 text-slate-450 text-xs italic bg-slate-50/50 border border-dashed border-slate-200 rounded-lg font-sans">Belum ada Notifikasi Plan Service</div>`;
-                    }
-                    return list.map(item => {
-                        return `
-                        <div onclick="switchMenu('plan-service')"
-                            class="p-3 bg-gradient-to-r from-amber-50/50 to-white hover:bg-amber-100/50 border border-amber-200 rounded-lg shadow-sm hover:shadow transition cursor-pointer space-y-2 text-xs">
-                            <div class="flex justify-between items-center">
-                                <span class="font-mono font-black text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded text-[10px]">${item.type}</span>
-                                <span class="font-bold text-slate-800 font-mono text-[11px] bg-white border border-slate-200 px-2 py-0.5 rounded">${item.unit}</span>
-                            </div>
-                            <div>
-                                <h5 class="font-semibold text-slate-700 uppercase text-[9px] tracking-wide mb-0.5">Catatan / Detail:</h5>
-                                <p class="text-slate-650 font-sans break-words line-clamp-2" title="${item.notes}">${item.notes}</p>
-                            </div>
-                            <div class="flex justify-between items-center text-[9px] text-slate-500 font-mono border-t border-amber-100 pt-2 mt-1">
-                                <span class="font-bold text-amber-800">${item.mechanic && item.mechanic !== '-' ? 'PIC: ' + item.mechanic : item.date}</span>
-                                <span class="px-1.5 py-0.5 rounded font-bold uppercase text-[8px] bg-amber-500 text-white shadow-sm">${item.status}</span>
-                            </div>
-                        </div>
-                    `;
-                    }).join('');
-                };
-
                 // Render columns
                 document.getElementById('kanban-open-count').innerText = openWOList.length;
                 document.getElementById('kanban-open-list').innerHTML = renderCards(openWOList, 'WO OPEN');
-
-                document.getElementById('kanban-plan-service-count').innerText = planServiceNotifications.length;
-                document.getElementById('kanban-plan-service-list').innerHTML = renderPlanNotificationCards(planServiceNotifications);
 
                 document.getElementById('kanban-closed-count').innerText = closedList.length;
                 document.getElementById('kanban-closed-list').innerHTML = renderCards(closedList, 'CLOSED');
@@ -9457,6 +9473,7 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const existingId = document.getElementById('ps-id').value;
+                    const existingItem = existingId ? planServiceDataStore.find(p => p.id === existingId) : null;
                     const payload = {
                         id: existingId || ('PS_' + Math.random().toString(36).substr(2, 9).toUpperCase()),
                         unit_code: document.getElementById('ps-unit-code').value.trim().toUpperCase(),
@@ -9467,7 +9484,7 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                         mechanic: document.getElementById('ps-mechanic').value.trim(),
                         status: document.getElementById('ps-status').value,
                         notes: document.getElementById('ps-notes').value.trim(),
-                        created_at: new Date().toISOString().split('T')[0]
+                        created_at: existingItem ? existingItem.created_at : new Date().toISOString().split('T')[0]
                     };
 
                     const res = await callBackend('savePlanServiceData', { data: payload });
@@ -9861,8 +9878,20 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
             // ============================================================
             // FAR MODULE (FAILURE ANALYSIS REPORT)
             // ============================================================
-            let farDataStore = JSON.parse(localStorage.getItem('PICA_FAR_DATA') || '[]');
+            let farDataStore = JSON.parse(localStorage.getItem('FAR_DB') || localStorage.getItem('PICA_FAR_DATA') || '[]');
             let farPhotoBuffer = []; // temporary buffer for photos being added in form
+
+            async function refreshFarData() {
+                try {
+                    const farData = await callBackend('getFarData');
+                    if (!Array.isArray(farData)) throw new Error('Respons FAR_DB tidak valid');
+                    farDataStore = farData;
+                    saveFarToStorage();
+                    renderFarModule();
+                } catch (err) {
+                    console.warn('Gagal membaca FAR_DB, menggunakan cache lokal:', err);
+                }
+            }
 
             function saveFarToStorage() {
                 try {
@@ -11458,16 +11487,9 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
             }
 
             function renderOrgModule() {
-                const localData = localStorage.getItem('ORG_STRUCTURE_DB');
-                if (localData) {
-                    orgDataStore = JSON.parse(localData);
-                } else {
-                    orgDataStore = [...DEFAULT_ORG_DATA];
-                    localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
-                }
-
                 const wrapper = document.getElementById('org-chart-wrapper');
                 const topLevel = orgDataStore.filter(m => !m.parentId);
+                const isEditor = (currentUserRole === 'editor');
 
                 if (topLevel.length === 0 && orgDataStore.length > 0) {
                     orgDataStore[0].parentId = null;
@@ -11482,7 +11504,6 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     topLevel.forEach(m => {
                         const children = orgDataStore.filter(c => c.parentId === m.id);
                         const hasChildren = children.length > 0;
-                        const isEditor = (currentUserRole === 'editor');
                         const actionHtml = isEditor ? `
                                 <!-- Actions on Hover (Pusatkan di atas kartu agar rapi) -->
                                 <div class="absolute right-1/2 translate-x-1/2 -top-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded-full shadow-md z-30">
@@ -11606,7 +11627,8 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const res = await callBackend('saveOrgData', { data: payload });
-                    if (res && res.data) orgDataStore = res.data;
+                    if (!res || res.success === false) throw new Error(res && res.message ? res.message : 'Gagal menyimpan data organisasi');
+                    if (Array.isArray(res.data)) orgDataStore = res.data;
                     else {
                         if (id) orgDataStore = orgDataStore.map(m => m.id === id ? { ...m, ...payload, id } : m);
                         else {
@@ -11641,7 +11663,8 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const res = await callBackend('deleteOrgData', { id: id });
-                    if (res && res.data) orgDataStore = res.data;
+                    if (!res || res.success === false) throw new Error(res && res.message ? res.message : 'Gagal menghapus data organisasi');
+                    if (Array.isArray(res.data)) orgDataStore = res.data;
                     else {
                         orgDataStore = orgDataStore.filter(m => m.id !== id);
                         orgDataStore = orgDataStore.map(m => m.parentId === id ? { ...m, parentId: null } : m);
@@ -11660,14 +11683,6 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
             let currentSopTab = 'sop';
 
             function initSopJobdescModule() {
-                const localSop = localStorage.getItem('SOP_DATA_DB');
-                sopDataStore = localSop ? JSON.parse(localSop) : [...DEFAULT_SOP_DATA];
-                if (!localSop) localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
-
-                const localJd = localStorage.getItem('JOBDESC_DATA_DB');
-                jobdescDataStore = localJd ? JSON.parse(localJd) : [...DEFAULT_JOBDESC_DATA];
-                if (!localJd) localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
-
                 switchSopTab(currentSopTab);
             }
 
@@ -11847,7 +11862,8 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const res = await callBackend('saveSopData', { data: payload });
-                    if (res && res.data) sopDataStore = res.data;
+                    if (!res || res.success === false) throw new Error(res && res.message ? res.message : 'Gagal menyimpan SOP');
+                    if (Array.isArray(res.data)) sopDataStore = res.data;
                     else {
                         if (id) sopDataStore = sopDataStore.map(s => s.id === id ? { ...s, ...payload, id } : s);
                         else {
@@ -11881,7 +11897,8 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const res = await callBackend('deleteSopData', { id: id });
-                    if (res && res.data) sopDataStore = res.data;
+                    if (!res || res.success === false) throw new Error(res && res.message ? res.message : 'Gagal menghapus SOP');
+                    if (Array.isArray(res.data)) sopDataStore = res.data;
                     else sopDataStore = sopDataStore.filter(s => s.id !== id);
                     localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
                     renderSopModuleContent();
@@ -11915,7 +11932,8 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const res = await callBackend('saveJobdescData', { data: payload });
-                    if (res && res.data) jobdescDataStore = res.data;
+                    if (!res || res.success === false) throw new Error(res && res.message ? res.message : 'Gagal menyimpan Job Description');
+                    if (Array.isArray(res.data)) jobdescDataStore = res.data;
                     else {
                         if (id) jobdescDataStore = jobdescDataStore.map(j => j.id === id ? { ...j, ...payload, id } : j);
                         else {
@@ -11948,7 +11966,8 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 showLoading(true);
                 try {
                     const res = await callBackend('deleteJobdescData', { id: id });
-                    if (res && res.data) jobdescDataStore = res.data;
+                    if (!res || res.success === false) throw new Error(res && res.message ? res.message : 'Gagal menghapus Job Description');
+                    if (Array.isArray(res.data)) jobdescDataStore = res.data;
                     else jobdescDataStore = jobdescDataStore.filter(j => j.id !== id);
                     localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
                     renderJobdescModuleContent();
