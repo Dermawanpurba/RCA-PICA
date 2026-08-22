@@ -4553,6 +4553,43 @@
             let AUTO_SYNC_INTERVAL = parseInt(localStorage.getItem('PICA_SYNC_INTERVAL')) || 0; // Default to 0 (disabled)
             let syncTimer = null;
 
+            // Safe LocalStorage Wrapper — Mencegah QuotaExceededError (5MB limit) mereset memori runtime
+            function safeSaveLocal(key, data) {
+                try {
+                    if (key === 'WO_DB' && Array.isArray(data)) {
+                        // Simpan semua WO OPEN/aktif + sampel data closed terbaru dengan field esensial agar hemat kuota browser (< 200KB)
+                        const openWos = data.filter(w => {
+                            let st = String(w["STATUS WO"] || w["STATUS_WO"] || w["STATUS"] || "").toUpperCase().trim();
+                            if (!st) {
+                                const ed = w["END DATE"] || w["END_DATE"] || w["TGL SELESAI"] || w["END DATETIME"] || "";
+                                st = ed ? 'CLOSED' : 'OPEN';
+                            }
+                            return st === 'OPEN' || st === 'PENDING' || st === 'IN PROGRESS';
+                        });
+                        const recentClosed = data.filter(w => !openWos.includes(w)).slice(-300);
+                        const compactList = [...openWos, ...recentClosed].map(w => ({
+                            "NO WO": w["NO WO"] || w["NO_WO"] || "",
+                            "NO ID": w["NO ID"] || w["NO_ID"] || w["UNIT_CODE"] || w["UNIT"] || "",
+                            "PROBLEM": w["PROBLEM"] || "",
+                            "ACTION": w["ACTION"] || "",
+                            "STATUS WO": w["STATUS WO"] || w["STATUS_WO"] || w["STATUS"] || "",
+                            "START DATE": w["START DATE"] || w["START_DATE"] || "",
+                            "START TIME": w["START TIME"] || "",
+                            "END DATE": w["END DATE"] || w["END_DATE"] || "",
+                            "END TIME": w["END TIME"] || "",
+                            "SCH_UNH": w["SCH_UNH"] || w["SCH/UNH"] || "",
+                            "MAJOR COMPONENT": w["MAJOR COMPONENT"] || "",
+                            "id": w.id || w["NO WO"] || ""
+                        }));
+                        localStorage.setItem(key, JSON.stringify(compactList));
+                    } else {
+                        localStorage.setItem(key, typeof data === 'string' ? data : JSON.stringify(data));
+                    }
+                } catch (e) {
+                    console.warn(`[Storage] Quota localStorage terlampaui untuk '${key}'. Data tetap aman di memori aplikasi:`, e.message || e);
+                }
+            }
+
             // REAL INTEGRATION FOR LIVE SERVER - real-time badge + health check polling
             let _liveCheckTimer=null;
             window.updateLiveBadge=function(state, msg){
@@ -5597,19 +5634,19 @@
                         orgDataStore = Array.isArray(res.org) ? res.org : [];
                         sopDataStore = Array.isArray(res.sop) ? res.sop : [];
                         jobdescDataStore = Array.isArray(res.jobdesc) ? res.jobdesc : [];
-                        localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
-                        localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
-                        localStorage.setItem('URGENT_PARTS_DB', JSON.stringify(urgentPartsStore));
-                        localStorage.setItem('POPULASI_UNIT_DB', JSON.stringify(populasiUnitStore));
-                        localStorage.setItem('WO_DB', JSON.stringify(woStore));
-                        localStorage.setItem('FAR_DB', JSON.stringify(farDataStore));
-                        localStorage.setItem('ACCURATE_PR_DB', JSON.stringify(accurateDataStore));
-                        localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
-                        localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
-                        localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
-                        localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
-                        localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
-                        localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
+                        safeSaveLocal('PICA_DB', picaDataStore);
+                        safeSaveLocal('RCA_DB', rcaDataStore);
+                        safeSaveLocal('URGENT_PARTS_DB', urgentPartsStore);
+                        safeSaveLocal('POPULASI_UNIT_DB', populasiUnitStore);
+                        safeSaveLocal('WO_DB', woStore);
+                        safeSaveLocal('FAR_DB', farDataStore);
+                        safeSaveLocal('ACCURATE_PR_DB', accurateDataStore);
+                        safeSaveLocal('USERS_DB', usersStore);
+                        safeSaveLocal('BACKLOG_DB', backlogDataStore);
+                        safeSaveLocal('PLAN_SERVICE_DB', planServiceDataStore);
+                        safeSaveLocal('ORG_STRUCTURE_DB', orgDataStore);
+                        safeSaveLocal('SOP_DATA_DB', sopDataStore);
+                        safeSaveLocal('JOBDESC_DATA_DB', jobdescDataStore);
 
                         if (res.targets && Object.keys(res.targets).length > 0) {
                             targetsConfig = res.targets;
@@ -5637,7 +5674,7 @@
                             const rawWo = await callBackend('getWoData');
                             if (rawWo && Array.isArray(rawWo) && rawWo.length > 0) {
                                 woStore = rawWo;
-                                localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                                safeSaveLocal('WO_DB', woStore);
                             }
                         } catch (woErr) {
                             console.warn("Fallback getWoData otomatis gagal:", woErr);
@@ -5742,19 +5779,19 @@
                                     jobdescDataStore = Array.isArray(res.jobdesc) ? res.jobdesc : jobdescDataStore;
                                     usersStore = Array.isArray(res.users) ? res.users : usersStore;
 
-                                    localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore));
-                                    localStorage.setItem('RCA_DB', JSON.stringify(rcaDataStore));
-                                    localStorage.setItem('URGENT_PARTS_DB', JSON.stringify(urgentPartsStore));
-                                    localStorage.setItem('POPULASI_UNIT_DB', JSON.stringify(populasiUnitStore));
-                                    localStorage.setItem('WO_DB', JSON.stringify(woStore));
-                                    localStorage.setItem('FAR_DB', JSON.stringify(farDataStore));
-                                    localStorage.setItem('ACCURATE_PR_DB', JSON.stringify(accurateDataStore));
-                                    localStorage.setItem('BACKLOG_DB', JSON.stringify(backlogDataStore));
-                                    localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore));
-                                    localStorage.setItem('ORG_STRUCTURE_DB', JSON.stringify(orgDataStore));
-                                    localStorage.setItem('SOP_DATA_DB', JSON.stringify(sopDataStore));
-                                    localStorage.setItem('JOBDESC_DATA_DB', JSON.stringify(jobdescDataStore));
-                                    localStorage.setItem('USERS_DB', JSON.stringify(usersStore));
+                                    safeSaveLocal('PICA_DB', picaDataStore);
+                                    safeSaveLocal('RCA_DB', rcaDataStore);
+                                    safeSaveLocal('URGENT_PARTS_DB', urgentPartsStore);
+                                    safeSaveLocal('POPULASI_UNIT_DB', populasiUnitStore);
+                                    safeSaveLocal('WO_DB', woStore);
+                                    safeSaveLocal('FAR_DB', farDataStore);
+                                    safeSaveLocal('ACCURATE_PR_DB', accurateDataStore);
+                                    safeSaveLocal('BACKLOG_DB', backlogDataStore);
+                                    safeSaveLocal('PLAN_SERVICE_DB', planServiceDataStore);
+                                    safeSaveLocal('ORG_STRUCTURE_DB', orgDataStore);
+                                    safeSaveLocal('SOP_DATA_DB', sopDataStore);
+                                    safeSaveLocal('JOBDESC_DATA_DB', jobdescDataStore);
+                                    safeSaveLocal('USERS_DB', usersStore);
 
                                     if (res.targets && Object.keys(res.targets).length > 0) {
                                         targetsConfig = res.targets;
@@ -9727,11 +9764,11 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     if (res && res.success) {
                         if (Array.isArray(res.wo)) {
                             woStore = res.wo;
-                            localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                            safeSaveLocal('WO_DB', woStore);
                         }
                         // Sinkron data lain jika tersedia
-                        if (Array.isArray(res.pica)) { picaDataStore = res.pica; localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore)); }
-                        if (Array.isArray(res.planService)) { planServiceDataStore = res.planService; localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore)); }
+                        if (Array.isArray(res.pica)) { picaDataStore = res.pica; safeSaveLocal('PICA_DB', picaDataStore); }
+                        if (Array.isArray(res.planService)) { planServiceDataStore = res.planService; safeSaveLocal('PLAN_SERVICE_DB', planServiceDataStore); }
                         renderWoTable();
                         renderKanbanWo();
                         Swal.fire({
@@ -9746,7 +9783,7 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                         const rawWo = await callBackend('getWoData');
                         if (rawWo && Array.isArray(rawWo)) {
                             woStore = rawWo;
-                            localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                            safeSaveLocal('WO_DB', woStore);
                             renderWoTable();
                             renderKanbanWo();
                             Swal.fire({ icon: 'success', title: 'Data WO Tersinkron', text: `${woStore.length} data WO berhasil dimuat.`, timer: 1500, showConfirmButton: false });
