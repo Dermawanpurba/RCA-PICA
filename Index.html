@@ -2461,10 +2461,90 @@
             <div
                 class="bg-industrial-card border border-industrial-border p-4 rounded flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm bg-white">
                 <div>
-                    <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider">Dashboard Kanban WO</h3>
-                    <p class="text-xs text-slate-500">Monitor dan kelola status Work Order secara visual.</p>
+                    <h3 class="text-xs font-black uppercase text-indigo-700 tracking-wider">Dashboard Kanban WO & Papan Catur</h3>
+                    <p class="text-xs text-slate-500">Monitor dan kelola status Work Order serta ketersediaan armada (RFU vs B/D) secara visual.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="openPapanCaturModal()"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition-all">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                        <span>Pengaturan Unit Papan Catur</span>
+                    </button>
+                    <button type="button" onclick="refreshWoDataLive()"
+                        class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-200 shadow-sm transition-all" title="Tarik & Sinkronkan Data WO Terbaru dari Google Sheets">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                        <span>Sync dari Sheets</span>
+                    </button>
+                    <button type="button" onclick="debugWoStore()"
+                        class="bg-amber-400 hover:bg-amber-500 text-slate-900 text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-amber-500 shadow-sm transition-all" title="Lihat isi data WO di memori & bersihkan cache lama">
+                        <i data-lucide="bug" class="w-3.5 h-3.5"></i>
+                        <span>Debug WO</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PAPAN CATUR / HOURLY BREAKDOWN REPORT BOARD -->
+            <div class="bg-white border border-industrial-border rounded-xl shadow-sm overflow-hidden p-4 space-y-3">
+                <!-- Top Bar (Tanggal, Title, Legend) -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="bg-black text-white font-mono font-black text-[11px] px-2.5 py-1 rounded shadow-sm">TGL</span>
+                        <span id="papan-catur-date" class="bg-emerald-100 text-emerald-950 border border-emerald-400 font-mono font-black text-xs px-3 py-1 rounded shadow-sm">22/8/2026</span>
+                        <span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded shadow-sm uppercase tracking-wide">MODEL</span>
+                        <span class="bg-yellow-300 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded shadow-sm uppercase tracking-wide">STATUS</span>
+                        <span class="text-xs font-black italic uppercase tracking-wider text-slate-800 bg-slate-100 border border-slate-300 px-3 py-1 rounded shadow-sm ml-1">
+                            HOURLY BREAKDOWN REPORT
+                        </span>
+                    </div>
+
+                    <!-- Legend Indikator -->
+                    <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0">
+                        <span class="flex items-center gap-1.5 text-emerald-800">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-emerald-600 shadow-sm"></span> Unit Ready (RFU)
+                        </span>
+                        <span class="flex items-center gap-1.5 text-rose-800">
+                            <span class="w-3 h-3 rounded-full bg-red-600 inline-block border border-red-700 shadow-sm animate-pulse"></span> Unit Breakdown (BD)
+                        </span>
+                    </div>
                 </div>
 
+                <!-- Main Layout: Left Summary Table (3 cols) + Right Grid Papan Catur (9 cols) -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+                    <!-- Left Summary Table -->
+                    <div class="xl:col-span-3 space-y-2.5">
+                        <div class="border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
+                            <table class="w-full text-xs text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-900 text-white font-mono text-[11px] uppercase">
+                                        <th class="p-2 border-r border-slate-700">Unit</th>
+                                        <th class="p-2 text-center text-emerald-400 border-r border-slate-700 w-12">RFU</th>
+                                        <th class="p-2 text-center text-rose-400 w-12">B/D</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="papan-catur-summary-tbody" class="divide-y divide-slate-200 font-mono text-[11px]">
+                                    <!-- Dynamic Summary Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- LAST WO Selector / Indicator -->
+                        <div class="border border-sky-300 bg-sky-50 rounded-lg p-2.5 flex items-center justify-between gap-2 shadow-sm">
+                            <span class="text-[10px] font-black italic uppercase text-sky-900 tracking-wider">LAST WO</span>
+                            <div id="papan-catur-last-wo-container" class="font-mono text-xs font-black text-slate-900 bg-white border border-sky-400 px-2.5 py-1 rounded shadow-sm">
+                                -
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Grid Papan Catur Board -->
+                    <div class="xl:col-span-9 border border-slate-300 rounded-lg overflow-x-auto shadow-sm bg-white">
+                        <table class="w-full text-xs border-collapse min-w-[680px]">
+                            <tbody id="papan-catur-grid-tbody" class="divide-y divide-slate-200 font-mono">
+                                <!-- Dynamic Model Rows (RFU row & BD row per Model) -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- Kanban Filters -->
@@ -4413,6 +4493,56 @@
             </div>
         </div>
 
+        <!-- MODAL PENGATURAN UNIT PAPAN CATUR -->
+        <div id="papan-catur-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                <div class="p-4 bg-slate-900 text-white flex justify-between items-center shrink-0">
+                    <div class="flex items-center gap-2.5">
+                        <div class="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg border border-indigo-500/30">
+                            <i data-lucide="sliders" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black uppercase tracking-wider">Pengaturan List Unit Papan Catur</h3>
+                            <p class="text-[11px] text-slate-400">Atur unit-unit yang masuk dalam pemantauan Papan Catur & klasifikasi model.</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closePapanCaturModal()" class="text-slate-400 hover:text-white transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <div class="p-5 overflow-y-auto space-y-4 flex-1">
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 leading-relaxed flex items-start gap-2.5 shadow-sm">
+                        <i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+                        <div>
+                            <b>Petunjuk:</b> Masukkan kode unit armada yang dipisahkan dengan koma (contoh: <code>BSS 108, BSS 112, BSS 115</code>). Unit yang terdaftar di sini otomatis tersinkron dengan status Work Order <b>OPEN</b> (masuk baris Breakdown merah) atau <b>CLOSED</b> (masuk baris Ready For Use hijau).
+                        </div>
+                    </div>
+
+                    <div id="papan-catur-config-container" class="space-y-3">
+                        <!-- Dynamic Model Config Cards -->
+                    </div>
+
+                    <button type="button" onclick="addNewPapanCaturModelRow()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 border border-dashed border-slate-300 rounded-xl text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5 transition">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Kategori / Model Baru
+                    </button>
+                </div>
+
+                <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center gap-3 shrink-0">
+                    <button type="button" onclick="resetPapanCaturToDefault()" class="px-3.5 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-xl transition">
+                        Reset Default Standar
+                    </button>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closePapanCaturModal()" class="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl transition">
+                            Batal
+                        </button>
+                        <button type="button" onclick="savePapanCaturModalConfig()" class="px-5 py-2 text-xs font-black uppercase tracking-wider text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
             // --- DATA SOURCE & SYNC CONFIGURATION ---
@@ -5513,6 +5643,7 @@
                     renderUrgentPartsTable(urgentPartsStore);
                     renderPopulasiTable();
                     renderWoTable();
+                    renderKanbanWo();
                     renderRcaModule();
                     renderFarModule();
                     renderBacklogModule();
@@ -5564,6 +5695,7 @@
                     renderUrgentPartsTable(urgentPartsStore);
                     renderPopulasiTable();
                     renderWoTable();
+                    renderKanbanWo();
                     renderRcaModule();
                     renderFarModule();
                 } finally {
@@ -8931,23 +9063,77 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
             // ============================================================
             // WORK ORDER (WO) MODULE
             // ============================================================
+            function getWoYearMonth(dateStr) {
+                if (!dateStr) return "";
+                const s = String(dateStr).trim();
+                const iso = s.match(/^(\d{4})-(\d{2})/);
+                if (iso) return `${iso[1]}-${iso[2]}`;
+                const numDate = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+                if (numDate) return `${numDate[3]}-${String(numDate[2]).padStart(2, '0')}`;
+                const months = { jan:'01', feb:'02', mar:'03', apr:'04', may:'05', mei:'05', jun:'06', jul:'07', aug:'08', agu:'08', ags:'08', sep:'09', oct:'10', okt:'10', nov:'11', dec:'12', des:'12' };
+                const textDate = s.match(/^(\d{1,2})[\s\/-]([A-Za-z]{3})[\s\/-](\d{2,4})/);
+                if (textDate) {
+                    const mKey = textDate[2].toLowerCase();
+                    const m = months[mKey] || '01';
+                    let y = textDate[3];
+                    if (y.length === 2) y = '20' + y;
+                    return `${y}-${m}`;
+                }
+                return "";
+            }
+
+            function parseWoDateForSort(item) {
+                const raw = item["START DATETIME"] || item["START DATE"] || item["START_DATE"] || item["TGL MULAI"] || "";
+                if (!raw) return 0;
+                const ym = getWoYearMonth(raw);
+                if (ym) {
+                    const parts = String(raw).match(/^(\d{1,2})[\s\/-]/);
+                    const day = parts ? String(parts[1]).padStart(2, '0') : '01';
+                    return new Date(`${ym}-${day}`).getTime() || 0;
+                }
+                const d = new Date(raw);
+                return isNaN(d.getTime()) ? 0 : d.getTime();
+            }
+
             function renderWoTable() {
                 const tbody = document.getElementById('wo-tbody');
                 if (!tbody) return;
                 tbody.innerHTML = "";
+
+                // Normalisasi list data WO valid (bersihkan ghost row / formula error)
+                const validWoList = woStore.filter(item => {
+                    if (!item) return false;
+                    const noWo = String(item["NO WO"] || item["NO_WO"] || item["No WO"] || item["WO"] || "").trim();
+                    const noId = String(item["NO ID"] || item["NO_ID"] || item["No ID"] || item["UNIT_CODE"] || item["UNIT"] || "").trim();
+                    const problem = String(item["PROBLEM"] || item["problem"] || "").trim();
+                    if (!noWo && !noId && !problem) return false;
+                    if (noWo.startsWith("#ERROR") && !noId && !problem) return false;
+                    return true;
+                });
 
                 // Calculate overall status counts and gather OPEN items
                 let openCount = 0;
                 let closedCount = 0;
                 let openItems = [];
 
-                woStore.forEach(item => {
-                    const status = (item["STATUS WO"] || "").toUpperCase();
-                    if (status === 'OPEN') {
+                validWoList.forEach(item => {
+                    let status = String(item["STATUS WO"] || item["STATUS_WO"] || item["Status WO"] || item["STATUS"] || item["Status"] || "").toUpperCase().trim();
+                    if (!status) {
+                        const endDate = item["END DATE"] || item["END_DATE"] || item["TGL SELESAI"] || item["END DATETIME"];
+                        if (endDate || (item["ACTION"] && String(item["ACTION"]).toLowerCase().includes("selesai"))) {
+                            status = 'CLOSED';
+                        } else {
+                            status = 'OPEN';
+                        }
+                    }
+                    if (status === 'OPEN' || status === 'PENDING' || status === 'IN PROGRESS') {
                         openCount++;
                         openItems.push(item);
-                    } else if (status === 'CLOSE' || status === 'CLOSED') {
+                    } else if (status === 'CLOSE' || status === 'CLOSED' || status === 'FINISH' || status === 'DONE') {
                         closedCount++;
+                    } else {
+                        openCount++;
+                        openItems.push(item);
                     }
                 });
 
@@ -9004,17 +9190,13 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     if (openItems.length === 0) {
                         openListContainer.innerHTML = `<div class="col-span-full text-center py-6 text-slate-400 text-xs italic">Tidak ada Work Order status OPEN.</div>`;
                     } else {
-                        const sortedOpen = [...openItems].sort((a, b) => {
-                            const valA = a["START DATETIME"] || a["START DATE"] || "";
-                            const valB = b["START DATETIME"] || b["START DATE"] || "";
-                            return String(valB).localeCompare(String(valA));
-                        });
+                        const sortedOpen = [...openItems].sort((a, b) => parseWoDateForSort(b) - parseWoDateForSort(a));
 
                         sortedOpen.forEach(item => {
-                            const noWo = item["NO WO"] || "-";
-                            const noId = item["NO ID"] || "-";
-                            const problem = item["PROBLEM"] || "-";
-                            const date = item["START DATE"] || "-";
+                            const noWo = item["NO WO"] || item["NO_WO"] || item["No WO"] || item["WO"] || item.id || "-";
+                            const noId = item["NO ID"] || item["NO_ID"] || item["No ID"] || item["UNIT_CODE"] || item["UNIT"] || "-";
+                            const problem = item["PROBLEM"] || item["problem"] || "-";
+                            const date = item["START DATE"] || item["START_DATE"] || item["TGL MULAI"] || "-";
 
                             const cardHtml = `
                             <div onclick="searchWoFromCard('${noWo}')" 
@@ -9037,47 +9219,49 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 const monthFilter = document.getElementById('filter-wo-month')?.value || "";
                 const dateSort = document.getElementById('sort-wo-date')?.value || "desc";
 
-                let filtered = [...woStore];
+                let filtered = [...validWoList];
                 if (statusFilter) {
-                    filtered = filtered.filter(item => (item["STATUS WO"] || "").toUpperCase() === statusFilter.toUpperCase());
+                    filtered = filtered.filter(item => {
+                        let st = String(item["STATUS WO"] || item["STATUS_WO"] || item["Status WO"] || item["STATUS"] || item["Status"] || "").toUpperCase().trim();
+                        if (!st) {
+                            const endDate = item["END DATE"] || item["END_DATE"] || item["TGL SELESAI"] || item["END DATETIME"];
+                            st = endDate ? 'CLOSED' : 'OPEN';
+                        }
+                        if (statusFilter.toUpperCase() === 'OPEN') return st === 'OPEN' || st === 'PENDING' || st === 'IN PROGRESS';
+                        if (statusFilter.toUpperCase() === 'CLOSED' || statusFilter.toUpperCase() === 'CLOSE') return st === 'CLOSED' || st === 'CLOSE' || st === 'FINISH' || st === 'DONE';
+                        return st === statusFilter.toUpperCase();
+                    });
                 }
                 if (monthFilter) {
                     filtered = filtered.filter(item => {
-                        const startDate = String(item["START DATE"] || "").trim();
-                        const isoMonth = startDate.match(/^(\d{4})-(\d{2})/);
-                        const localMonth = startDate.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
-                        const itemMonth = isoMonth
-                            ? `${isoMonth[1]}-${isoMonth[2]}`
-                            : localMonth
-                                ? `${localMonth[3]}-${String(localMonth[2]).padStart(2, '0')}`
-                                : "";
+                        const startDate = String(item["START DATE"] || item["START_DATE"] || item["TGL MULAI"] || "").trim();
+                        const itemMonth = getWoYearMonth(startDate);
                         return itemMonth === monthFilter;
                     });
                 }
                 if (query) {
                     filtered = filtered.filter(item => {
-                        return (item["NO WO"] || "").toLowerCase().includes(query) ||
-                            (item["NO ID"] || "").toLowerCase().includes(query) ||
-                            (item["PROBLEM"] || "").toLowerCase().includes(query) ||
-                            (item["ACTION"] || "").toLowerCase().includes(query) ||
-                            (item["MAJOR COMPONENT"] || "").toLowerCase().includes(query) ||
-                            (item["REMARK"] || "").toLowerCase().includes(query);
+                        const noWo = String(item["NO WO"] || item["NO_WO"] || item["No WO"] || item["WO"] || "").toLowerCase();
+                        const noId = String(item["NO ID"] || item["NO_ID"] || item["No ID"] || item["UNIT_CODE"] || item["UNIT"] || "").toLowerCase();
+                        const problem = String(item["PROBLEM"] || item["problem"] || "").toLowerCase();
+                        const action = String(item["ACTION"] || item["action"] || "").toLowerCase();
+                        const major = String(item["MAJOR COMPONENT"] || item["MAJOR_COMPONENT"] || "").toLowerCase();
+                        const remark = String(item["REMARK"] || item["remark"] || "").toLowerCase();
+                        return noWo.includes(query) || noId.includes(query) || problem.includes(query) || action.includes(query) || major.includes(query) || remark.includes(query);
                     });
                 }
 
                 // Sort by Date
                 filtered.sort((a, b) => {
-                    const valA = a["START DATETIME"] || a["START DATE"] || "";
-                    const valB = b["START DATETIME"] || b["START DATE"] || "";
+                    const timeA = parseWoDateForSort(a);
+                    const timeB = parseWoDateForSort(b);
                     if (dateSort === 'desc') {
-                        return String(valB).localeCompare(String(valA));
+                        return timeB - timeA;
                     } else {
-                        return String(valA).localeCompare(String(valB));
+                        return timeA - timeB;
                     }
                 });
 
-                // ALWAYS update pagination (even when filtered.length === 0)
-                // This prevents stale 8999 count when woStore is cleared
                 const totalItems = filtered.length;
                 const startIndex = (woCurrentPage - 1) * ITEMS_PER_PAGE;
                 const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -9085,14 +9269,37 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
 
                 paginatedData.forEach((item, index) => {
                     const globalIndex = index + 1 + startIndex;
+                    const noWo = item["NO WO"] || item["NO_WO"] || item["No WO"] || item["WO"] || item.id || "-";
+                    const noId = item["NO ID"] || item["NO_ID"] || item["No ID"] || item["UNIT_CODE"] || item["UNIT"] || "-";
+                    const problem = item["PROBLEM"] || item["problem"] || "-";
+                    const action = item["ACTION"] || item["action"] || "-";
+                    const startDate = item["START DATE"] || item["START_DATE"] || item["TGL MULAI"] || "-";
+                    const startTime = item["START TIME"] || item["START_TIME"] || item["JAM MULAI"] || "-";
+                    const endDate2 = item["END DATE2"] || "-";
+                    const endDate = item["END DATE"] || item["END_DATE"] || item["TGL SELESAI"] || "-";
+                    const endTime = item["END TIME"] || item["END_TIME"] || item["JAM SELESAI"] || "-";
+                    const total1 = item["TOTAL_1"] || item["TOTAL"] || "-";
+                    const startDatetime = item["START DATETIME"] || item["START_DATETIME"] || "-";
+                    const majorComp = item["MAJOR COMPONENT"] || item["MAJOR_COMPONENT"] || "-";
+                    const endDatetime = item["END DATETIME"] || item["END_DATETIME"] || "-";
+                    const remark = item["REMARK"] || item["remark"] || "-";
+                    const dueDate = item["DUE DATE"] || item["DUE_DATE"] || "-";
+                    const d1 = item["D1"] || "-";
+                    const d2 = item["D2"] || "-";
+                    const d3 = item["D3"] || "-";
+                    const startBd = item["Start BD"] || item["START_BD"] || "-";
+                    const endBd = item["End BD"] || item["END_BD"] || "-";
+                    const total2 = item["TOTAL_2"] || "-";
+                    const schUnh = item["SCH_UNH"] || item["SCH/UNH"] || "-";
+
                     let actionsHtml = "";
                     if (currentUserRole === 'editor') {
                         actionsHtml = `
                         <div class="flex justify-center space-x-2">
-                            <button onclick="editWo('${item["NO WO"]}')" class="text-indigo-600 hover:text-indigo-800" title="Edit">
+                            <button onclick="editWo('${noWo}')" class="text-indigo-600 hover:text-indigo-800" title="Edit">
                                 <i data-lucide="edit" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="deleteWo('${item["NO WO"]}')" class="text-red-600 hover:text-red-800" title="Hapus">
+                            <button onclick="deleteWo('${noWo}')" class="text-red-600 hover:text-red-800" title="Hapus">
                                 <i data-lucide="trash" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -9102,7 +9309,7 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     }
 
                     // Find latest PICA status for this WO's unit (NO ID)
-                    const unitCode = item["NO ID"];
+                    const unitCode = noId;
                     const picaMatches = picaDataStore.filter(p => String(p.unit_code || "").toUpperCase() === String(unitCode || "").toUpperCase());
                     let picaStatusHtml = "";
                     if (picaMatches.length > 0) {
@@ -9137,45 +9344,49 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     `;
                     }
 
+                    let rawStatus = String(item["STATUS WO"] || item["STATUS_WO"] || item["Status WO"] || item["STATUS"] || item["Status"] || "").toUpperCase().trim();
+                    if (!rawStatus) {
+                        rawStatus = (endDate !== '-' || endDatetime !== '-') ? 'CLOSED' : 'OPEN';
+                    }
+
                     let statusBadge = "";
-                    const status = (item["STATUS WO"] || "").toUpperCase();
-                    if (status === 'OPEN') {
-                        statusBadge = `<span class="px-2 py-1 rounded bg-red-100 text-red-800 font-bold text-[10px]">${status}</span>`;
-                    } else if (status === 'CLOSE') {
-                        statusBadge = `<span class="px-2 py-1 rounded bg-green-100 text-green-800 font-bold text-[10px]">${status}</span>`;
+                    if (rawStatus === 'OPEN' || rawStatus === 'PENDING' || rawStatus === 'IN PROGRESS') {
+                        statusBadge = `<span class="px-2 py-1 rounded bg-red-100 text-red-800 font-bold text-[10px]">${rawStatus}</span>`;
+                    } else if (rawStatus === 'CLOSE' || rawStatus === 'CLOSED' || rawStatus === 'FINISH' || rawStatus === 'DONE') {
+                        statusBadge = `<span class="px-2 py-1 rounded bg-green-100 text-green-800 font-bold text-[10px]">${rawStatus}</span>`;
                     } else {
-                        statusBadge = `<span class="px-2 py-1 rounded bg-slate-100 text-slate-800 text-[10px]">${status || '-'}</span>`;
+                        statusBadge = `<span class="px-2 py-1 rounded bg-slate-100 text-slate-800 text-[10px]">${rawStatus || '-'}</span>`;
                     }
 
                     const row = `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3 text-center border-r border-industrial-border font-bold text-slate-500">${globalIndex}</td>
-                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900">${item["NO WO"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900">${item["NO ID"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis">${item["PROBLEM"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis">${item["ACTION"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["START DATE"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["START TIME"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["END DATE2"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["END DATE"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["END TIME"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900 font-mono">${noWo}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-slate-900 font-mono">${noId}</td>
+                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis" title="${problem}">${problem}</td>
+                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis" title="${action}">${action}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${startDate}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${startTime}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${endDate2}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${endDate}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${endTime}</td>
                         <td class="p-3 border-r border-industrial-border text-center">
                             ${statusBadge}
                             ${picaStatusHtml}
                         </td>
-                        <td class="p-3 border-r border-industrial-border font-bold text-indigo-700">${item["TOTAL_1"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["START DATETIME"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["MAJOR COMPONENT"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["END DATETIME"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis">${item["REMARK"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["DUE DATE"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["D1"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["D2"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["D3"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["Start BD"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["End BD"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border font-bold text-red-700">${item["TOTAL_2"] || '-'}</td>
-                        <td class="p-3 border-r border-industrial-border">${item["SCH_UNH"] || '-'}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-indigo-700">${total1}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${startDatetime}</td>
+                        <td class="p-3 border-r border-industrial-border">${majorComp}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${endDatetime}</td>
+                        <td class="p-3 border-r border-industrial-border max-w-xs overflow-hidden text-ellipsis" title="${remark}">${remark}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${dueDate}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${d1}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${d2}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${d3}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${startBd}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${endBd}</td>
+                        <td class="p-3 border-r border-industrial-border font-bold text-red-700">${total2}</td>
+                        <td class="p-3 border-r border-industrial-border font-mono">${schUnh}</td>
                         <td class="p-3 border-r border-industrial-border text-center">${actionsHtml}</td>
                     </tr>
                 `;
@@ -9200,7 +9411,6 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     paginationDiv.innerHTML = pagHtml;
                 }
                 lucide.createIcons();
-
             }
 
             function changeWoPage(page) {
@@ -9218,14 +9428,22 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 const searchQuery = (document.getElementById('kanban-search')?.value || "").toLowerCase();
                 const monthQuery = document.getElementById('kanban-filter-month')?.value || "";
 
-                let items = [...woStore];
+                let items = woStore.filter(item => {
+                    if (!item) return false;
+                    const noWo = String(item["NO WO"] || item["NO_WO"] || item["No WO"] || item["WO"] || "").trim();
+                    const noId = String(item["NO ID"] || item["NO_ID"] || item["No ID"] || item["UNIT_CODE"] || item["UNIT"] || "").trim();
+                    const problem = String(item["PROBLEM"] || item["problem"] || "").trim();
+                    if (!noWo && !noId && !problem) return false;
+                    if (noWo.startsWith("#ERROR") && !noId && !problem) return false;
+                    return true;
+                });
 
                 // Filter by search query
                 if (searchQuery) {
                     items = items.filter(item => {
-                        const noWo = (item["NO WO"] || "").toLowerCase();
-                        const noId = (item["NO ID"] || "").toLowerCase();
-                        const problem = (item["PROBLEM"] || "").toLowerCase();
+                        const noWo = String(item["NO WO"] || item["NO_WO"] || item["No WO"] || item["WO"] || "").toLowerCase();
+                        const noId = String(item["NO ID"] || item["NO_ID"] || item["No ID"] || item["UNIT_CODE"] || item["UNIT"] || "").toLowerCase();
+                        const problem = String(item["PROBLEM"] || item["problem"] || "").toLowerCase();
                         return noWo.includes(searchQuery) || noId.includes(searchQuery) || problem.includes(searchQuery);
                     });
                 }
@@ -9233,8 +9451,9 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 // Filter by month
                 if (monthQuery) {
                     items = items.filter(item => {
-                        const date = item["START DATE"] || "";
-                        return date.startsWith(monthQuery);
+                        const date = item["START DATE"] || item["START_DATE"] || item["TGL MULAI"] || "";
+                        const itemMonth = getWoYearMonth(date);
+                        return itemMonth === monthQuery;
                     });
                 }
 
@@ -9245,22 +9464,23 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 // - WO CLOSED    : STATUS WO = CLOSE / CLOSED
                 // ============================================================
                 const getSchedFlag = (item) => String(item["SCH_UNH"] || item["SCH/UNH"] || "").toUpperCase();
+                const isItemClosed = (item) => {
+                    let st = String(item["STATUS WO"] || item["STATUS_WO"] || item["Status WO"] || item["STATUS"] || item["Status"] || "").toUpperCase().trim();
+                    if (!st) {
+                        const endDate = item["END DATE"] || item["END_DATE"] || item["TGL SELESAI"] || item["END DATETIME"];
+                        return !!endDate;
+                    }
+                    return st === 'CLOSE' || st === 'CLOSED' || st === 'FINISH' || st === 'DONE';
+                };
 
-                const closedList = items.filter(item => {
-                    const status = String(item["STATUS WO"] || "").toUpperCase();
-                    return status === 'CLOSE' || status === 'CLOSED';
-                });
+                const closedList = items.filter(item => isItemClosed(item));
 
                 const planServiceList = items.filter(item => {
-                    const status = String(item["STATUS WO"] || "").toUpperCase();
-                    const isClosed = status === 'CLOSE' || status === 'CLOSED';
-                    return !isClosed && getSchedFlag(item) === 'SCHEDULED';
+                    return !isItemClosed(item) && getSchedFlag(item) === 'SCHEDULED';
                 });
 
                 const openWOList = items.filter(item => {
-                    const status = String(item["STATUS WO"] || "").toUpperCase();
-                    const isClosed = status === 'CLOSE' || status === 'CLOSED';
-                    return !isClosed && getSchedFlag(item) !== 'SCHEDULED';
+                    return !isItemClosed(item) && getSchedFlag(item) !== 'SCHEDULED';
                 });
 
                 // Build Plan Service Notification List
@@ -9334,7 +9554,653 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 document.getElementById('kanban-closed-count').innerText = closedList.length;
                 document.getElementById('kanban-closed-list').innerHTML = renderCards(closedList, 'CLOSED');
 
+                // Render Papan Catur (Hourly Breakdown Report)
+                renderPapanCatur();
+
                 if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+
+            // ============================================================
+            // PAPAN CATUR / HOURLY BREAKDOWN REPORT MODULE
+            // ============================================================
+            const DEFAULT_PAPAN_CATUR_CONFIG = [
+                {
+                    model: "EXC",
+                    name: "Excavator",
+                    badgeBg: "bg-red-600 text-white",
+                    units: ["BSS 108", "BSS 112", "BSS 115", "BSS 116", "BSS 117", "BSS 118", "BSS 119"]
+                },
+                {
+                    model: "MAN",
+                    name: "MAN Dump Truck",
+                    badgeBg: "bg-slate-900 text-white",
+                    isHauler: true,
+                    units: ["BSS 608", "BSS 609", "BSS 612", "BSS 613", "BSS 617"]
+                },
+                {
+                    model: "HINO",
+                    name: "Hino Dump Truck",
+                    badgeBg: "bg-amber-400 text-slate-950",
+                    isHauler: true,
+                    units: ["BSS 912", "BSS 913", "BSS 918", "BSS 920", "BSS 921", "BSS 922"]
+                },
+                {
+                    model: "DF",
+                    name: "Dongfeng Dump Truck",
+                    badgeBg: "bg-emerald-600 text-white",
+                    isHauler: true,
+                    units: ["BSS 701", "BSS 703", "BSS 707", "BSS 708", "BSS 710"]
+                },
+                {
+                    model: "SITRAK",
+                    name: "Sitrak Dump Truck",
+                    badgeBg: "bg-cyan-600 text-white",
+                    isHauler: true,
+                    units: ["BSS 802", "BSS 803", "BSS 805", "BSS 806", "BSS 808", "BSS 809", "BSS 810", "BSS 811", "BSS 812", "BSS 813", "BSS 815", "BSS 816", "BSS 817", "BSS 818", "BSS 819", "BSS 820", "BSS 821", "BSS 822", "BSS 823"]
+                },
+                {
+                    model: "GDR",
+                    name: "Motor Grader",
+                    badgeBg: "bg-sky-500 text-white",
+                    units: ["BSS 301", "BSS 305"]
+                },
+                {
+                    model: "DZR",
+                    name: "Dozer",
+                    badgeBg: "bg-blue-700 text-white",
+                    units: ["BSS 206", "BSS 207", "BSS 209", "BSS 210"]
+                },
+                {
+                    model: "BOMAG",
+                    name: "Compactor / Bomag",
+                    badgeBg: "bg-purple-700 text-white",
+                    units: ["BSS 302"]
+                },
+                {
+                    model: "WL",
+                    name: "Wheel Loader",
+                    badgeBg: "bg-pink-600 text-white",
+                    units: ["BSS 501"]
+                },
+                {
+                    model: "WP",
+                    name: "Water Pump",
+                    badgeBg: "bg-slate-800 text-emerald-400",
+                    units: ["EB 001", "EB 005", "EB 007", "EB 008"]
+                }
+            ];
+
+            let papanCaturConfig = null;
+
+            function getPapanCaturConfig() {
+                if (papanCaturConfig && Array.isArray(papanCaturConfig) && papanCaturConfig.length > 0) {
+                    return papanCaturConfig;
+                }
+                const saved = localStorage.getItem('PAPAN_CATUR_CONFIG');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            papanCaturConfig = parsed;
+                            return papanCaturConfig;
+                        }
+                    } catch (e) {
+                        console.warn("Gagal parse PAPAN_CATUR_CONFIG:", e);
+                    }
+                }
+                papanCaturConfig = JSON.parse(JSON.stringify(DEFAULT_PAPAN_CATUR_CONFIG));
+                return papanCaturConfig;
+            }
+
+            function setPapanCaturConfig(newConfig) {
+                papanCaturConfig = newConfig;
+                localStorage.setItem('PAPAN_CATUR_CONFIG', JSON.stringify(newConfig));
+            }
+
+            function normalizeUnitCodeKey(str) {
+                return String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
+            }
+
+            async function debugWoStore() {
+                const total = woStore.length;
+                const openItems = woStore.filter(w => {
+                    let st = String(w["STATUS WO"] || w["STATUS_WO"] || w["Status WO"] || w["STATUS"] || w["Status"] || "").toUpperCase().trim();
+                    if (!st) {
+                        const ed = w["END DATE"] || w["END_DATE"] || w["END DATE2"] || "";
+                        st = ed ? 'CLOSED' : 'OPEN';
+                    }
+                    return st === 'OPEN' || st === 'PENDING' || st === 'IN PROGRESS';
+                });
+
+                // Cari semua unit unik di woStore
+                const allUnits = [...new Set(woStore.map(w => String(w["NO ID"] || w["NO_ID"] || w["UNIT"] || "").trim()).filter(Boolean))];
+                const hasBss301 = woStore.some(w => normalizeUnitCodeKey(w["NO ID"] || w["NO_ID"] || w["UNIT"] || "") === "BSS301");
+                const bss301Entries = woStore.filter(w => normalizeUnitCodeKey(w["NO ID"] || w["NO_ID"] || w["UNIT"] || "") === "BSS301");
+
+                let msg = `📦 Total WO di memori: <b>${total}</b><br>`;
+                msg += `✅ WO OPEN: <b>${openItems.length}</b><br>`;
+                msg += `🔍 BSS 301 ditemukan: <b>${hasBss301 ? 'YA (' + bss301Entries.length + ' baris)' : 'TIDAK'}</b><br><br>`;
+
+                if (bss301Entries.length > 0) {
+                    msg += `<b>Data BSS 301:</b><br>`;
+                    bss301Entries.forEach(w => {
+                        msg += `→ WO: ${w["NO WO"] || '-'} | Status: ${w["STATUS WO"] || '-'} | Start: ${w["START DATE"] || '-'}<br>`;
+                    });
+                } else {
+                    msg += `⚠️ BSS 301 tidak ada di memori.<br>`;
+                    msg += `Artinya data di <b>localStorage</b> belum update dari GAS.<br><br>`;
+                    msg += `<b>Unit yang ada di WO (10 pertama):</b><br>`;
+                    allUnits.slice(0, 10).forEach(u => { msg += `• ${u}<br>`; });
+                    if (allUnits.length > 10) msg += `... dan ${allUnits.length - 10} unit lainnya.<br>`;
+                }
+
+                const { isConfirmed } = await Swal.fire({
+                    title: 'Debug WO Store',
+                    html: msg,
+                    icon: hasBss301 ? 'info' : 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '🗑️ Clear Cache & Sync Ulang',
+                    cancelButtonText: 'Tutup',
+                    confirmButtonColor: '#d97706'
+                });
+
+                if (isConfirmed) {
+                    // Hapus WO_DB cache agar initApp/refreshWoDataLive menarik data fresh dari GAS
+                    localStorage.removeItem('WO_DB');
+                    woStore = [];
+                    await refreshWoDataLive();
+                }
+            }
+
+            async function refreshWoDataLive() {
+                showLoading(true);
+                try {
+                    // Gunakan getOptimizedDataFull agar konsisten dengan initApp
+                    const res = await callBackend('getOptimizedDataFull');
+                    if (res && res.success) {
+                        if (Array.isArray(res.wo)) {
+                            woStore = res.wo;
+                            localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                        }
+                        // Sinkron data lain jika tersedia
+                        if (Array.isArray(res.pica)) { picaDataStore = res.pica; localStorage.setItem('PICA_DB', JSON.stringify(picaDataStore)); }
+                        if (Array.isArray(res.planService)) { planServiceDataStore = res.planService; localStorage.setItem('PLAN_SERVICE_DB', JSON.stringify(planServiceDataStore)); }
+                        renderWoTable();
+                        renderKanbanWo();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Data WO Tersinkron',
+                            text: `Berhasil memuat ${woStore.length} data Work Order dari Google Sheets.`,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        // Fallback: coba langsung hit getWoData jika ada
+                        const rawWo = await callBackend('getWoData');
+                        if (rawWo && Array.isArray(rawWo)) {
+                            woStore = rawWo;
+                            localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                            renderWoTable();
+                            renderKanbanWo();
+                            Swal.fire({ icon: 'success', title: 'Data WO Tersinkron', text: `${woStore.length} data WO berhasil dimuat.`, timer: 1500, showConfirmButton: false });
+                        } else {
+                            throw new Error('Data WO tidak valid dari server');
+                        }
+                    }
+                } catch (e) {
+                    console.error("Gagal sinkron WO:", e);
+                    Swal.fire({ icon: 'error', title: 'Gagal Sinkron', text: 'Tidak dapat terhubung ke Google Sheets. Cek koneksi & deployment GAS.' });
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function renderPapanCatur() {
+                const summaryTbody = document.getElementById('papan-catur-summary-tbody');
+                const gridTbody = document.getElementById('papan-catur-grid-tbody');
+                const dateEl = document.getElementById('papan-catur-date');
+                const lastWoEl = document.getElementById('papan-catur-last-wo-container');
+
+                if (!summaryTbody || !gridTbody) return;
+
+                // Update current date
+                const today = new Date();
+                if (dateEl) {
+                    dateEl.innerText = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+                }
+
+                const config = getPapanCaturConfig();
+
+                // Mapping active Open WOs by unit code
+                const openWosByUnit = {};
+                let latestWoId = '-';
+
+                const validWos = woStore.filter(w => {
+                    const noWo = String(w["NO WO"] || w["NO_WO"] || w["No WO"] || w["WO"] || "").trim();
+                    const noId = String(w["NO ID"] || w["NO_ID"] || w["No ID"] || w["UNIT_CODE"] || w["UNIT"] || "").trim();
+                    return (noWo || noId) && !noWo.startsWith("#ERROR");
+                });
+
+                // Cari LAST WO = nomor WO OPEN terbaru (urutkan leksikografis DESC)
+                const openWoIds = validWos
+                    .filter(w => {
+                        let st = String(w["STATUS WO"] || w["STATUS_WO"] || w["Status WO"] || w["STATUS"] || w["Status"] || "").toUpperCase().trim();
+                        if (!st) {
+                            const ed = w["END DATE"] || w["END_DATE"] || w["TGL SELESAI"] || w["END DATE2"] || "";
+                            st = ed ? 'CLOSED' : 'OPEN';
+                        }
+                        return st === 'OPEN' || st === 'PENDING' || st === 'IN PROGRESS';
+                    })
+                    .map(w => String(w["NO WO"] || w["NO_WO"] || "").trim())
+                    .filter(id => id && !id.startsWith('#'));
+
+                if (openWoIds.length > 0) {
+                    // Urutkan secara leksikografis DESC — nomor terbesar/terbaru tampil sebagai LAST WO
+                    openWoIds.sort((a, b) => b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }));
+                    latestWoId = openWoIds[0];
+                } else if (validWos.length > 0) {
+                    latestWoId = String(validWos[validWos.length - 1]["NO WO"] || '-').trim();
+                }
+
+                validWos.forEach(w => {
+                    const noWo = String(w["NO WO"] || w["NO_WO"] || w["No WO"] || w["WO"] || "").trim();
+                    const rawNoId = String(w["NO ID"] || w["NO_ID"] || w["No ID"] || w["UNIT_CODE"] || w["UNIT"] || "").trim();
+                    if (!rawNoId) return;
+
+                    let st = String(w["STATUS WO"] || w["STATUS_WO"] || w["Status WO"] || w["STATUS"] || w["Status"] || "").toUpperCase().trim();
+                    if (!st) {
+                        const endDate = w["END DATE"] || w["END_DATE"] || w["TGL SELESAI"] || w["END DATETIME"] || w["END DATE2"];
+                        st = endDate ? 'CLOSED' : 'OPEN';
+                    }
+
+                    if (st === 'OPEN' || st === 'PENDING' || st === 'IN PROGRESS') {
+                        const cleanId = normalizeUnitCodeKey(rawNoId);
+                        if (!openWosByUnit[cleanId]) openWosByUnit[cleanId] = [];
+                        openWosByUnit[cleanId].push(w);
+                    }
+                });
+
+                // Debug log untuk memeriksa data yang masuk (bisa dihapus setelah konfirmasi)
+                console.log('[Papan Catur] woStore total:', woStore.length, '| Open units:', Object.keys(openWosByUnit));
+                console.log('[Papan Catur] LAST WO (Open):', latestWoId);
+
+                let summaryHtml = '';
+                let gridHtml = '';
+
+                let haulerRfu = 0;
+                let haulerBd = 0;
+                let totalRfu = 0;
+                let totalBd = 0;
+                let hasHauler = false;
+
+                config.forEach(cat => {
+                    const modelName = cat.model;
+                    const units = Array.isArray(cat.units) ? cat.units : [];
+                    const badgeBg = cat.badgeBg || "bg-slate-800 text-white";
+
+                    const rfuUnits = [];
+                    const bdUnits = [];
+
+                    units.forEach(u => {
+                        const cleanU = normalizeUnitCodeKey(u);
+                        if (!cleanU) return;
+                        if (openWosByUnit[cleanU] && openWosByUnit[cleanU].length > 0) {
+                            bdUnits.push({ unit: u, wos: openWosByUnit[cleanU] });
+                        } else {
+                            rfuUnits.push(u);
+                        }
+                    });
+
+                    const rfuCount = rfuUnits.length;
+                    const bdCount = bdUnits.length;
+
+                    totalRfu += rfuCount;
+                    totalBd += bdCount;
+
+                    if (cat.isHauler) {
+                        hasHauler = true;
+                        haulerRfu += rfuCount;
+                        haulerBd += bdCount;
+                    }
+
+                    // Left Summary Row for this Model
+                    summaryHtml += `
+                        <tr class="hover:bg-slate-50 transition border-b border-slate-200">
+                            <td class="p-1.5 font-bold text-slate-800 border-r border-slate-200">${modelName}</td>
+                            <td class="p-1.5 text-center font-bold text-emerald-600 bg-emerald-50/40 border-r border-slate-200">${rfuCount}</td>
+                            <td class="p-1.5 text-center font-bold ${bdCount > 0 ? 'text-red-600 bg-red-50/60 font-black' : 'text-slate-400'}">${bdCount}</td>
+                        </tr>
+                    `;
+
+                    // Right Grid 2-row block for this Model
+                    const rfuChipsHtml = rfuUnits.length === 0 
+                        ? `<span class="text-[10px] text-slate-400 italic px-2 py-0.5">-</span>`
+                        : rfuUnits.map(u => `
+                            <span onclick="showPapanCaturUnitDetail('${u}', false)" 
+                                class="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-0.5 rounded text-[10px] font-black tracking-tight shadow-sm cursor-pointer transition transform hover:scale-105 select-none" title="Unit Ready (RFU) - Klik untuk info">
+                                ${u}
+                            </span>
+                        `).join('');
+
+                    const bdChipsHtml = bdUnits.length === 0
+                        ? `<span class="text-[10px] text-slate-400 italic px-2 py-0.5">-</span>`
+                        : bdUnits.map(item => `
+                            <span onclick="showPapanCaturUnitDetail('${item.unit}', true)" 
+                                class="inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded text-[10px] font-black tracking-tight shadow-sm cursor-pointer transition transform hover:scale-105 select-none animate-pulse" title="Unit Breakdown (BD) - ${item.wos.length} Open WO! Klik untuk detail">
+                                <span>${item.unit}</span>
+                                <span class="bg-black/30 text-white text-[8px] px-1 rounded font-mono">${item.wos.length}</span>
+                            </span>
+                        `).join('');
+
+                    gridHtml += `
+                        <tr class="border-b border-slate-200">
+                            <!-- Model Badge (Spans 2 rows) -->
+                            <td rowspan="2" class="p-2 text-center border-r border-slate-300 font-black text-xs min-w-[70px] ${badgeBg}">
+                                <span>${modelName}</span>
+                            </td>
+                            <!-- RFU Row -->
+                            <td class="p-1 text-center font-bold text-[10px] bg-emerald-100 text-emerald-950 border-r border-slate-300 w-14 select-none">
+                                RFU
+                            </td>
+                            <td class="p-1.5 bg-emerald-50/50">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    ${rfuChipsHtml}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b-2 border-slate-300">
+                            <!-- BD Row -->
+                            <td class="p-1 text-center font-bold text-[10px] bg-red-100 text-red-950 border-r border-slate-300 w-14 select-none">
+                                BD
+                            </td>
+                            <td class="p-1.5 bg-red-50/30">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    ${bdChipsHtml}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+
+                    // Insert HAULER subtotal row right after SITRAK or last hauler
+                    if (modelName === "SITRAK" && hasHauler) {
+                        summaryHtml += `
+                            <tr class="bg-amber-100/80 font-black border-b border-amber-300 text-amber-950">
+                                <td class="p-1.5 border-r border-amber-300 italic">HAULER</td>
+                                <td class="p-1.5 text-center text-amber-900 border-r border-amber-300">${haulerRfu}</td>
+                                <td class="p-1.5 text-center ${haulerBd > 0 ? 'text-red-700' : 'text-amber-800'}">${haulerBd}</td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                // Summary Total Row
+                summaryHtml += `
+                    <tr class="bg-slate-900 text-white font-black text-xs border-t-2 border-slate-800">
+                        <td class="p-2 border-r border-slate-700 italic">TOTAL</td>
+                        <td class="p-2 text-center text-emerald-400 border-r border-slate-700">${totalRfu}</td>
+                        <td class="p-2 text-center ${totalBd > 0 ? 'text-rose-400' : 'text-slate-400'}">${totalBd}</td>
+                    </tr>
+                `;
+
+                summaryTbody.innerHTML = summaryHtml;
+                gridTbody.innerHTML = gridHtml;
+
+                if (lastWoEl) {
+                    lastWoEl.innerText = latestWoId;
+                }
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+
+            function showPapanCaturUnitDetail(unitCode, isBreakdown) {
+                const cleanU = normalizeUnitCodeKey(unitCode);
+                const openWos = woStore.filter(w => {
+                    const rawNoId = normalizeUnitCodeKey(w["NO ID"] || w["NO_ID"] || w["No ID"] || w["UNIT_CODE"] || w["UNIT"] || "");
+                    if (rawNoId !== cleanU) return false;
+                    let st = String(w["STATUS WO"] || w["STATUS_WO"] || w["Status WO"] || w["STATUS"] || w["Status"] || "").toUpperCase().trim();
+                    if (!st) {
+                        const endDate = w["END DATE"] || w["END_DATE"] || w["TGL SELESAI"] || w["END DATETIME"] || w["END DATE2"];
+                        st = endDate ? 'CLOSED' : 'OPEN';
+                    }
+                    return st === 'OPEN' || st === 'PENDING' || st === 'IN PROGRESS';
+                });
+
+                if (isBreakdown && openWos.length > 0) {
+                    let wosListHtml = openWos.map(w => `
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-left space-y-1 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="font-mono font-black text-slate-900 bg-white px-2 py-0.5 rounded border border-red-200">${w["NO WO"] || '-'}</span>
+                                <span class="text-red-700 font-bold uppercase text-[10px] bg-red-100 px-2 py-0.5 rounded">STATUS OPEN</span>
+                            </div>
+                            <p class="text-slate-800 font-bold mt-1">Problem: <span class="font-normal text-slate-700">${w["PROBLEM"] || '-'}</span></p>
+                            <p class="text-slate-600 text-[11px]">Action: <span class="text-slate-700">${w["ACTION"] || '-'}</span></p>
+                            <div class="text-[10px] text-slate-400 font-mono mt-1 pt-1 border-t border-red-100 flex justify-between">
+                                <span>Tgl: ${w["START DATE"] || '-'}</span>
+                                <span>Jam: ${w["START TIME"] || '-'}</span>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    Swal.fire({
+                        title: `Unit Breakdown: ${unitCode}`,
+                        html: `
+                            <div class="space-y-2 mt-2">
+                                <p class="text-xs text-slate-500">Unit ini memiliki <b>${openWos.length}</b> Work Order aktif berstatus OPEN:</p>
+                                <div class="max-h-64 overflow-y-auto space-y-2 pr-1">${wosListHtml}</div>
+                            </div>
+                        `,
+                        icon: 'warning',
+                        confirmButtonText: 'Filter di Kanban',
+                        showCancelButton: true,
+                        cancelButtonText: 'Tutup',
+                        confirmButtonColor: '#4f46e5',
+                        cancelButtonColor: '#94a3b8'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const searchInput = document.getElementById('kanban-search');
+                            if (searchInput) {
+                                searchInput.value = unitCode;
+                                renderKanbanWo();
+                                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: `Unit Ready (RFU): ${unitCode}`,
+                        html: `
+                            <div class="text-xs text-slate-600 text-center space-y-1">
+                                <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl font-bold">✓</div>
+                                <p class="font-bold text-slate-900 mt-2">Kondisi Siap Operasi (RFU)</p>
+                                <p class="text-slate-500">Tidak ada Work Order berstatus OPEN pada armada <b>${unitCode}</b>.</p>
+                            </div>
+                        `,
+                        icon: 'success',
+                        confirmButtonText: 'Tutup',
+                        confirmButtonColor: '#10b981'
+                    });
+                }
+            }
+
+            // --- PENGATURAN MODAL PAPAN CATUR ---
+            function openPapanCaturModal() {
+                const container = document.getElementById('papan-catur-config-container');
+                if (!container) return;
+
+                const config = getPapanCaturConfig();
+                container.innerHTML = '';
+
+                config.forEach((cat, idx) => {
+                    const unitsStr = (cat.units || []).join(', ');
+                    const isHaulerChecked = cat.isHauler ? 'checked' : '';
+
+                    const cardHtml = `
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 relative group" id="papan-model-row-${idx}">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 flex-1">
+                                    <input type="text" value="${cat.model}" id="cfg-model-${idx}" placeholder="Kode Model (Cth: EXC)" 
+                                        class="bg-white border border-slate-300 rounded px-2.5 py-1 text-xs font-mono font-black uppercase text-slate-900 w-28 focus:outline-none focus:border-indigo-600">
+                                    <input type="text" value="${cat.name || ''}" id="cfg-name-${idx}" placeholder="Nama Deskripsi (Cth: Excavator)" 
+                                        class="bg-white border border-slate-300 rounded px-2.5 py-1 text-xs text-slate-700 flex-1 focus:outline-none focus:border-indigo-600">
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <label class="flex items-center gap-1 text-[11px] font-bold text-slate-600 cursor-pointer">
+                                        <input type="checkbox" id="cfg-hauler-${idx}" ${isHaulerChecked} class="rounded text-indigo-600 focus:ring-0">
+                                        <span>Hauler</span>
+                                    </label>
+                                    <button type="button" onclick="deletePapanCaturModelRow(${idx})" class="text-rose-500 hover:text-rose-700 p-1 transition" title="Hapus Kategori">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Daftar Kode Unit Armada (Pisahkan dengan koma):</label>
+                                <textarea id="cfg-units-${idx}" rows="2" placeholder="BSS 101, BSS 102, BSS 103..." 
+                                    class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-indigo-600">${unitsStr}</textarea>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHtml);
+                });
+
+                document.getElementById('papan-catur-modal').classList.remove('hidden');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+
+            function closePapanCaturModal() {
+                const modal = document.getElementById('papan-catur-modal');
+                if (modal) modal.classList.add('hidden');
+            }
+
+            function addNewPapanCaturModelRow() {
+                const container = document.getElementById('papan-catur-config-container');
+                if (!container) return;
+
+                const idx = container.children.length;
+                const cardHtml = `
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 relative" id="papan-model-row-${idx}">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 flex-1">
+                                <input type="text" value="" id="cfg-model-${idx}" placeholder="Kode Model (Cth: ART)" 
+                                    class="bg-white border border-slate-300 rounded px-2.5 py-1 text-xs font-mono font-black uppercase text-slate-900 w-28 focus:outline-none focus:border-indigo-600">
+                                <input type="text" value="" id="cfg-name-${idx}" placeholder="Nama Deskripsi (Cth: Articulated Dump Truck)" 
+                                    class="bg-white border border-slate-300 rounded px-2.5 py-1 text-xs text-slate-700 flex-1 focus:outline-none focus:border-indigo-600">
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <label class="flex items-center gap-1 text-[11px] font-bold text-slate-600 cursor-pointer">
+                                    <input type="checkbox" id="cfg-hauler-${idx}" class="rounded text-indigo-600 focus:ring-0">
+                                    <span>Hauler</span>
+                                </label>
+                                <button type="button" onclick="deletePapanCaturModelRow(${idx})" class="text-rose-500 hover:text-rose-700 p-1 transition" title="Hapus Kategori">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Daftar Kode Unit Armada (Pisahkan dengan koma):</label>
+                            <textarea id="cfg-units-${idx}" rows="2" placeholder="BSS 901, BSS 902..." 
+                                class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-indigo-600"></textarea>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+
+            function deletePapanCaturModelRow(idx) {
+                const row = document.getElementById(`papan-model-row-${idx}`);
+                if (row) row.remove();
+            }
+
+            function savePapanCaturModalConfig() {
+                const container = document.getElementById('papan-catur-config-container');
+                if (!container) return;
+
+                const newConfig = [];
+                const rows = container.querySelectorAll('[id^="papan-model-row-"]');
+
+                rows.forEach(row => {
+                    const modelInput = row.querySelector('[id^="cfg-model-"]');
+                    const nameInput = row.querySelector('[id^="cfg-name-"]');
+                    const haulerInput = row.querySelector('[id^="cfg-hauler-"]');
+                    const unitsInput = row.querySelector('[id^="cfg-units-"]');
+
+                    const model = (modelInput?.value || '').trim().toUpperCase();
+                    const name = (nameInput?.value || '').trim();
+                    const isHauler = !!haulerInput?.checked;
+                    const rawUnits = (unitsInput?.value || '').trim();
+
+                    if (!model) return;
+
+                    const unitsList = rawUnits
+                        .split(',')
+                        .map(u => u.trim())
+                        .filter(Boolean);
+
+                    // Choose appropriate badge color
+                    let badgeBg = "bg-slate-800 text-white";
+                    if (model === "EXC") badgeBg = "bg-red-600 text-white";
+                    else if (model === "MAN") badgeBg = "bg-slate-900 text-white";
+                    else if (model === "HINO") badgeBg = "bg-amber-400 text-slate-950";
+                    else if (model === "DF") badgeBg = "bg-emerald-600 text-white";
+                    else if (model === "SITRAK") badgeBg = "bg-cyan-600 text-white";
+                    else if (model === "GDR") badgeBg = "bg-sky-500 text-white";
+                    else if (model === "DZR") badgeBg = "bg-blue-700 text-white";
+                    else if (model === "BOMAG") badgeBg = "bg-purple-700 text-white";
+                    else if (model === "WL") badgeBg = "bg-pink-600 text-white";
+                    else if (model === "WP") badgeBg = "bg-slate-800 text-emerald-400";
+
+                    newConfig.push({
+                        model,
+                        name,
+                        isHauler,
+                        badgeBg,
+                        units: unitsList
+                    });
+                });
+
+                if (newConfig.length === 0) {
+                    Swal.fire('Peringatan', 'Minimal harus ada 1 model/kategori unit.', 'warning');
+                    return;
+                }
+
+                setPapanCaturConfig(newConfig);
+                closePapanCaturModal();
+                renderPapanCatur();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tersimpan',
+                    text: 'Pengaturan unit Papan Catur berhasil diperbarui.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+
+            function resetPapanCaturToDefault() {
+                Swal.fire({
+                    title: 'Reset ke Default?',
+                    text: 'Daftar model dan list unit akan dikembalikan ke settingan standar.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#94a3b8',
+                    confirmButtonText: 'Ya, Reset!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setPapanCaturConfig(JSON.parse(JSON.stringify(DEFAULT_PAPAN_CATUR_CONFIG)));
+                        openPapanCaturModal();
+                        renderPapanCatur();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Direset',
+                            text: 'Konfigurasi telah dikembalikan ke default.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
             }
 
             // --- PLAN SERVICE HARI INI MODULE LOGIC ---
