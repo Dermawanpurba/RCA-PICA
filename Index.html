@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>PICA & Analisa Biaya Repair - Enterprise System</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -595,17 +598,30 @@
             transform: scale(.96);
         }
 
-        /* Overlay mobile benar-benar berada di bawah drawer dan di atas konten. */
-        #sidebar-backdrop {
-            z-index: 80;
+        /* Mobile Touch & Scroll Enhancements */
+        * {
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Dialog lebih aman pada viewport pendek. */
+        .table-touch-scroll,
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-inline: contain;
+            scrollbar-gutter: stable;
+        }
+
+        /* Overlay mobile benar-benar berada di bawah drawer dan di atas konten. */
+        #sidebar-backdrop {
+            z-index: 85;
+        }
+
+        /* Dialog & Modal responsive di smartphone */
         [id$="-modal"]>div,
         [id*="modal"]>div {
-            max-height: calc(100dvh - 2rem);
+            max-height: calc(100dvh - 1.5rem);
             overflow-y: auto;
             overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
         }
 
         @media (min-width: 768px) {
@@ -630,8 +646,8 @@
             #sidebar-toggle-btn {
                 top: 5.25rem;
                 left: min(86vw, 304px);
-                width: 34px;
-                height: 44px;
+                width: 32px;
+                height: 42px;
             }
 
             #sidebar-toggle-btn.sidebar-closed {
@@ -639,13 +655,13 @@
             }
 
             main {
-                padding: .875rem !important;
-                padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)) !important;
+                padding: .75rem !important;
+                padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
             }
 
             main>header {
-                margin: -.875rem -.875rem 1rem;
-                padding: .875rem 3rem .875rem .875rem;
+                margin: -.75rem -.75rem .875rem;
+                padding: .75rem .75rem .75rem .75rem;
             }
 
             main>header h2 {
@@ -662,35 +678,71 @@
                 transform: none;
             }
 
+            /* Responsive Inputs prevent iOS Safari zoom */
+            input:not([type="checkbox"]):not([type="radio"]),
+            select,
+            textarea {
+                font-size: 14px !important;
+            }
+
+            /* Mobile Modal Container */
+            [id$="-modal"]>div,
+            [id*="modal"]>div {
+                width: calc(100% - 1rem) !important;
+                max-width: 100% !important;
+                margin: 0.5rem auto !important;
+                padding: 1rem !important;
+                border-radius: 1rem !important;
+            }
+
+            /* Bottom Nav Bar */
             .no-print.md\:hidden.fixed.bottom-0 {
                 scroll-snap-type: x mandatory;
-                padding-block: .5rem !important;
-                background: rgba(255, 255, 255, .94) !important;
+                padding-block: .35rem !important;
+                background: rgba(255, 255, 255, .96) !important;
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
             }
 
-            /* Toolbar actions tidak meluber; tiap aksi tetap mudah ditekan. */
+            .mobile-nav-btn {
+                min-width: 54px;
+                min-height: 48px;
+                padding: 4px 6px !important;
+            }
+
+            /* Toolbar actions tidak meluber; tiap aksi tetap mudah ditekan */
             section .flex.items-center.space-x-2 {
                 width: 100%;
                 overflow-x: auto;
-                padding-bottom: 2px;
+                padding-bottom: 4px;
+                -webkit-overflow-scrolling: touch;
             }
 
             section .flex.items-center.space-x-2>button {
                 flex: 0 0 auto;
+                min-height: 38px;
             }
 
             #view-dashboard>.grid:first-child {
-                gap: .75rem;
+                gap: .625rem;
             }
 
             #view-dashboard>.grid:first-child .premium-card {
-                padding: 1rem !important;
+                padding: .875rem !important;
             }
 
             #view-dashboard>.grid:first-child .text-3xl {
-                font-size: 1.65rem !important;
+                font-size: 1.5rem !important;
+            }
+
+            /* RCA sheet on smartphone */
+            #rca-print-paper {
+                padding: 1rem !important;
+            }
+
+            /* Papan catur board touch scrolling */
+            #papan-catur-grid-tbody td {
+                min-width: 28px !important;
             }
         }
 
@@ -792,79 +844,340 @@
             transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* --- P2: Dark mode overrides --- */
+        /* ========================================================
+           TYPOGRAPHY & CONTRAST SYSTEM (LIGHT & DARK MODE)
+           ======================================================== */
+        /* --- Light Mode Typography Refinements --- */
+        body {
+            color: #1e293b; /* Slate 800 - crisp high contrast */
+        }
+
+        .text-slate-900, .text-slate-950, .text-black {
+            color: #0f172a;
+        }
+
+        .text-slate-800 {
+            color: #1e293b;
+        }
+
+        .text-slate-700 {
+            color: #334155;
+        }
+
+        .text-slate-600 {
+            color: #475569;
+        }
+
+        .text-slate-500 {
+            color: #64748b; /* Minimum 4.5:1 AA contrast ratio */
+        }
+
+        /* --- Comprehensive Dark Mode Styling --- */
         html.dark body {
-            background: #0f172a;
-            color: #e2e8f0;
+            background-color: #0b0f19 !important;
+            color: #e2e8f0 !important;
         }
 
-        html.dark .premium-card {
-            background: #1e293b;
-            border-color: #334155;
-            color: #e2e8f0;
+        /* Background Cards & Containers in Dark Mode */
+        html.dark .premium-card,
+        html.dark .bg-industrial-card,
+        html.dark .bg-white:not(.print-rca-page-force-light) {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
         }
 
-        html.dark .premium-card .text-slate-900,
-        html.dark .premium-card .text-slate-800 {
-            color: #f1f5f9;
+        /* Typography in Dark Mode - High Contrast & Sharp */
+        html.dark h1,
+        html.dark h2,
+        html.dark h3,
+        html.dark h4,
+        html.dark h5,
+        html.dark h6,
+        html.dark .text-slate-900,
+        html.dark .text-slate-950,
+        html.dark .text-slate-800,
+        html.dark .text-black {
+            color: #f8fafc !important; /* Crisp Slate 50 */
         }
 
-        html.dark .premium-card .text-slate-600,
-        html.dark .premium-card .text-slate-500 {
-            color: #94a3b8;
+        html.dark p,
+        html.dark .text-slate-700,
+        html.dark .text-slate-600 {
+            color: #cbd5e1 !important; /* Slate 300 */
         }
 
-        html.dark .premium-card .text-slate-400 {
-            color: #64748b;
+        html.dark .text-slate-500,
+        html.dark .text-slate-400 {
+            color: #94a3b8 !important; /* Slate 400 - clean and legible */
         }
 
-        html.dark .premium-card .border-slate-100,
-        html.dark .premium-card .border-slate-200,
-        html.dark .premium-card .border-industrial-border {
-            border-color: #334155;
+        html.dark .border-slate-100,
+        html.dark .border-slate-200,
+        html.dark .border-slate-300,
+        html.dark .border-industrial-border {
+            border-color: #334155 !important;
         }
 
-        html.dark .premium-card .bg-slate-50,
-        html.dark .premium-card .bg-slate-100 {
-            background-color: #0f172a;
+        html.dark .bg-slate-50,
+        html.dark .bg-slate-100 {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
         }
 
-        html.dark .premium-card .bg-white {
-            background-color: #1e293b;
+        html.dark .bg-slate-50\/50,
+        html.dark .bg-slate-50\/30 {
+            background-color: rgba(15, 23, 42, 0.6) !important;
         }
 
-        /* Sidebar dark mode */
-        html.dark #sidebar-wrapper,
-        html.dark #sidebar-desktop {
-            background: #0f172a !important;
+        /* Form Inputs & Selects in Dark Mode */
+        html.dark input:not([type="checkbox"]):not([type="radio"]),
+        html.dark select,
+        html.dark textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
         }
 
-        /* Mobile bottom nav dark mode */
-        html.dark .bg-industrial-card {
-            background: #1e293b;
+        html.dark input::placeholder,
+        html.dark textarea::placeholder {
+            color: #64748b !important;
         }
 
-        /* Table dark mode */
+        html.dark select option {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark input:focus,
+        html.dark select:focus,
+        html.dark textarea:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+        }
+
+        /* Tables & Sticky Cells in Dark Mode */
+        html.dark table {
+            border-color: #334155 !important;
+        }
+
+        html.dark table thead th {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark table tbody tr {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark table tbody tr:nth-child(even) {
+            background-color: #152033 !important;
+        }
+
         html.dark table tbody tr:hover {
-            background-color: rgba(99, 102, 241, 0.1);
+            background-color: #273549 !important;
         }
 
-        html.dark .bg-slate-50\/50 {
-            background-color: rgba(30, 41, 59, 0.5);
+        html.dark table tbody td {
+            color: #e2e8f0 !important;
+            border-color: #334155 !important;
         }
 
-        /* SweetAlert2 dark mode */
+        /* Sticky Column (NO) in Dark Mode - Fixes white-on-white text */
+        html.dark #pica-main-table th:first-child,
+        html.dark #pica-main-table td:first-child,
+        html.dark #parts-main-table th:first-child,
+        html.dark #parts-main-table td:first-child,
+        html.dark #populasi-main-table th:first-child,
+        html.dark #populasi-main-table td:first-child,
+        html.dark #wo-main-table th:first-child,
+        html.dark #wo-main-table td:first-child {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+            box-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        html.dark #pica-main-table tbody tr:nth-child(even) td:first-child,
+        html.dark #parts-main-table tbody tr:nth-child(even) td:first-child,
+        html.dark #populasi-main-table tbody tr:nth-child(even) td:first-child,
+        html.dark #wo-main-table tbody tr:nth-child(even) td:first-child {
+            background-color: #152033 !important;
+        }
+
+        html.dark #pica-main-table thead th:first-child,
+        html.dark #parts-main-table thead th:first-child,
+        html.dark #populasi-main-table thead th:first-child,
+        html.dark #wo-main-table thead th:first-child {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+        }
+
+        html.dark #pica-main-table tbody tr:hover td:first-child,
+        html.dark #parts-main-table tbody tr:hover td:first-child,
+        html.dark #populasi-main-table tbody tr:hover td:first-child,
+        html.dark #wo-main-table tbody tr:hover td:first-child {
+            background-color: #273549 !important;
+        }
+
+        /* Donut Chart in Dark Mode */
+        html.dark .donut-center {
+            background: #1e293b !important;
+        }
+
+        html.dark .donut-center .donut-value {
+            color: #f8fafc !important;
+        }
+
+        html.dark .donut-center .donut-label {
+            color: #94a3b8 !important;
+        }
+
+        /* RCA Paper in Dark Mode */
+        html.dark #rca-print-paper {
+            background: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark #rca-print-paper .border-black {
+            border-color: #475569 !important;
+        }
+
+        html.dark #rca-print-paper .border-b-2.border-black {
+            border-color: #64748b !important;
+        }
+
+        html.dark #rca-print-paper .border-b.border-black {
+            border-color: #94a3b8 !important;
+        }
+
+        html.dark #rca-print-paper table {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark #rca-print-paper thead {
+            background: #0f172a !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark #rca-print-paper th,
+        html.dark #rca-print-paper td {
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+
+        html.dark #rca-print-paper #rca-grand-total {
+            color: #f87171 !important;
+            border-color: #ef4444 !important;
+        }
+
+        /* Modals & Dialogs in Dark Mode */
+        html.dark [id$="-modal"]>div,
+        html.dark [id*="modal"]>div {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border: 1px solid #334155 !important;
+        }
+
+        html.dark [id$="-modal"] h3,
+        html.dark [id*="modal"] h3 {
+            color: #f8fafc !important;
+        }
+
+        html.dark [id$="-modal"] label,
+        html.dark [id*="modal"] label {
+            color: #cbd5e1 !important;
+        }
+
+        /* Sidebar & Navigation in Dark Mode */
+        html.dark #sidebar-wrapper,
+        html.dark #sidebar-desktop,
+        html.dark #sidebar-desktop>div {
+            background: #0f172a !important;
+            border-color: #1e293b !important;
+        }
+
+        html.dark .no-print.md\:hidden.fixed.bottom-0 {
+            background: rgba(15, 23, 42, 0.96) !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark #mobile-more-sheet {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark #mobile-more-sheet button {
+            color: #cbd5e1 !important;
+        }
+
+        html.dark #mobile-more-sheet button:hover {
+            background-color: #0f172a !important;
+        }
+
+        html.dark #mobile-more-sheet span {
+            color: #cbd5e1 !important;
+        }
+
+        /* SweetAlert2 in Dark Mode */
         html.dark .swal2-popup {
-            background: #1e293b;
-            color: #e2e8f0;
+            background: #1e293b !important;
+            color: #e2e8f0 !important;
+            border: 1px solid #334155 !important;
         }
 
         html.dark .swal2-title,
         html.dark .swal2-html-container {
-            color: #f1f5f9;
+            color: #f1f5f9 !important;
         }
 
-        /* --- Dark mode toggle button --- */
+        /* Badges & Pills High-Contrast */
+        html.dark .bg-amber-100 {
+            background-color: rgba(120, 53, 15, 0.35) !important;
+            color: #fbbf24 !important;
+            border-color: #78350f !important;
+        }
+
+        html.dark .bg-emerald-100 {
+            background-color: rgba(6, 78, 59, 0.4) !important;
+            color: #34d399 !important;
+            border-color: #064e3b !important;
+        }
+
+        html.dark .bg-rose-100,
+        html.dark .bg-red-100 {
+            background-color: rgba(136, 19, 55, 0.4) !important;
+            color: #f87171 !important;
+            border-color: #881337 !important;
+        }
+
+        html.dark .bg-indigo-100,
+        html.dark .bg-blue-100 {
+            background-color: rgba(49, 46, 129, 0.4) !important;
+            color: #818cf8 !important;
+            border-color: #312e81 !important;
+        }
+
+        html.dark .bg-purple-100 {
+            background-color: rgba(88, 28, 135, 0.4) !important;
+            color: #c084fc !important;
+            border-color: #581c87 !important;
+        }
+
+        html.dark .bg-teal-100 {
+            background-color: rgba(19, 78, 74, 0.4) !important;
+            color: #2dd4bf !important;
+            border-color: #134e4a !important;
+        }
+
+        /* Dark mode toggle button */
         #dark-mode-toggle {
             transition: transform 0.2s ease, background 0.2s ease;
         }
@@ -1222,28 +1535,36 @@
 
         <!-- HEADER OPERASIONAL (NO-PRINT) -->
         <header
-            class="no-print mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-industrial-border pb-4 gap-4">
-            <div>
-                <span
-                    class="text-xs bg-amber-100 text-industrial-yellow font-bold px-2.5 py-1 rounded border border-amber-300">
-                    EXECUTIVE BRIEFING PRESENTATION
-                </span>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900 mt-1.5 tracking-wider uppercase">
-                    (PICA) Problem Identification & Corrective Action
-                </h2>
-                <p id="sub-header-pt" class="text-xs text-slate-500 font-semibold">Periode Monitoring PT. Benakmur Selaras
-                    Sejahtera</p>
+            class="no-print mb-4 md:mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-industrial-border pb-4 gap-3 md:gap-4">
+            <div class="flex items-start gap-3 w-full md:w-auto">
+                <!-- Mobile Hamburger Menu Button -->
+                <button type="button" onclick="toggleSidebar()"
+                    class="md:hidden mt-0.5 p-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 active:scale-95 transition-all shadow-md shrink-0 flex items-center justify-center"
+                    title="Buka Menu Navigasi" aria-label="Buka Menu">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div class="flex-1 min-w-0">
+                    <span
+                        class="text-[10px] md:text-xs bg-amber-100 text-industrial-yellow font-bold px-2 py-0.5 md:px-2.5 md:py-1 rounded border border-amber-300 inline-block truncate max-w-full">
+                        EXECUTIVE BRIEFING PRESENTATION
+                    </span>
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-black text-slate-900 mt-1 md:mt-1.5 tracking-wider uppercase leading-tight">
+                        (PICA) Problem Identification & Corrective Action
+                    </h2>
+                    <p id="sub-header-pt" class="text-[11px] md:text-xs text-slate-500 font-semibold truncate">Periode Monitoring PT. Benakmur Selaras Sejahtera</p>
+                </div>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center justify-between w-full md:w-auto space-x-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-200">
                 <!-- P2: Dark mode toggle -->
                 <button onclick="toggleDarkMode()" id="dark-mode-toggle" title="Ganti mode gelap/terang"
-                    class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 transition-all">
+                    class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 transition-all flex items-center gap-1.5 text-xs font-semibold">
                     <i data-lucide="moon" class="w-4 h-4" id="dark-mode-icon"></i>
+                    <span class="md:hidden text-[11px]">Tema</span>
                 </button>
                 <div
-                    class="flex items-center space-x-2 text-xs text-slate-600 font-mono bg-slate-100 px-3 py-1.5 rounded border border-slate-200">
-                    <span class="w-2.5 h-2.5 bg-industrial-green rounded-full animate-pulse"></span>
-                    <span>Database Terkoneksi</span>
+                    class="flex items-center space-x-2 text-[11px] md:text-xs text-slate-600 font-mono bg-slate-100 px-2.5 py-1.5 rounded border border-slate-200">
+                    <span class="w-2 h-2 md:w-2.5 md:h-2.5 bg-industrial-green rounded-full animate-pulse shrink-0"></span>
+                    <span class="truncate">Database Terkoneksi</span>
                 </div>
             </div>
         </header>
@@ -2180,7 +2501,7 @@
                     </div>
 
                     <!-- SIGNATURE BLOCK -->
-                    <div class="grid grid-cols-4 gap-4 text-center text-[10px] pt-4 mt-8 border-t border-slate-200">
+                    <div class="grid grid-cols-2 md:grid-cols-4 print:grid-cols-4 gap-3 md:gap-4 text-center text-[10px] pt-4 mt-8 border-t border-slate-200">
                         <div class="flex flex-col justify-between h-36">
                             <span class="block text-slate-500 font-bold">Dibuat Oleh</span>
                             <div class="flex-1 flex items-center justify-center py-2">
@@ -7552,6 +7873,19 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                     return;
                 }
 
+                // Otomatis tutup sidebar drawer & bottom sheet saat berpindah menu di smartphone
+                if (window.innerWidth < 768) {
+                    collapseSidebar();
+                    const sheet = document.getElementById('mobile-more-sheet');
+                    const backdrop = document.getElementById('mobile-more-backdrop');
+                    if (sheet && !sheet.classList.contains('translate-y-full')) {
+                        sheet.classList.add('translate-y-full');
+                    }
+                    if (backdrop && !backdrop.classList.contains('hidden')) {
+                        backdrop.classList.add('hidden');
+                    }
+                }
+
                 document.getElementById('view-dashboard').classList.add('hidden');
                 document.getElementById('view-table').classList.add('hidden');
                 if (document.getElementById('view-backlog')) {
@@ -7584,6 +7918,15 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
                     btn.className = "mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1";
                 });
+
+                // Highlight tombol 'Lainnya' di mobile jika membuka modul sekunder
+                const moreSheetMenus = ['backlog', 'plan-service', 'populasi-unit', 'wo', 'far', 'org-structure', 'sop-jobdesc', 'accurate-parser', 'accurate-comparison', 'settings'];
+                if (moreSheetMenus.includes(menuId)) {
+                    const moreBtn = document.getElementById('m-btn-nav-more');
+                    if (moreBtn) {
+                        moreBtn.className = "mobile-nav-btn text-indigo-600 flex flex-col items-center font-bold shrink-0 px-2 py-1";
+                    }
+                }
 
                 if (menuId === 'dashboard') {
                     document.getElementById('view-dashboard').classList.remove('hidden');
@@ -8952,7 +9295,17 @@ const safeDesc = String(lab.desc || '').replace(/"/g, '&quot;');
                 };
 
                 try {
-                    const response = await callBackend('saveData', { data: payload });
+                    let response;
+                    try {
+                        response = await callBackend('saveData', { data: payload });
+                    } catch (e) {
+                        if (String(e).toLowerCase().includes('savedata is not defined') || String(e).toLowerCase().includes('not found')) {
+                            response = await callBackend('savePicaData', { data: payload });
+                        } else {
+                            throw e;
+                        }
+                    }
+
                     if (response && response.success) {
                         // tutup loading & modal SEGERA agar UX terasa instant (tanpa menunggu Swal timer)
                         showLoading(false);
