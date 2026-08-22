@@ -1011,11 +1011,6 @@
                             <span class="text-xs font-medium">PICA Active Board</span>
                         </button>
                         <p class="px-3 pt-3 pb-1 text-[9px] font-black uppercase tracking-[0.15em] text-slate-600 border-t border-slate-800 mt-2">Operasional</p>
-                        <button onclick="switchMenu('wo')" id="btn-nav-wo"
-                            class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
-                            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
-                            <span class="text-xs font-medium">Work Order (WO)</span>
-                        </button>
                         <button onclick="switchMenu('kanban-wo')" id="btn-nav-kanban-wo"
                             class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-850 hover:text-white transition-all">
                             <i data-lucide="layout-kanban" class="w-4 h-4 text-indigo-400"></i>
@@ -1131,10 +1126,10 @@
             <i data-lucide="table-properties" class="w-5 h-5"></i>
             <span class="text-[9px] mt-0.5">PICA Board</span>
         </button>
-        <button onclick="switchMenu('wo')" id="m-btn-nav-wo"
+        <button onclick="switchMenu('kanban-wo')" id="m-btn-nav-kanban-wo"
             class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
-            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-            <span class="text-[9px] mt-0.5 font-bold">WO</span>
+            <i data-lucide="layout-kanban" class="w-5 h-5"></i>
+            <span class="text-[9px] mt-0.5 font-bold">Kanban</span>
         </button>
         <button onclick="switchMenu('urgent-part')" id="m-btn-nav-urgent-part"
             class="mobile-nav-btn text-slate-500 flex flex-col items-center shrink-0 px-2 py-1">
@@ -5634,6 +5629,18 @@
                     if (rcaDataStore.length > 0) {
                         if (!activeRcaId || !rcaDataStore.some(r => r.id === activeRcaId)) {
                             activeRcaId = rcaDataStore[0].id;
+                        }
+                    }
+
+                    if (woStore.length === 0) {
+                        try {
+                            const rawWo = await callBackend('getWoData');
+                            if (rawWo && Array.isArray(rawWo) && rawWo.length > 0) {
+                                woStore = rawWo;
+                                localStorage.setItem('WO_DB', JSON.stringify(woStore));
+                            }
+                        } catch (woErr) {
+                            console.warn("Fallback getWoData otomatis gagal:", woErr);
                         }
                     }
 
